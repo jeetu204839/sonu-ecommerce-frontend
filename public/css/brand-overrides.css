@@ -1,0 +1,384 @@
+/**
+ * Final brand layer — load LAST after Bootstrap + style.css.
+ * Uses html + !important so these tokens always win over Bootstrap’s :root.
+ */
+
+html {
+  /* Distinct from default template lime (#81C408) — deep agri / trust green */
+  --brand-primary: #14532d;
+  --brand-primary-soft: #dcfce7;
+  --brand-secondary: #c2410c;
+  --brand-secondary-soft: #ffedd5;
+  --brand-ink: #1c1917;
+
+  --bs-primary: #14532d !important;
+  --bs-secondary: #c2410c !important;
+  --bs-primary-rgb: 20, 83, 45 !important;
+  --bs-secondary-rgb: 194, 65, 12 !important;
+  --bs-dark: #1c1917 !important;
+  --bs-dark-rgb: 28, 25, 23 !important;
+
+  --bs-link-color: #166534 !important;
+  --bs-link-hover-color: #14532d !important;
+  --bs-focus-ring-color: rgba(20, 83, 45, 0.35) !important;
+
+  --bs-light: #f7f9f6 !important;
+  --bs-light-rgb: 247, 249, 246 !important;
+  --bs-border-color: rgba(28, 25, 23, 0.12) !important;
+}
+
+body {
+  background-color: rgb(var(--bs-light-rgb)) !important;
+  color: var(--bs-dark) !important;
+}
+
+::selection {
+  background: rgba(var(--bs-secondary-rgb), 0.25);
+  color: var(--bs-dark);
+}
+
+/* Top bar: gradient instead of flat theme green */
+.topbar.bg-primary {
+  background: linear-gradient(
+    100deg,
+    #14532d 0%,
+    #0f3d22 45%,
+    #134e2e 100%
+  ) !important;
+}
+
+/* Full-width top bar — edge-to-edge white strip; horizontal inset comes from .navbar padding */
+.site-navbar-bar {
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+  z-index: 1030;
+}
+
+/* Mobile menu (hamburger): no grey border, no tap/focus layout jump */
+.shop-nav-toggler {
+  border: none !important;
+  background-color: transparent !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  flex-shrink: 0;
+  line-height: 1;
+  transition: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shop-nav-toggler:focus,
+.shop-nav-toggler:focus-visible,
+.shop-nav-toggler:active {
+  box-shadow: none !important;
+}
+
+.shop-nav-toggler:focus {
+  outline: none;
+}
+
+.shop-nav-toggler:focus-visible {
+  outline: 2px solid rgba(var(--bs-primary-rgb), 0.45);
+  outline-offset: 2px;
+}
+
+.shop-nav-toggler:active {
+  transform: none;
+  opacity: 1;
+}
+
+/* Navbar separation from hero */
+.navbar.navbar-light.bg-white {
+  box-shadow: 0 6px 24px rgba(20, 83, 45, 0.08);
+  border-bottom: 1px solid rgba(20, 83, 45, 0.1);
+}
+
+/* Primary buttons: slightly richer hover */
+.btn-primary {
+  border-color: transparent !important;
+  box-shadow: 0 2px 8px rgba(20, 83, 45, 0.2);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+.btn-outline-primary {
+  border-width: 2px;
+}
+
+/* Secondary / accent pills */
+.bg-secondary {
+  background-color: var(--bs-secondary) !important;
+}
+
+.text-primary {
+  color: var(--bs-primary) !important;
+}
+
+.text-secondary {
+  color: var(--bs-secondary) !important;
+}
+
+/* Hero product carousel — same slot every slide (no jump on slide change) */
+#carouselId .carousel-inner {
+  min-height: clamp(220px, 42vw, 400px);
+}
+
+#carouselId .carousel-item img {
+  width: 100%;
+  height: clamp(220px, 42vw, 400px);
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Product title overlay — bottom strip (darker blackish panel + soft shadow) */
+#carouselId .carousel-item a {
+  top: auto;
+  bottom: 0.65rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  font-size: clamp(0.8rem, 2.2vw, 1.35rem);
+  line-height: 1.25;
+  white-space: normal;
+  text-align: center;
+  background: linear-gradient(
+    rgba(12, 12, 14, 0.78),
+    rgba(12, 12, 14, 0.78)
+  ) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* “Enterprises” — entrance + subtle living gradient (professional, not flashy) */
+.brand-enterprises {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 1px;
+  background-image: linear-gradient(
+    110deg,
+    #0f3d22 0%,
+    #14532d 22%,
+    #1a6b3a 42%,
+    #166534 55%,
+    #14532d 78%,
+    #0f3d22 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: brandEntrReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) both,
+    brandEntrShimmer 9s ease-in-out infinite 0.9s;
+  will-change: transform, opacity, background-position;
+}
+
+.brand-enterprises::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(20, 83, 45, 0.35),
+    rgba(194, 65, 12, 0.45),
+    rgba(20, 83, 45, 0.35),
+    transparent
+  );
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: brandEntrUnderline 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+}
+
+.navbar-brand:hover .brand-enterprises {
+  filter: brightness(1.06);
+  transition: filter 0.35s ease;
+}
+
+.navbar-brand:hover .brand-enterprises::after {
+  opacity: 0.85;
+  transition: opacity 0.35s ease;
+}
+
+@keyframes brandEntrReveal {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 4px, 0);
+    letter-spacing: 0.08em;
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    letter-spacing: normal;
+  }
+}
+
+@keyframes brandEntrShimmer {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+@keyframes brandEntrUnderline {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-enterprises {
+    animation: none;
+    background: none;
+    color: var(--bs-primary) !important;
+    -webkit-text-fill-color: currentColor;
+    will-change: auto;
+  }
+
+  .brand-enterprises::after {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 0.4;
+    height: 1px;
+  }
+}
+
+/* Mobile: left drawer (offcanvas) — app-style nav */
+.shop-nav-drawer {
+  width: min(300px, 88vw) !important;
+  border: none;
+  box-shadow: 8px 0 32px rgba(20, 83, 45, 0.15);
+}
+
+.shop-nav-drawer .offcanvas-body {
+  min-height: calc(100vh - 4rem);
+}
+
+.shop-drawer-link {
+  color: var(--bs-dark) !important;
+  font-weight: 600;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.shop-drawer-link:hover {
+  background-color: rgba(var(--bs-primary-rgb), 0.08);
+  color: var(--bs-primary) !important;
+}
+
+.shop-drawer-link.active {
+  background-color: rgba(var(--bs-primary-rgb), 0.12);
+  color: var(--bs-primary) !important;
+}
+
+.offcanvas-backdrop.show {
+  opacity: 0.45;
+}
+
+/* Shop category tabs — one compact row on mobile (scroll), desktop unchanged */
+.fruite .shop-product-tabs-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.fruite .shop-product-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  .fruite .shop-product-tabs-scroll {
+    margin-left: calc(-0.5 * var(--bs-gutter-x, 0.75rem));
+    margin-right: calc(-0.5 * var(--bs-gutter-x, 0.75rem));
+    padding-left: calc(0.5 * var(--bs-gutter-x, 0.75rem));
+    padding-right: calc(0.5 * var(--bs-gutter-x, 0.75rem));
+  }
+
+  .fruite .shop-product-tabs-scroll .nav-pills > .nav-item > a {
+    min-height: 2.25rem;
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.35rem !important;
+    padding-left: 0.65rem !important;
+    padding-right: 0.65rem !important;
+  }
+
+  .fruite .shop-product-tab-label {
+    font-size: 0.8125rem;
+    line-height: 1.2;
+  }
+}
+
+@media (min-width: 992px) {
+  .fruite .shop-product-tabs-scroll {
+    overflow: visible;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .fruite .shop-product-tab-label {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}
+
+
+/* Product grid — same slot height; contain = full product visible (no crop “zoom”) */
+.fruite-img{
+  background-color:white !important;
+}
+.fruite .fruite-item .fruite-img {
+  height: clamp(160px, 30vw, 240px);
+  background-color: rgba(var(--bs-light-rgb), 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fruite .fruite-item .fruite-img img {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+/* Softer hover than template scale(1.3) — still a hint of zoom */
+.fruite .fruite-item .fruite-img img:hover {
+  transform: scale(1.06);
+}
+
+/* Product title — cap lines + fixed block so long names don’t stretch cards unevenly */
+.fruite .fruite-item h4 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  word-break: break-word;
+  line-height: 1.35;
+  font-size: clamp(0.85rem, 2.4vw, 1.25rem);
+  margin-bottom: 0.65rem;
+  min-height: calc(1.35em * 3);
+}

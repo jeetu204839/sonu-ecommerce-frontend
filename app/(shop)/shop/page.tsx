@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Categories from "../component/Categories";
 
 
 export default function ShopPage() {
@@ -17,69 +18,14 @@ export default function ShopPage() {
       </ol>
     </div>
 
-    <div className="container-fluid fruite py-2">
-      <div className="container">
-        <h1 className="mb-4">Fresh fruits shop</h1>
+    <div className="container-fluid fruite py-3">
+      <div className="container-fluid" style={{border: '1px solid #000'}}>
         <div className="row g-4">
           <div className="col-lg-12">
-            
-
             <div className="row g-4">
-              <div className="col-lg-3">
-                <div className="row g-4">
-                  <div className="col-lg-12">
-                    <div className="mb-3">
-                      <h4>Categories</h4>
-                      <ul className="list-unstyled fruite-categorie">
-                        <li>
-                          <div className="d-flex justify-content-between fruite-name">
-                            <a href="#">
-                              <i className="fas fa-apple-alt me-2"></i>Apples
-                            </a>
-                            <span>(3)</span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="d-flex justify-content-between fruite-name">
-                            <a href="#">
-                              <i className="fas fa-apple-alt me-2"></i>Oranges
-                            </a>
-                            <span>(5)</span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="d-flex justify-content-between fruite-name">
-                            <a href="#">
-                              <i className="fas fa-apple-alt me-2"></i>Strawberry
-                            </a>
-                            <span>(2)</span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="d-flex justify-content-between fruite-name">
-                            <a href="#">
-                              <i className="fas fa-apple-alt me-2"></i>Banana
-                            </a>
-                            <span>(8)</span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="d-flex justify-content-between fruite-name">
-                            <a href="#">
-                              <i className="fas fa-apple-alt me-2"></i>Pumpkin
-                            </a>
-                            <span>(5)</span>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-            
-               
-                  
-                </div>
-              </div>
+              
+             <Categories />
+
               <div className="col-lg-9">
                 <div className="row g-4 justify-content-center">
                   

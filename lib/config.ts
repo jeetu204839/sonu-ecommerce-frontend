@@ -17,6 +17,14 @@ export const PUBLIC_API_BASE_URL = normalizeBaseUrl(
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "",
 );
 
+/**
+ * Base URL for product/media files (e.g. uploads). Used to build image URLs from
+ * filenames like "1776095463193.webp". No trailing slash.
+ */
+export const MEDIA_BASE_URL = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_MEDIA_BASE_URL ?? "",
+);
+
 export function assertApiBaseUrl(): void {
   if (!API_BASE_URL && process.env.NODE_ENV === "production") {
     throw new Error(

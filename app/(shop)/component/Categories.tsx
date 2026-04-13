@@ -6,7 +6,10 @@ import {
 } from "@/lib/api/categories";
 
 function categoryHref(slug: string): string {
-  return `/shop?category=${encodeURIComponent(slug)}`;
+  const q = new URLSearchParams();
+  q.set("page", "1");
+  q.set("category", slug);
+  return `/shop?${q.toString()}`;
 }
 
 function CategoryRow({ cat }: Readonly<{ cat: CategoryListItem }>) {
@@ -19,7 +22,7 @@ function CategoryRow({ cat }: Readonly<{ cat: CategoryListItem }>) {
           <i className={`${iconClass} me-2`} aria-hidden="true" />
           {cat.name}
         </Link>
-        <span>({cat.productCount})</span>
+        <span>({cat.productCount}) {JSON.stringify(cat)} </span>
       </div>
       {cat.children.length > 0 ? (
         <ul className="list-unstyled ms-3 mt-2 small">

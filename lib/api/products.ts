@@ -53,9 +53,10 @@ export type ShopProductCard = {
   excerpt: string;
 };
 
-const PLACEHOLDER_IMG = "/img/belcha-garden-round-hand.webp";
+const PLACEHOLDER_IMG = "/img/coming-soon.png";
 
 function pickPrimaryImage(product: ProductDto): string | null {
+  console.log('product', product.productImages);
   const list = product.productImages;
   if (!list?.length) return null;
   const primary = list.find((i) => i.isPrimary);

@@ -84,7 +84,7 @@ function mapRow(raw: RawCategory, index: number): CategoryListItem {
   const isActive = pickBool(raw, ["is_active", "isActive", "active"], true);
   const productCount = pickNumber(
     raw,
-    ["product_count", "products_count", "count", "total", "items_count"],
+    ["productCount"],
     0,
   );
 
@@ -110,5 +110,6 @@ function mapRow(raw: RawCategory, index: number): CategoryListItem {
 export async function fetchCategories(): Promise<CategoryListItem[]> {
   const payload = await apiFetchJson<unknown>("/public/categories");
   const rows = normalizeCategoryRows(payload);
+  console.log('rows', rows);
   return rows.map((row, index) => mapRow(row, index));
 }

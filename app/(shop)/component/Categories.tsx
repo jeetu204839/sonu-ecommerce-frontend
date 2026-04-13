@@ -22,7 +22,7 @@ function CategoryRow({ cat }: Readonly<{ cat: CategoryListItem }>) {
           <i className={`${iconClass} me-2`} aria-hidden="true" />
           {cat.name}
         </Link>
-        <span>({cat.productCount}) {JSON.stringify(cat)} </span>
+        <span>({cat.productCount})</span>
       </div>
       {cat.children.length > 0 ? (
         <ul className="list-unstyled ms-3 mt-2 small">

@@ -2,20 +2,18 @@ import { apiFetchJson } from "@/lib/api/client";
 
 /**
  * Categories API: GET {API_BASE_URL}/public/categories
- *
- * Step-by-step (how this fits together):
- * 1. `.env.local` sets `API_BASE_URL` (no trailing slash), e.g. http://127.0.0.1:8000/api
- * 2. `apiFetchJson("/public/categories")` builds the full URL and safely parses JSON
- * 3. Backend may return a raw array, or `{ data: [...] }`, or `{ categories: [...] }` —
- *    `normalizeCategoryRows` handles common shapes
- * 4. Each row is mapped to `CategoryListItem` for the UI (name, count, link)
  */
 
 export type CategoryListItem = {
   id: string;
   name: string;
-  count: number | null;
-  href: string;
+  slug: string;
+  description?: string;
+  image?: string;
+  icon?: string;
+  isActive: boolean;
+  productCount: number;
+  children: CategoryListItem[];
 };
 
 type RawCategory = Record<string, unknown>;
@@ -27,20 +25,38 @@ function toStringId(value: unknown, fallback: number): string {
   return String(fallback);
 }
 
-function pickName(raw: RawCategory): string {
-  const n = raw.name ?? raw.title ?? raw.category_name;
-  return typeof n === "string" && n.trim() ? n : "Category";
+function optionalString(raw: RawCategory, keys: string[]): string | undefined {
+  for (const key of keys) {
+    const v = raw[key];
+    if (typeof v === "string" && v.trim()) return v;
+  }
+  return undefined;
 }
 
-function pickCount(raw: RawCategory): number | null {
-  const c =
-    raw.count ?? raw.product_count ?? raw.products_count ?? raw.total ?? raw.items_count;
-  if (typeof c === "number" && !Number.isNaN(c)) return c;
-  if (typeof c === "string") {
-    const parsed = Number.parseInt(c, 10);
-    return Number.isNaN(parsed) ? null : parsed;
+function pickString(raw: RawCategory, keys: string[], fallback: string): string {
+  return optionalString(raw, keys) ?? fallback;
+}
+
+function pickBool(raw: RawCategory, keys: string[], fallback: boolean): boolean {
+  for (const key of keys) {
+    const v = raw[key];
+    if (typeof v === "boolean") return v;
+    if (v === 1 || v === "1") return true;
+    if (v === 0 || v === "0") return false;
   }
-  return null;
+  return fallback;
+}
+
+function pickNumber(raw: RawCategory, keys: string[], fallback: number): number {
+  for (const key of keys) {
+    const v = raw[key];
+    if (typeof v === "number" && !Number.isNaN(v)) return v;
+    if (typeof v === "string") {
+      const parsed = Number.parseInt(v, 10);
+      if (!Number.isNaN(parsed)) return parsed;
+    }
+  }
+  return fallback;
 }
 
 function normalizeCategoryRows(payload: unknown): RawCategory[] {
@@ -55,12 +71,40 @@ function normalizeCategoryRows(payload: unknown): RawCategory[] {
 
 function mapRow(raw: RawCategory, index: number): CategoryListItem {
   const id = toStringId(raw.id ?? raw.slug, index);
-  const name = pickName(raw);
-  const count = pickCount(raw);
-  const slug =
-    typeof raw.slug === "string" && raw.slug.trim() ? raw.slug : id;
-  const href = `/shop?category=${encodeURIComponent(slug)}`;
-  return { id, name, count, href };
+  const name = pickString(raw, ["name", "title", "category_name"], "Category");
+  const slug = pickString(raw, ["slug"], id);
+
+  const description = optionalString(raw, [
+    "description",
+    "category_description",
+  ]);
+  const image = optionalString(raw, ["image", "image_url", "thumbnail"]);
+  const icon = optionalString(raw, ["icon"]);
+
+  const isActive = pickBool(raw, ["is_active", "isActive", "active"], true);
+  const productCount = pickNumber(
+    raw,
+    ["product_count", "products_count", "count", "total", "items_count"],
+    0,
+  );
+
+  let children: CategoryListItem[] = [];
+  const nested = raw.children ?? raw.subcategories;
+  if (Array.isArray(nested)) {
+    children = nested.map((row, i) => mapRow(row as RawCategory, i));
+  }
+
+  return {
+    id,
+    name,
+    slug,
+    description,
+    image,
+    icon,
+    isActive,
+    productCount,
+    children,
+  };
 }
 
 export async function fetchCategories(): Promise<CategoryListItem[]> {

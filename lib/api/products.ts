@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { apiFetchJson } from "@/lib/api/client";
 import { MEDIA_BASE_URL } from "@/lib/config";
 
@@ -53,10 +55,11 @@ export type ShopProductCard = {
   excerpt: string;
 };
 
-const PLACEHOLDER_IMG = "/img/coming-soon.png";
+export const PLACEHOLDER_PRODUCT_IMAGE = "/img/coming-soon.png";
+
+const PLACEHOLDER_IMG = PLACEHOLDER_PRODUCT_IMAGE;
 
 function pickPrimaryImage(product: ProductDto): string | null {
-  console.log('product', product.productImages);
   const list = product.productImages;
   if (!list?.length) return null;
   const primary = list.find((i) => i.isPrimary);
@@ -138,3 +141,135 @@ export async function fetchProductsPage(options: {
     message: payload.message,
   };
 }
+
+/** GET {API_BASE_URL}/public/products/detail/{slug} */
+export type ProductDetailImageDto = {
+  id: number;
+  imageUrl: string;
+  isPrimary: boolean;
+};
+
+export type ProductDetailAttributeOptionDto = {
+  id: number;
+  name: string;
+};
+
+export type ProductDetailAttributeDto = {
+  id: number;
+  value: string;
+  attributeId: number;
+  attribute: ProductDetailAttributeOptionDto[];
+};
+
+export type ProductDetailCategoryDto = {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+};
+
+export type ProductDetailVendorDto = {
+  storeName: string;
+  storeSlug: string;
+  isVerified: boolean;
+};
+
+export type ProductDetailDto = {
+  id: number;
+  name: string;
+  slug: string;
+  sku: string;
+  shortDescription: string | null;
+  longDescription: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  mrp: number;
+  price: number;
+  discountPercent: number;
+  stock: number;
+  weight: number;
+  weightUnit: string;
+  length: number;
+  lengthUnit: string;
+  width: number;
+  widthUnit: string;
+  height: number;
+  heightUnit: string;
+  stockStatus: string;
+  isFeatured: boolean;
+  category: ProductDetailCategoryDto;
+  vendor: ProductDetailVendorDto;
+  productImages?: ProductDetailImageDto[];
+  attributes?: ProductDetailAttributeDto[];
+};
+
+export type ProductDetailApiEnvelope = {
+  status: boolean;
+  message: string;
+  data: { product: ProductDetailDto } | null;
+  errors: unknown;
+};
+
+export function galleryImagesFromProduct(
+  product: Pick<ProductDetailDto, "name" | "productImages">,
+): { src: string; alt: string }[] {
+  const raw = product.productImages?.filter((i) => i.imageUrl?.trim()) ?? [];
+  const sorted = [...raw].sort((a, b) => {
+    if (a.isPrimary === b.isPrimary) return a.id - b.id;
+    return a.isPrimary ? -1 : 1;
+  });
+  if (sorted.length === 0) {
+    return [{ src: PLACEHOLDER_IMG, alt: product.name }];
+  }
+  return sorted.map((i) => ({
+    src: resolveProductImageUrl(i.imageUrl),
+    alt: product.name,
+  }));
+}
+
+export type FetchProductDetailResult = {
+  product: ProductDetailDto | null;
+  message: string;
+};
+
+async function fetchProductDetailImpl(
+  slug: string,
+): Promise<FetchProductDetailResult> {
+  const trimmed = slug.trim();
+  if (!trimmed) {
+    return { product: null, message: "Missing product slug." };
+  }
+
+  const path = `/public/products/detail/${encodeURIComponent(trimmed)}`;
+  let payload: ProductDetailApiEnvelope | null;
+  try {
+    payload = await apiFetchJson<ProductDetailApiEnvelope>(path, {
+      cache: "no-store",
+      throwOnError: false,
+    });
+  } catch (e) {
+    return {
+      product: null,
+      message:
+        e instanceof Error
+          ? e.message
+          : "Unable to reach the product API. Check API_BASE_URL and that the backend is running.",
+    };
+  }
+
+  if (!payload) {
+    return { product: null, message: "Empty response from server." };
+  }
+
+  if (!payload.status || !payload.data?.product) {
+    return {
+      product: null,
+      message: payload.message || "Product not found.",
+    };
+  }
+
+  return { product: payload.data.product, message: payload.message };
+}
+
+/** Cached per request so `generateMetadata` and the page share one fetch. */
+export const fetchProductDetail = cache(fetchProductDetailImpl);

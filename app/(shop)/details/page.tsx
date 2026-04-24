@@ -1,74 +1,168 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
+import {
+  fetchProductDetail,
+  galleryImagesFromProduct,
+  type ProductDetailDto,
+} from "@/lib/api/products";
+
+import ProductEnquiryModal from "./ProductEnquiryModal";
 import ProductGallery from "./ProductGallery";
 
-const PRODUCT = {
-  name: "India Mark 2 Cast Iron Hand Pump — Complete Unit",
-  sku: "RE-HP-IM2-001",
-  price: 12499,
-  currency: "INR",
-  badge: "BIS-aligned hardware",
-  shortLead: "Usually ships in 3–5 business days",
-  images: [
-    {
-      src: "/img/india-mark-2-hand-pump.webp",
-      alt: "India Mark 2 hand pump — front three-quarter view",
-    },
-    {
-      src: "/img/cast-iron-hand-pump.webp",
-      alt: "Cast iron hand pump body and handle assembly",
-    },
-    {
-      src: "/img/hand-pump-cylinder.webp",
-      alt: "Cylinder and plunger components detail",
-    },
-    {
-      src: "/img/hand-pump-gi-pipes.webp",
-      alt: "GI pipe connections included in kit context",
-    },
-  ],
-};
+type PageProps = Readonly<{
+  searchParams: Promise<{
+    slug?: string;
+    enquiryThanks?: string;
+    enquiryError?: string;
+  }>;
+}>;
 
-export const metadata: Metadata = {
-  title: `${PRODUCT.name} | Ray Enterprises`,
-  description:
-    "Full specifications for India Mark 2 compatible cast iron hand pump — rural water supply, deep-well ready hardware, factory-checked components.",
-};
+export async function generateMetadata({
+  searchParams,
+}: PageProps): Promise<Metadata> {
+  const sp = await searchParams;
+  const slug = sp.slug?.trim();
+  if (!slug) {
+    return {
+      title: "Product detail | Ray Enterprises",
+      description: "Browse product specifications and request a quote.",
+    };
+  }
 
-export default function DetailsPage() {
+  const { product } = await fetchProductDetail(slug);
+  if (!product) {
+    return { title: "Product not found | Ray Enterprises" };
+  }
+
+  const description =
+    product.metaDescription?.trim() ||
+    product.shortDescription?.trim() ||
+    product.longDescription?.trim() ||
+    `Buy ${product.name} online.`;
+
+  return {
+    title: `${product.metaTitle?.trim() || product.name} | Ray Enterprises`,
+    description,
+  };
+}
+
+function stockLabel(stockStatus: string): string {
+  const s = stockStatus.toUpperCase();
+  if (s === "IN_STOCK") return "In stock";
+  if (s === "OUT_OF_STOCK") return "Out of stock";
+  return stockStatus.replaceAll("_", " ").toLowerCase();
+}
+
+function specRows(product: ProductDetailDto) {
+  const rows: { label: string; value: string }[] = [
+    { label: "SKU", value: product.sku },
+    {
+      label: "Weight",
+      value: `${product.weight} ${product.weightUnit}`,
+    },
+    {
+      label: "Dimensions (L × W × H)",
+      value: `${product.length} ${product.lengthUnit} × ${product.width} ${product.widthUnit} × ${product.height} ${product.heightUnit}`,
+    },
+    { label: "Category", value: product.category.name },
+    {
+      label: "Seller",
+      value: product.vendor.isVerified
+        ? `${product.vendor.storeName} (verified)`
+        : product.vendor.storeName,
+    },
+    { label: "Stock on hand", value: String(product.stock) },
+    { label: "Availability", value: stockLabel(product.stockStatus) },
+  ];
+
+  for (const row of product.attributes ?? []) {
+    const options = row.attribute?.map((a) => a.name).filter(Boolean) ?? [];
+    if (row.value && options.length) {
+      rows.push({ label: row.value, value: options.join(", ") });
+    }
+  }
+
+  return rows;
+}
+
+export default async function DetailsPage({ searchParams }: PageProps) {
+  const sp = await searchParams;
+  const slug = sp.slug?.trim();
+  const enquiryThanks = sp.enquiryThanks === "1";
+  const enquiryError = sp.enquiryError === "1";
+
+  if (!slug) {
+    return (
+      <div className="container-fluid page-header py-4 py-lg-5">
+        <div className="container text-center text-white">
+          <h1 className="display-6 fw-bold mb-3 text-white">Product detail</h1>
+          <p className="text-white-50 mb-4">
+            Open a product from the shop to see its full listing.
+          </p>
+          <Link
+            href="/shop"
+            className="btn btn-light btn-lg rounded-pill px-4 fw-semibold"
+          >
+            Go to shop
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const { product, message } = await fetchProductDetail(slug);
+  if (!product) {
+    notFound();
+  }
+
+  const images = galleryImagesFromProduct(product);
+  const detailUrl = `/details?slug=${encodeURIComponent(product.slug)}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: PRODUCT.name,
-    image: PRODUCT.images.map((i) => i.src),
-    sku: PRODUCT.sku,
-    brand: { "@type": "Brand", name: "Ray Enterprises" },
+    name: product.name,
+    image: images.map((i) => i.src),
+    sku: product.sku,
+    brand: { "@type": "Brand", name: product.vendor.storeName },
     offers: {
       "@type": "Offer",
-      priceCurrency: PRODUCT.currency,
-      price: PRODUCT.price,
-      availability: "https://schema.org/InStock",
-      url: "/details",
+      priceCurrency: "INR",
+      price: product.price,
+      availability:
+        product.stockStatus === "IN_STOCK"
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      url: detailUrl,
     },
   };
 
+  const overviewText =
+    product.longDescription?.trim() ||
+    product.shortDescription?.trim() ||
+    "Full description will appear here when provided by the seller.";
+
+  const badge = product.isFeatured
+    ? "Featured"
+    : product.category.name;
+
   const related = [
     {
-      href: "/details",
+      href: "/shop",
       img: "/img/check-valve.webp",
       title: "CI check valve — handi",
       price: "₹2,499",
     },
     {
-      href: "/details",
+      href: "/shop",
       img: "/img/hose-nipple.webp",
       title: "CI hose nipple",
       price: "₹349",
     },
     {
-      href: "/details",
+      href: "/shop",
       img: "/img/pipe-hooks.webp",
       title: 'GI J-shape pipe hook — 4"',
       price: "₹189",
@@ -93,13 +187,23 @@ export default function DetailsPage() {
                 </Link>
               </li>
               <li className="breadcrumb-item">
-                <span className="text-white-50">Shop</span>
+                <Link href="/shop" className="text-white text-decoration-none">
+                  Shop
+                </Link>
+              </li>
+              <li className="breadcrumb-item">
+                <Link
+                  href={`/shop?category=${encodeURIComponent(product.category.slug)}`}
+                  className="text-white text-decoration-none"
+                >
+                  {product.category.name}
+                </Link>
               </li>
               <li
                 className="breadcrumb-item active text-white-50"
                 aria-current="page"
               >
-                {PRODUCT.name}
+                {product.name}
               </li>
             </ol>
           </nav>
@@ -107,40 +211,71 @@ export default function DetailsPage() {
       </div>
 
       <div className="container py-5">
+        {enquiryThanks ? (
+          <div
+            className="alert alert-success border-0 shadow-sm mb-4"
+            role="status"
+          >
+            <i className="fas fa-check-circle me-2" aria-hidden="true" />
+            Thank you—your enquiry has been received. We will get back to you
+            shortly.
+          </div>
+        ) : null}
+        {enquiryError ? (
+          <div className="alert alert-warning border-0 shadow-sm mb-4" role="alert">
+            <i className="fas fa-exclamation-triangle me-2" aria-hidden="true" />
+            Please fill in your name, email, contact number, and description so we
+            can assist you.
+          </div>
+        ) : null}
+
         <div className="row g-4 g-xl-5 align-items-start">
           <div className="col-lg-6">
-            <ProductGallery
-              images={PRODUCT.images}
-              productName={PRODUCT.name}
-            />
+            <ProductGallery images={images} productName={product.name} />
           </div>
 
           <div className="col-lg-6">
-            <span className="badge bg-secondary text-dark mb-2">
-              {PRODUCT.badge}
-            </span>
-            <h2 className="h2 text-primary mb-2">{PRODUCT.name}</h2>
+            <span className="badge bg-secondary text-dark mb-2">{badge}</span>
+            <h2 className="h2 text-primary mb-2">{product.name}</h2>
             <p className="text-muted small mb-1">
-              SKU: <span className="text-dark">{PRODUCT.sku}</span>
+              SKU: <span className="text-dark">{product.sku}</span>
             </p>
-            <p className="fs-3 fw-bold text-dark mb-3">
-              ₹{PRODUCT.price.toLocaleString("en-IN")}{" "}
-              <span className="fs-6 fw-normal text-muted">
+            <div className="fs-3 fw-bold text-dark mb-3 d-flex flex-wrap align-items-baseline gap-2">
+              <span>₹{product.price.toLocaleString("en-IN")}</span>
+              {product.mrp > product.price ? (
+                <>
+                  <span className="fs-6 fw-normal text-muted text-decoration-line-through">
+                    ₹{product.mrp.toLocaleString("en-IN")}
+                  </span>
+                  <span className="fs-6 fw-semibold text-success">
+                    {product.discountPercent}% off
+                  </span>
+                </>
+              ) : null}
+              <span className="fs-6 fw-normal text-muted w-100">
                 incl. GST where applicable
               </span>
-            </p>
+            </div>
+
+            {product.shortDescription?.trim() ? (
+              <p className="text-secondary mb-4">{product.shortDescription}</p>
+            ) : null}
 
             <ul className="text-secondary small mb-4 ps-3">
               <li>
-                Deep-well compatible when paired with correct riser pipes (sold
-                separately).
+                Sold by{" "}
+                <span className="fw-semibold text-dark">
+                  {product.vendor.storeName}
+                </span>
+                {product.vendor.isVerified ? " (verified store)" : ""}.
               </li>
+              <li>Category: {product.category.name}.</li>
               <li>
-                Cast iron body and proven lever geometry for daily community use.
-              </li>
-              <li>
-                QC checklist: pressure seating, thread fit, and finish
-                inspection.
+                Availability:{" "}
+                <span className="text-dark">{stockLabel(product.stockStatus)}</span>
+                {product.stock > 0
+                  ? ` — ${product.stock} unit(s) available.`
+                  : "."}
               </li>
             </ul>
 
@@ -156,20 +291,29 @@ export default function DetailsPage() {
                   id="qty"
                   type="number"
                   min={1}
+                  max={product.stock > 0 ? product.stock : undefined}
                   defaultValue={1}
                   className="form-control border-secondary"
                   style={{ width: "5.5rem" }}
                 />
               </div>
-              <div className="d-flex flex-column gap-2 flex-grow-1" style={{ minWidth: "min(100%, 18rem)" }}>
-                <Link
-                  href={`/contact?sku=${encodeURIComponent(PRODUCT.sku)}`}
-                  className="btn btn-primary btn-lg d-inline-flex align-items-center justify-content-center gap-2 px-4 px-xl-5 py-3 rounded-pill fw-semibold text-decoration-none shadow"
-                  style={{ letterSpacing: "0.03em" }}
-                >
-                  <i className="fas fa-envelope-open-text" aria-hidden="true" />
-                  Request enquiry
-                </Link>
+              <div
+                className="d-flex flex-column gap-2 flex-grow-1"
+                style={{ minWidth: "min(100%, 18rem)" }}
+              >
+                <div className="d-inline-flex flex-column align-items-stretch align-items-sm-start gap-2">
+                  <ProductEnquiryModal
+                    productSlug={product.slug}
+                    productName={product.name}
+                    productSku={product.sku}
+                  />
+                  <Link
+                    href={`/contact?sku=${encodeURIComponent(product.sku)}`}
+                    className="small text-muted text-center text-sm-start align-self-center align-self-sm-start"
+                  >
+                    Prefer the full contact page?
+                  </Link>
+                </div>
                 <span className="small text-muted text-center text-sm-start">
                   Share your requirement—we will quote availability &amp; freight.
                 </span>
@@ -186,7 +330,7 @@ export default function DetailsPage() {
 
             <p className="small text-success mb-0">
               <i className="fas fa-truck me-1" aria-hidden="true" />
-              {PRODUCT.shortLead}
+              {message}
             </p>
           </div>
         </div>
@@ -239,19 +383,8 @@ export default function DetailsPage() {
               aria-labelledby="tab-desc"
             >
               <h3 className="h5 text-primary mb-3">Product overview</h3>
-              <p className="text-secondary mb-3">
-                This listing is structured for buyers who need a dependable hand
-                pump platform for bore-wells and open wells in rural and
-                semi-urban installations. The assembly prioritizes
-                serviceability: wearable parts are accessible without specialist
-                tools, and threads are cut for compatibility with standard GI
-                riser inventory carried by most dealers.
-              </p>
-              <p className="text-secondary mb-0">
-                Use this page as your canonical product story: pair it with
-                datasheets from your supplier, torque notes for flange joints,
-                and any statutory certifications you hold—those PDFs can be
-                linked from your CMS or admin later.
+              <p className="text-secondary mb-0" style={{ whiteSpace: "pre-wrap" }}>
+                {overviewText}
               </p>
             </div>
 
@@ -265,45 +398,20 @@ export default function DetailsPage() {
               <div className="table-responsive">
                 <table className="table table-bordered table-striped mb-0">
                   <tbody>
-                    <tr>
-                      <th className="w-25 bg-light">Material</th>
-                      <td>Cast iron body; steel / GI hardware as per BOM</td>
-                    </tr>
-                    <tr>
-                      <th className="bg-light">Typical discharge</th>
-                      <td>
-                        Subject to static head and cylinder pairing (refer pump
-                        curve)
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="bg-light">Handle / lever</th>
-                      <td>Ergonomic lever; service bolt access on site</td>
-                    </tr>
-                    <tr>
-                      <th className="bg-light">Threads / fit</th>
-                      <td>
-                        Standard pipe threads for dealer inventory; verify before
-                        install
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="bg-light">Finish</th>
-                      <td>Anti-rust primer recommended for coastal storage</td>
-                    </tr>
-                    <tr>
-                      <th className="bg-light">Packaging</th>
-                      <td>
-                        Wooden crate / strapped pallet — varies by dispatch lane
-                      </td>
-                    </tr>
+                    {specRows(product).map((row, idx) => (
+                      <tr key={`${idx}-${row.label}`}>
+                        <th className="w-25 bg-light">{row.label}</th>
+                        <td>{row.value}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
-              <p className="small text-muted mt-3 mb-0">
-                Values are representative for ecommerce display. Replace with
-                certified numbers from your test reports and supplier drawings.
-              </p>
+              {product.category.description?.trim() ? (
+                <p className="small text-muted mt-3 mb-0">
+                  {product.category.description}
+                </p>
+              ) : null}
             </div>
 
             <div

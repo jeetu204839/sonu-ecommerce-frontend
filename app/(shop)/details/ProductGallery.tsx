@@ -8,6 +8,10 @@ type ProductGalleryProps = Readonly<{
   productName: string;
 }>;
 
+function isRemoteImageSrc(src: string): boolean {
+  return src.startsWith("http://") || src.startsWith("https://");
+}
+
 export default function ProductGallery({
   images,
   productName,
@@ -39,15 +43,28 @@ export default function ProductGallery({
       >
         <div className="position-absolute top-0 start-0 w-100 h-100 p-2 p-md-4">
           <div className="position-relative h-100 w-100">
-            <Image
-              key={main.src}
-              src={main.src}
-              alt={main.alt}
-              fill
-              style={{ objectFit: "contain" }}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              priority
-            />
+            {isRemoteImageSrc(main.src) ? (
+              // eslint-disable-next-line @next/next/no-img-element -- API URLs: avoid optimizer fetching localhost/backend (often fails); browser loads fine.
+              <img
+                key={main.src}
+                src={main.src}
+                alt={main.alt}
+                className="position-absolute top-0 start-0 h-100 w-100"
+                style={{ objectFit: "contain" }}
+                fetchPriority="high"
+                decoding="async"
+              />
+            ) : (
+              <Image
+                key={main.src}
+                src={main.src}
+                alt={main.alt}
+                fill
+                style={{ objectFit: "contain" }}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+              />
+            )}
           </div>
         </div>
       </div>
@@ -61,7 +78,7 @@ export default function ProductGallery({
           const isActive = index === active;
           return (
             <button
-              key={img.src}
+              key={`${index}-${img.src}`}
               type="button"
               role="option"
               aria-selected={isActive}
@@ -72,14 +89,28 @@ export default function ProductGallery({
               onClick={() => setActive(index)}
               onKeyDown={(e) => onKeyNav(e, index)}
             >
-              <Image
-                src={img.src}
-                alt=""
-                width={64}
-                height={64}
-                className="w-100 h-100 rounded"
-                style={{ objectFit: "contain" }}
-              />
+              {isRemoteImageSrc(img.src) ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={img.src}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="w-100 h-100 rounded"
+                  style={{ objectFit: "contain" }}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <Image
+                  src={img.src}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="w-100 h-100 rounded"
+                  style={{ objectFit: "contain" }}
+                />
+              )}
             </button>
           );
         })}

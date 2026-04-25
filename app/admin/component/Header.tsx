@@ -5,9 +5,7 @@ const Header = () => {
   return (
     <>
       <header className="header">
-        <a href="javascript:void(0)" className="logo">
-          AdminLTE
-        </a>
+        <Link href="/admin/dashboard" className="logo">\  Admin </Link>
         {/* Header Navbar: style can be found in header.less */}
         <nav className="navbar navbar-static-top" role="navigation">
           {/* Sidebar toggle button*/}

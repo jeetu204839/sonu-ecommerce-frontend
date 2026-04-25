@@ -14,9 +14,7 @@ const Sidebar = () => {
             </div>
             <div className="pull-left info">
               <p>Hello, Jane</p>
-              <a href="#">
-                <i className="fa fa-circle text-success" /> Online
-              </a>
+              <Link href="/dashboard"> <i className="fa fa-circle text-success" /> Online</Link>
             </div>
           </div>
           {/* search form */}
@@ -135,24 +133,26 @@ const Sidebar = () => {
                 </li>
               </ul>
             </li>
+
             <li className="treeview">
               <a href="#">
-                <i className="fa fa-table" /> <span>Tables</span>
+                <i className="fa fa-table" /> <span>Attributes</span>
                 <i className="fa fa-angle-left pull-right" />
               </a>
               <ul className="treeview-menu">
                 <li>
-                  <a href="pages/tables/simple.html">
-                    <i className="fa fa-angle-double-right" /> Simple tables
-                  </a>
+                  <Link href="attributes">
+                    <i className="fa fa-angle-double-right" /> List
+                  </Link>
                 </li>
                 <li>
-                  <a href="pages/tables/data.html">
-                    <i className="fa fa-angle-double-right" /> Data tables
-                  </a>
+                  <Link href="attributes/create">
+                    <i className="fa fa-angle-double-right" /> Create
+                  </Link>
                 </li>
               </ul>
             </li>
+
             <li>
               <a href="pages/calendar.html">
                 <i className="fa fa-calendar" /> <span>Calendar</span>

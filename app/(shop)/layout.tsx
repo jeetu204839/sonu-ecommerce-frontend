@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-//import "./globals.css";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,25 +41,34 @@ export default function RootLayout({
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
 
         {/* Libraries Stylesheet */}
-        <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet" />
-        <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"></link>
+        <link href="/lib/lightbox/css/lightbox.min.css" rel="stylesheet" />
+        <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/brand-overrides.css" />
-
-        {/* JavaScript Libraries  */}
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/waypoints/waypoints.min.js"></script>
-        <script src="lib/lightbox/js/lightbox.min.js"></script>
-        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
       </head>
       <body className="">
         <Navigation /> {/* Add the Navigation component */}
         {children}
-        <Footer/>
+        <Footer />
+
+        {/* Load JS with next/script — raw <script> in RSC triggers a runtime error */}
+        <Script
+          src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+          strategy="afterInteractive"
+        />
+        <Script src="/lib/easing/easing.min.js" strategy="afterInteractive" />
+        <Script src="/lib/waypoints/waypoints.min.js" strategy="afterInteractive" />
+        <Script src="/lib/lightbox/js/lightbox.min.js" strategy="afterInteractive" />
+        <Script
+          src="/lib/owlcarousel/owl.carousel.min.js"
+          strategy="afterInteractive"
+        />
       </body> 
     </html>
   );

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Header from "./component/Header";
+import Sidebar from "./component/Sidebar";
 
 
 
@@ -35,7 +37,14 @@ export default function AdminLayout({
 
       </head>
       <body className="skin-blue">
-        {children}
+        <Header />
+
+        <div className="wrapper row-offcanvas row-offcanvas-left" >
+           <Sidebar />
+           <aside className="right-side">
+              {children}
+           </aside>
+        </div>
 
         {/* Keep legacy admin JS isolated to admin layout only */}
         <Script src="/admin/js/jquery.min.js" strategy="afterInteractive" />

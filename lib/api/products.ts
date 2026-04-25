@@ -114,6 +114,24 @@ export async function fetchProductsPage(options: {
   }
 
   const path = `/public/products?${params.toString()}`;
+  return fetchProductsByPath(path);
+}
+
+export async function fetchRandomProductsPage(options: {
+  page: number;
+  categorySlug?: string;
+}): Promise<FetchProductsResult> {
+  const page = Number.isFinite(options.page) && options.page > 0 ? options.page : 1;
+  const params = new URLSearchParams();
+  params.set("page", String(page));
+  if (options.categorySlug) {
+    params.set("category", options.categorySlug);
+  }
+  const path = `/public/products/random?${params.toString()}`;
+  return fetchProductsByPath(path);
+}
+
+async function fetchProductsByPath(path: string): Promise<FetchProductsResult> {
   const payload = await apiFetchJson<ProductsApiEnvelope>(path, {
     cache: "no-store",
   });

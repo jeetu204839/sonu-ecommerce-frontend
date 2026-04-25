@@ -43,10 +43,10 @@ export default async function Shop({ searchParams }: PageProps) {
           <div className="row g-5 align-items-center">
             <div className="col-md-12 col-lg-7">
               <h1 className="mb-5 display-3 text-primary">Premium Quality Cast Iron Products</h1>
-              {/* <div className="position-relative mx-auto">
+              <div className="position-relative mx-auto">
                 <input className="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number" placeholder="Search" />
                 <button type="submit" className="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100" style={{ top: '0', right: '25%' }}>Submit Now</button>
-              </div> */}
+              </div>
             </div>
             <div className="col-md-12 col-lg-5">
               <div id="carouselId" className="carousel slide position-relative" data-bs-ride="carousel">
@@ -155,7 +155,7 @@ export default async function Shop({ searchParams }: PageProps) {
                           className={`d-flex align-items-center justify-content-center px-3 py-1 py-lg-2 bg-light rounded-pill ${
                             selectedCategory === category.slug ? "active" : ""
                           }`}
-                          href={`/?category=${encodeURIComponent(category.slug)}`}
+                          href={`/category=${encodeURIComponent(category.slug)}`}
                           scroll={false}
                         >
                           <span className="text-dark text-nowrap shop-product-tab-label">

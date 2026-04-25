@@ -2,7 +2,9 @@ import type { NextConfig } from "next";
 
 function remotePatternsFromEnv(): NonNullable<
   NextConfig["images"]
->["remotePatterns"] {
+>["remotePatterns"] extends infer T
+  ? NonNullable<T>
+  : never {
   const base =
     process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
   if (!base.trim()) return [];
@@ -39,6 +41,14 @@ const nextConfig: NextConfig = {
       },
       ...remotePatternsFromEnv(),
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/category=:slug",
+        destination: "/?category=:slug",
+      },
+    ];
   },
 };
 

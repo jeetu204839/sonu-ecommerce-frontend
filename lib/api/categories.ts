@@ -110,6 +110,26 @@ function mapRow(raw: RawCategory, index: number): CategoryListItem {
 export async function fetchCategories(): Promise<CategoryListItem[]> {
   const payload = await apiFetchJson<unknown>("/public/categories");
   const rows = normalizeCategoryRows(payload);
-  console.log('rows', rows);
+  return rows.map((row, index) => mapRow(row, index));
+}
+
+type CategoriesEnvelope = {
+  status?: boolean;
+  message?: string;
+  data?: unknown;
+  errors?: unknown;
+};
+
+export async function fetchFeaturedCategories(): Promise<CategoryListItem[]> {
+  const payload = await apiFetchJson<CategoriesEnvelope>(
+    "/public/categories/feature",
+    {
+      cache: "no-store",
+      throwOnError: false,
+    },
+  );
+
+  if (!payload || payload.status === false) return [];
+  const rows = normalizeCategoryRows(payload.data ?? payload);
   return rows.map((row, index) => mapRow(row, index));
 }

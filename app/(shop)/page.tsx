@@ -1,5 +1,8 @@
 
-export default function Shop() {
+import { fetchFeaturedCategories } from "@/lib/api/categories";
+
+export default async function Shop() {
+  const featuredCategories = await fetchFeaturedCategories();
   return (
     <>
      
@@ -119,6 +122,8 @@ export default function Shop() {
               </div>
               <div className="col-12 col-lg-8 text-lg-end">
                 <div className="shop-product-tabs-scroll">
+
+                  {/* Product Tabs */}
                   <ul className="nav nav-pills d-flex flex-nowrap justify-content-lg-end gap-2 mb-3 mb-lg-5 pb-1">
                     <li className="nav-item flex-shrink-0">
                       <a
@@ -129,43 +134,21 @@ export default function Shop() {
                         <span className="text-dark text-nowrap shop-product-tab-label">All Products</span>
                       </a>
                     </li>
-                    <li className="nav-item flex-shrink-0">
-                      <a
-                        className="d-flex align-items-center justify-content-center px-3 py-1 py-lg-2 bg-light rounded-pill"
-                        data-bs-toggle="pill"
-                        href="#tab-2"
-                      >
-                        <span className="text-dark text-nowrap shop-product-tab-label">Vegetables</span>
-                      </a>
-                    </li>
-                    <li className="nav-item flex-shrink-0">
-                      <a
-                        className="d-flex align-items-center justify-content-center px-3 py-1 py-lg-2 bg-light rounded-pill"
-                        data-bs-toggle="pill"
-                        href="#tab-3"
-                      >
-                        <span className="text-dark text-nowrap shop-product-tab-label">Fruits</span>
-                      </a>
-                    </li>
-                    <li className="nav-item flex-shrink-0">
-                      <a
-                        className="d-flex align-items-center justify-content-center px-3 py-1 py-lg-2 bg-light rounded-pill"
-                        data-bs-toggle="pill"
-                        href="#tab-4"
-                      >
-                        <span className="text-dark text-nowrap shop-product-tab-label">Bread</span>
-                      </a>
-                    </li>
-                    <li className="nav-item flex-shrink-0">
-                      <a
-                        className="d-flex align-items-center justify-content-center px-3 py-1 py-lg-2 bg-light rounded-pill"
-                        data-bs-toggle="pill"
-                        href="#tab-5"
-                      >
-                        <span className="text-dark text-nowrap shop-product-tab-label">Meat</span>
-                      </a>
-                    </li>
+                    {featuredCategories.map((category) => (
+                      <li className="nav-item flex-shrink-0" key={category.id}>
+                        <a
+                          className="d-flex align-items-center justify-content-center px-3 py-1 py-lg-2 bg-light rounded-pill"
+                          data-bs-toggle="pill"
+                          href="#tab-1"
+                        >
+                          <span className="text-dark text-nowrap shop-product-tab-label">
+                            {category.name}
+                          </span>
+                        </a>
+                      </li>
+                    ))}
                   </ul>
+                  {/* Product Tabs */}
                 </div>
               </div>
             </div>

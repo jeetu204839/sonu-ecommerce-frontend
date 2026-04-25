@@ -141,12 +141,12 @@ const Sidebar = () => {
               </a>
               <ul className="treeview-menu">
                 <li>
-                  <Link href="attributes">
+                  <Link href="/admin/attributes">
                     <i className="fa fa-angle-double-right" /> List
                   </Link>
                 </li>
                 <li>
-                  <Link href="attributes/create">
+                  <Link href="/admin/attributes/create">
                     <i className="fa fa-angle-double-right" /> Create
                   </Link>
                 </li>

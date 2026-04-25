@@ -13,11 +13,7 @@ import ProductEnquiryModal from "./ProductEnquiryModal";
 import ProductGallery from "./ProductGallery";
 
 type PageProps = Readonly<{
-  searchParams: Promise<{
-    slug?: string;
-    enquiryThanks?: string;
-    enquiryError?: string;
-  }>;
+  searchParams: Promise<{ slug?: string }>;
 }>;
 
 export async function generateMetadata({
@@ -91,8 +87,6 @@ function specRows(product: ProductDetailDto) {
 export default async function DetailsPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const slug = sp.slug?.trim();
-  const enquiryThanks = sp.enquiryThanks === "1";
-  const enquiryError = sp.enquiryError === "1";
 
   if (!slug) {
     return (
@@ -211,24 +205,6 @@ export default async function DetailsPage({ searchParams }: PageProps) {
       </div>
 
       <div className="container py-5">
-        {enquiryThanks ? (
-          <div
-            className="alert alert-success border-0 shadow-sm mb-4"
-            role="status"
-          >
-            <i className="fas fa-check-circle me-2" aria-hidden="true" />
-            Thank you—your enquiry has been received. We will get back to you
-            shortly.
-          </div>
-        ) : null}
-        {enquiryError ? (
-          <div className="alert alert-warning border-0 shadow-sm mb-4" role="alert">
-            <i className="fas fa-exclamation-triangle me-2" aria-hidden="true" />
-            Please fill in your name, email, contact number, and description so we
-            can assist you.
-          </div>
-        ) : null}
-
         <div className="row g-4 g-xl-5 align-items-start">
           <div className="col-lg-6">
             <ProductGallery images={images} productName={product.name} />
@@ -303,7 +279,7 @@ export default async function DetailsPage({ searchParams }: PageProps) {
               >
                 <div className="d-inline-flex flex-column align-items-stretch align-items-sm-start gap-2">
                   <ProductEnquiryModal
-                    productSlug={product.slug}
+                    productId={product.id}
                     productName={product.name}
                     productSku={product.sku}
                   />

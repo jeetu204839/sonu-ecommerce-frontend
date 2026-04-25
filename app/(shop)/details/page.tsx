@@ -52,7 +52,11 @@ function stockLabel(stockStatus: string): string {
   return stockStatus.replaceAll("_", " ").toLowerCase();
 }
 
-function specRows(product: ProductDetailDto) {
+function specRows(
+  product: ProductDetailDto,
+  sellerName: string,
+  sellerVerified: boolean,
+) {
   const rows: { label: string; value: string }[] = [
     { label: "SKU", value: product.sku },
     {
@@ -66,9 +70,7 @@ function specRows(product: ProductDetailDto) {
     { label: "Category", value: product.category.name },
     {
       label: "Seller",
-      value: product.vendor.isVerified
-        ? `${product.vendor.storeName} (verified)`
-        : product.vendor.storeName,
+      value: sellerVerified ? `${sellerName} (verified)` : sellerName,
     },
     { label: "Stock on hand", value: String(product.stock) },
     { label: "Availability", value: stockLabel(product.stockStatus) },
@@ -113,14 +115,16 @@ export default async function DetailsPage({ searchParams }: PageProps) {
   }
 
   const images = galleryImagesFromProduct(product);
-  const detailUrl = `/details?slug=${encodeURIComponent(product.slug)}`;
+  const sellerName = product.vendor?.storeName?.trim() || "Unknown seller";
+  const sellerVerified = Boolean(product.vendor?.isVerified);
+  const detailUrl = `/details/${encodeURIComponent(product.slug)}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
     image: images.map((i) => i.src),
     sku: product.sku,
-    brand: { "@type": "Brand", name: product.vendor.storeName },
+    brand: { "@type": "Brand", name: sellerName },
     offers: {
       "@type": "Offer",
       priceCurrency: "INR",
@@ -240,10 +244,8 @@ export default async function DetailsPage({ searchParams }: PageProps) {
             <ul className="text-secondary small mb-4 ps-3">
               <li>
                 Sold by{" "}
-                <span className="fw-semibold text-dark">
-                  {product.vendor.storeName}
-                </span>
-                {product.vendor.isVerified ? " (verified store)" : ""}.
+                <span className="fw-semibold text-dark">{sellerName}</span>
+                {sellerVerified ? " (verified store)" : ""}.
               </li>
               <li>Category: {product.category.name}.</li>
               <li>
@@ -374,7 +376,7 @@ export default async function DetailsPage({ searchParams }: PageProps) {
               <div className="table-responsive">
                 <table className="table table-bordered table-striped mb-0">
                   <tbody>
-                    {specRows(product).map((row, idx) => (
+                    {specRows(product, sellerName, sellerVerified).map((row, idx) => (
                       <tr key={`${idx}-${row.label}`}>
                         <th className="w-25 bg-light">{row.label}</th>
                         <td>{row.value}</td>

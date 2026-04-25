@@ -39,8 +39,9 @@ const Navigation = () => {
                 <Link href="/" className="nav-item nav-link active">Home</Link>
 
                 <Link href="/shop" className="nav-item nav-link"> Shop </Link>
-                <Link href="/details" className="nav-item nav-link">Detail </Link>
-                <div className="nav-item dropdown">
+                <Link href="/search" className="nav-item nav-link">Search </Link>
+
+                {/* <div className="nav-item dropdown">
                   <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown"  >   Pages </a>
                   <div className="dropdown-menu m-0 bg-secondary rounded-0">
                     <a href="/cart" className="dropdown-item">
@@ -56,7 +57,8 @@ const Navigation = () => {
                       404 Page
                     </a>
                   </div>
-                </div>
+                </div> */}
+
                 <Link href="/contact" className="nav-item nav-link">Contact</Link>
               </div>
               <div className="d-flex m-3 me-0">

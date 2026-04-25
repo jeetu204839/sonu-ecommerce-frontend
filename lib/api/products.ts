@@ -55,6 +55,43 @@ export type ShopProductCard = {
   excerpt: string;
 };
 
+/** Row for search / listing tables (API may return extra fields). */
+export type SearchProductTableRow = ShopProductCard & {
+  sku: string;
+  categoryName: string;
+  vendorName: string;
+  vendorVerified: boolean;
+  stockStatus: string;
+};
+
+type ProductSearchRaw = ProductDto & {
+  sku?: string;
+  category?: { name?: string };
+  vendor?: { storeName?: string; isVerified?: boolean };
+  stockStatus?: string;
+};
+
+function toSearchTableRow(raw: ProductSearchRaw): SearchProductTableRow {
+  const card = toCard(raw);
+  return {
+    ...card,
+    sku: typeof raw.sku === "string" && raw.sku.trim() ? raw.sku.trim() : "—",
+    categoryName:
+      typeof raw.category?.name === "string" && raw.category.name.trim()
+        ? raw.category.name.trim()
+        : "—",
+    vendorName:
+      typeof raw.vendor?.storeName === "string" && raw.vendor.storeName.trim()
+        ? raw.vendor.storeName.trim()
+        : "—",
+    vendorVerified: Boolean(raw.vendor?.isVerified),
+    stockStatus:
+      typeof raw.stockStatus === "string" && raw.stockStatus.trim()
+        ? raw.stockStatus.trim()
+        : "—",
+  };
+}
+
 export const PLACEHOLDER_PRODUCT_IMAGE = "/img/coming-soon.png";
 
 const PLACEHOLDER_IMG = PLACEHOLDER_PRODUCT_IMAGE;
@@ -105,12 +142,16 @@ export type FetchProductsResult = {
 export async function fetchProductsPage(options: {
   page: number;
   categorySlug?: string;
+  searchTerm?: string;
 }): Promise<FetchProductsResult> {
   const page = Number.isFinite(options.page) && options.page > 0 ? options.page : 1;
   const params = new URLSearchParams();
   params.set("page", String(page));
   if (options.categorySlug) {
     params.set("category", options.categorySlug);
+  }
+  if (options.searchTerm?.trim()) {
+    params.set("search", options.searchTerm.trim());
   }
 
   const path = `/public/products?${params.toString()}`;
@@ -120,12 +161,16 @@ export async function fetchProductsPage(options: {
 export async function fetchRandomProductsPage(options: {
   page: number;
   categorySlug?: string;
+  searchTerm?: string;
 }): Promise<FetchProductsResult> {
   const page = Number.isFinite(options.page) && options.page > 0 ? options.page : 1;
   const params = new URLSearchParams();
   params.set("page", String(page));
   if (options.categorySlug) {
     params.set("category", options.categorySlug);
+  }
+  if (options.searchTerm?.trim()) {
+    params.set("search", options.searchTerm.trim());
   }
   const path = `/public/products/random?${params.toString()}`;
   return fetchProductsByPath(path);
@@ -155,6 +200,58 @@ async function fetchProductsByPath(path: string): Promise<FetchProductsResult> {
   const { products, pagination } = payload.data;
   return {
     products: (products ?? []).map(toCard),
+    pagination,
+    message: payload.message,
+  };
+}
+
+export type FetchProductSearchResult = {
+  rows: SearchProductTableRow[];
+  pagination: ProductsPagination | null;
+  message: string;
+};
+
+/** GET {API_BASE_URL}/public/products/search?page=1&search=... */
+export async function fetchProductSearchPage(options: {
+  page: number;
+  searchTerm: string;
+}): Promise<FetchProductSearchResult> {
+  const page = Number.isFinite(options.page) && options.page > 0 ? options.page : 1;
+  const term = options.searchTerm.trim();
+
+  const params = new URLSearchParams();
+  params.set("page", String(page));
+  if (term) {
+    params.set("search", term);
+  }
+  const path = `/public/products/search?${params.toString()}`;
+
+  const payload = await apiFetchJson<ProductsApiEnvelope>(path, {
+    cache: "no-store",
+    throwOnError: false,
+  });
+
+  if (!payload) {
+    return {
+      rows: [],
+      pagination: null,
+      message: "Empty response from server.",
+    };
+  }
+
+  if (!payload.status || !payload.data) {
+    return {
+      rows: [],
+      pagination: null,
+      message: payload.message || "Could not load search results.",
+    };
+  }
+
+  const { products, pagination } = payload.data;
+  return {
+    rows: (products ?? []).map((p) =>
+      toSearchTableRow(p as ProductSearchRaw),
+    ),
     pagination,
     message: payload.message,
   };

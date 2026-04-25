@@ -42,8 +42,22 @@ const nextConfig: NextConfig = {
       ...remotePatternsFromEnv(),
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/details",
+        has: [{ type: "query", key: "slug", value: "(?<slug>.*)" }],
+        destination: "/details/:slug",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
+      {
+        source: "/details/:slug",
+        destination: "/details?slug=:slug",
+      },
       {
         source: "/category=:slug",
         destination: "/?category=:slug",

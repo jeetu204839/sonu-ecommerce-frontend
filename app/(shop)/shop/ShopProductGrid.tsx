@@ -53,7 +53,7 @@ export default function ShopProductGrid({
             <div className="rounded position-relative fruite-item h-100 d-flex flex-column">
               <div className="fruite-img">
                 <Link
-                  href={`/details?slug=${encodeURIComponent(p.slug)}`}
+                  href={`/details/${encodeURIComponent(p.slug)}`}
                   className="d-block"
                 >
                   <img
@@ -66,7 +66,7 @@ export default function ShopProductGrid({
               <div className="p-4 border border-secondary border-top-0 rounded-bottom flex-grow-1 d-flex flex-column">
                 <h4 className="h5">
                   <Link
-                    href={`/details?slug=${encodeURIComponent(p.slug)}`}
+                    href={`/details/${encodeURIComponent(p.slug)}`}
                     className="text-dark text-decoration-none"
                   >
                     {p.name}
@@ -92,11 +92,10 @@ export default function ShopProductGrid({
                     ) : null}
                   </div>
                   <Link
-                    href={`/details?slug=${encodeURIComponent(p.slug)}`}
+                    href={`/details/${encodeURIComponent(p.slug)}`}
                     className="btn border border-secondary rounded-pill px-3 text-primary d-inline-flex align-items-center gap-2"
                   >
-                    <i className="fa fa-shopping-bag text-primary" aria-hidden="true" />
-                    <span>Add to cart</span>
+                    <span>View Details</span>
                   </Link>
                 </div>
               </div>

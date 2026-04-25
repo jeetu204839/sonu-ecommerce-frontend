@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { fetchFeaturedCategories } from "@/lib/api/categories";
 import { fetchRandomProductsPage } from "@/lib/api/products";
+import SearchHeroForm from "./SearchHeroForm";
 
 type PageProps = Readonly<{
   searchParams: Promise<{ category?: string }>;
@@ -43,10 +44,7 @@ export default async function Shop({ searchParams }: PageProps) {
           <div className="row g-5 align-items-center">
             <div className="col-md-12 col-lg-7">
               <h1 className="mb-5 display-3 text-primary">Premium Quality Cast Iron Products</h1>
-              <div className="position-relative mx-auto">
-                <input className="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number" placeholder="Search" />
-                <button type="submit" className="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100" style={{ top: '0', right: '25%' }}>Submit Now</button>
-              </div>
+              <SearchHeroForm />
             </div>
             <div className="col-md-12 col-lg-5">
               <div id="carouselId" className="carousel slide position-relative" data-bs-ride="carousel">
@@ -197,7 +195,7 @@ export default async function Shop({ searchParams }: PageProps) {
                                 ₹{product.price.toLocaleString("en-IN")}
                               </p>
                               <Link
-                                href={`/details?slug=${encodeURIComponent(product.slug)}`}
+                                href={`/details/${encodeURIComponent(product.slug)}`}
                                 className="btn border border-secondary rounded-pill px-3 text-primary"
                               >
                                 View details

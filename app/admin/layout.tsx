@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import AdminLoaderProvider from "./component/AdminLoaderProvider";
 import Header from "./component/Header";
 import Sidebar from "./component/Sidebar";
 
@@ -34,6 +35,8 @@ export default function AdminLayout({
         <link href="/admin/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />
         {/* <!-- Theme style --> */}
         <link href="/admin/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+        {/* <!-- Next admin shell: restore content-header when wrapped by AdminLoaderProvider --> */}
+        <link href="/admin/css/admin-app-overrides.css" rel="stylesheet" type="text/css" />
 
       </head>
       <body className="skin-blue">
@@ -41,8 +44,8 @@ export default function AdminLayout({
 
         <div className="wrapper row-offcanvas row-offcanvas-left" >
            <Sidebar />
-           <aside className="right-side">
-              {children}
+           <aside className="right-side" style={{ position: "relative" }}>
+              <AdminLoaderProvider>{children}</AdminLoaderProvider>
            </aside>
         </div>
 

@@ -1,0 +1,83 @@
+/**
+ * Pages render inside .admin-loader-host, so .content-header is no longer a direct child
+ * of .right-side and AdminLTE's ".right-side > .content-header" rules do not apply.
+ * Re-apply the same layout as AdminLTE (title + small left, breadcrumb right).
+ */
+
+.right-side .admin-loader-host section.content-header {
+  position: relative;
+  padding: 15px 15px 10px 20px;
+}
+
+.right-side .admin-loader-host section.content-header > h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.right-side .admin-loader-host section.content-header > h1 > small {
+  font-size: 15px;
+  display: inline-block;
+  padding-left: 4px;
+  font-weight: 300;
+  color: #777;
+}
+
+.right-side .admin-loader-host section.content-header > .breadcrumb {
+  float: right;
+  background: transparent;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 12px;
+  padding: 7px 5px;
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  border-radius: 2px;
+  list-style: none;
+}
+
+.right-side .admin-loader-host section.content-header > .breadcrumb > li {
+  display: inline-block;
+}
+
+.right-side .admin-loader-host section.content-header > .breadcrumb > li > a {
+  color: #444;
+  text-decoration: none;
+}
+
+.right-side .admin-loader-host section.content-header > .breadcrumb > li > a > .fa,
+.right-side .admin-loader-host section.content-header > .breadcrumb > li > a > .glyphicon,
+.right-side .admin-loader-host section.content-header > .breadcrumb > li > a > .ion {
+  margin-right: 5px;
+}
+
+.right-side .admin-loader-host section.content-header > .breadcrumb > li + li:before {
+  content: ">\00a0";
+  padding: 0 5px;
+  color: #ccc;
+}
+
+.right-side .admin-loader-host section.content-header > .breadcrumb > .active {
+  color: #999;
+}
+
+@media screen and (max-width: 767px) {
+  .right-side .admin-loader-host section.content-header > .breadcrumb {
+    position: relative;
+    margin-top: 5px;
+    top: 0;
+    right: 0;
+    float: none;
+    background: #efefef;
+  }
+}
+
+.skin-blue .right-side .admin-loader-host section.content-header {
+  background: #fbfbfb;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.skin-black .right-side .admin-loader-host section.content-header {
+  background: transparent;
+  box-shadow: none;
+}

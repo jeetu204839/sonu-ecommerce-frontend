@@ -5,7 +5,7 @@ export default function Create() {
     <>
       <section className="content-header">
          create attributes
-      </section>``
+      </section>
     </>
   );
 }

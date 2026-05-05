@@ -25,6 +25,15 @@ function remotePatternsFromEnv(): NonNullable<
 }
 
 const nextConfig: NextConfig = {
+  /**
+   * Server Actions default body limit is 1 MB. Category forms upload multipart images.
+   * Set in both places so dev/prod pick it up across Next versions (see Next.js docs).
+   */
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "25mb",
+    },
+  },
   images: {
     remotePatterns: [
       {

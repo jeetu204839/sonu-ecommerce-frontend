@@ -153,6 +153,26 @@ const Sidebar = () => {
               </ul>
             </li>
 
+
+            <li className="treeview">
+              <a href="#">
+                <i className="fa fa-table" /> <span>Categories</span>
+                <i className="fa fa-angle-left pull-right" />
+              </a>
+              <ul className="treeview-menu">
+                <li>
+                  <Link href="/admin/categories">
+                    <i className="fa fa-angle-double-right" /> List
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/categories/create">
+                    <i className="fa fa-angle-double-right" /> Create
+                  </Link>
+                </li>
+              </ul>
+            </li>
+
             <li>
               <a href="pages/calendar.html">
                 <i className="fa fa-calendar" /> <span>Calendar</span>

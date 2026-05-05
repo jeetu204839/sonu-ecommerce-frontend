@@ -1,3 +1,5 @@
+/** Types returned by the backend for attribute list APIs. */
+
 export type AdminAttributesListData = {
   attributes: AdminAttributeRow[];
   pagination: AdminAttributesPagination;

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { fetchAdminAttributesPage } from "@/lib/admin/attributes";
+import { fetchAdminAttributesPage } from "@/lib/admin/attribute";
 import Pagination from "@/app/admin/component/common/Pagination";
 
 type PageProps = Readonly<{

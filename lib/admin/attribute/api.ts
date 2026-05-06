@@ -21,6 +21,30 @@ export async function fetchAdminAttributesPage(page: number) {
   );
 }
 
+/** All attribute definitions (follows every list page until `next_page` is null). */
+export async function fetchAdminAttributesAll(): Promise<
+  | { ok: true; attributes: AdminAttributeRow[] }
+  | { ok: false; message: string; unauthorized?: boolean }
+> {
+  const all: AdminAttributeRow[] = [];
+  let page = 1;
+
+  while (true) {
+    const res = await fetchAdminAttributesPage(page);
+    if (!res.ok) {
+      return res;
+    }
+    all.push(...res.data.attributes);
+    const next = res.data.pagination.next_page;
+    if (next == null) {
+      break;
+    }
+    page = next;
+  }
+
+  return { ok: true, attributes: all };
+}
+
 /**
  * Create an attribute. Payload: `{ name }`.
  * On success the API should return the usual `{ status, message, data }` envelope with the created row in `data`.

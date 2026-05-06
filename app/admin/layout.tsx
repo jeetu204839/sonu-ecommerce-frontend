@@ -56,6 +56,14 @@ export default function AdminLayout({
           strategy="afterInteractive"
         />
         <Script src="/admin/js/bootstrap.min.js" strategy="afterInteractive" />
+        {/*
+          CKEditor 4: self-hosted under /public/admin only.
+          No cdn.ckeditor.com / third-party script URL — reduces supply-chain risk.
+        */}
+        <Script
+          src="/admin/js/plugins/ckeditor/ckeditor.js"
+          strategy="afterInteractive"
+        />
         <Script
           src="/admin/js/plugins/morris/morris.min.js"
           strategy="afterInteractive"

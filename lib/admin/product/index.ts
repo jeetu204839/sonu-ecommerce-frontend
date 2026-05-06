@@ -2,11 +2,20 @@
 
 export type {
   AdminProductCategorySummary,
+  AdminProductAttributeDto,
+  AdminProductAttributeOptionDto,
   AdminProductImageRow,
   AdminProductRow,
   AdminProductsListData,
   AdminProductsPagination,
   AdminProductVendorSummary,
+  CreateAdminProductPayload,
+  ProductAttributeFormEntry,
 } from "./types";
 
-export { fetchAdminProductsPage } from "./api";
+export { createAdminProduct, fetchAdminProductsPage } from "./api";
+
+export {
+  createProductInitialState,
+  type CreateProductFormState,
+} from "./create-form-state";

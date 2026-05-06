@@ -1,60 +1,60 @@
+import Link from "next/link";
 
-export default function CreateProductPage() {
-    return (
-        <>
-            <section className="content-header">
-                <h1>
-                    General Form Elements
-                    <small>Preview</small>
-                </h1>
-                <ol className="breadcrumb">
-                    <li>
-                        <a href="#">
-                            <i className="fa fa-dashboard" /> Home
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">Forms</a>
-                    </li>
-                    <li className="active">General Elements</li>
-                </ol>
-            </section>
+import ProductCreateForm from "@/app/admin/products/create/ProductCreateForm";
+import { fetchAdminAttributesAll } from "@/lib/admin/attribute";
+import { fetchAdminCategoryParentPickList } from "@/lib/admin/category";
 
-            <section className="content">
-                <div className="box box-primary">
-                    <div className="box-header">
-                        <h3 className="box-title">Quick Example</h3>
-                    </div>
+export default async function CreateProductPage() {
+  const [categoriesResult, attributesResult] = await Promise.all([
+    fetchAdminCategoryParentPickList(),
+    fetchAdminAttributesAll(),
+  ]);
 
-                    <form role="form">
-                        <div className="box-body">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <label htmlFor="exampleInputEmail1">Email address</label>
-                                        <input
-                                            type="email"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            placeholder="Enter email"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+  const categoryOptions = categoriesResult.ok ? categoriesResult.options : [];
+  const categoriesLoadWarning = categoriesResult.ok
+    ? undefined
+    : categoriesResult.message;
 
+  const attributeOptions = attributesResult.ok ? attributesResult.attributes : [];
+  const attributesLoadWarning = attributesResult.ok
+    ? undefined
+    : attributesResult.message;
 
+  return (
+    <>
+      <section className="content-header">
+        <h1>
+          Products{" "}
+          <small>Create</small>
+        </h1>
+        <ol className="breadcrumb">
+          <li>
+            <Link href="/admin/products">
+              <i className="fa fa-dashboard" /> Products
+            </Link>
+          </li>
+          <li className="active">Create</li>
+        </ol>
+      </section>
 
-                        </div>
+      <section className="content">
+        <div className="row">
+          <div className="col-md-12">
+            <div className="box box-primary">
+              <div className="box-header with-border">
+                <h3 className="box-title">Create product</h3>
+              </div>
 
-                        <div className="box-footer">
-                            <button type="submit" className="btn btn-primary">
-                                Submit
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-            </section>
-        </>
-    )
+              <ProductCreateForm
+                categoryOptions={categoryOptions}
+                attributeOptions={attributeOptions}
+                categoriesLoadWarning={categoriesLoadWarning}
+                attributesLoadWarning={attributesLoadWarning}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
 }

@@ -1,6 +1,6 @@
-import { adminApiGetEnvelope } from "@/lib/admin/http";
+import { adminApiGetEnvelope, adminApiPostEnvelope } from "@/lib/admin/http";
 
-import type { AdminProductsListData } from "./types";
+import type { AdminProductRow, AdminProductsListData, CreateAdminProductPayload } from "./types";
 
 const ADMIN_PRODUCT_PATH = "/admin/product";
 
@@ -28,4 +28,9 @@ export async function fetchAdminProductsPage(
   return adminApiGetEnvelope<AdminProductsListData>(
     `${ADMIN_PRODUCT_PATH}?${query.toString()}`,
   );
+}
+
+export async function createAdminProduct(payload: CreateAdminProductPayload) {
+  const body: Record<string, unknown> = { ...payload };
+  return adminApiPostEnvelope<AdminProductRow>(ADMIN_PRODUCT_PATH, body);
 }

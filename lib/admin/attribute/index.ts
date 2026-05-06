@@ -8,6 +8,7 @@ export type {
 export {
   createAdminAttribute,
   fetchAdminAttributeById,
+  fetchAdminAttributesAll,
   fetchAdminAttributesPage,
   updateAdminAttribute,
 } from "./api";

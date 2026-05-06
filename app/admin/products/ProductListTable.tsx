@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import type { AdminProductRow } from "@/lib/admin/product";
+import type { AdminProductRow } from "@/lib/admin/product/types";
 import { resolveProductImageUrl } from "@/lib/api/products";
 
 function formatInr(amount: number): string {

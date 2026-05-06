@@ -3,9 +3,7 @@ import Link from 'next/link';
 const Sidebar = () => {
 
   return (
-    <>
       <aside className="left-side sidebar-offcanvas">
-        {/* sidebar: style can be found in sidebar.less */}
         <section className="sidebar">
           {/* Sidebar user panel */}
           <div className="user-panel">
@@ -14,45 +12,24 @@ const Sidebar = () => {
             </div>
             <div className="pull-left info">
               <p>Hello, Jane</p>
-              <Link href="/dashboard"> <i className="fa fa-circle text-success" /> Online</Link>
+              <Link href="/admin/dashboard"> <i className="fa fa-circle text-success" /> Online</Link>
             </div>
           </div>
-          {/* search form */}
-          <form action="#" method="get" className="sidebar-form">
-            <div className="input-group">
-              <input
-                type="text"
-                name="q"
-                className="form-control"
-                placeholder="Search..."
-              />
-              <span className="input-group-btn">
-                <button
-                  type="submit"
-                  name="seach"
-                  id="search-btn"
-                  className="btn btn-flat"
-                >
-                  <i className="fa fa-search" />
-                </button>
-              </span>
-            </div>
-          </form>
-          {/* /.search form */}
+          
           {/* sidebar menu: : style can be found in sidebar.less */}
           <ul className="sidebar-menu">
             <li className="active">
-              <a href="index.html">
-                <i className="fa fa-dashboard" /> <span>Dashboard</span>
-              </a>
+              <Link href="/admin/dashboard"><i className="fa fa-dashboard" /> <span>Dashboard</span></Link>
             </li>
-            <li>
+
+            {/* <li>
               <a href="pages/widgets.html">
                 <i className="fa fa-th" /> <span>Widgets</span>{" "}
                 <small className="badge pull-right bg-green">new</small>
               </a>
-            </li>
-            <li className="treeview">
+            </li> */}
+
+            {/* <li className="treeview">
               <a href="#">
                 <i className="fa fa-bar-chart-o" />
                 <span>Charts</span>
@@ -75,8 +52,9 @@ const Sidebar = () => {
                   </a>
                 </li>
               </ul>
-            </li>
-            <li className="treeview">
+            </li> */}
+
+            {/* <li className="treeview">
               <a href="#">
                 <i className="fa fa-laptop" />
                 <span>UI Elements</span>
@@ -109,8 +87,9 @@ const Sidebar = () => {
                   </a>
                 </li>
               </ul>
-            </li>
-            <li className="treeview">
+            </li> */}
+
+            {/* <li className="treeview">
               <a href="#">
                 <i className="fa fa-edit" /> <span>Forms</span>
                 <i className="fa fa-angle-left pull-right" />
@@ -130,6 +109,25 @@ const Sidebar = () => {
                   <a href="pages/forms/editors.html">
                     <i className="fa fa-angle-double-right" /> Editors
                   </a>
+                </li>
+              </ul>
+            </li> */}
+
+            <li className="treeview">
+              <a href="#">
+                <i className="fa fa-table" /> <span>Products</span>
+                <i className="fa fa-angle-left pull-right" />
+              </a>
+              <ul className="treeview-menu">
+                <li>
+                  <Link href="/admin/products">
+                    <i className="fa fa-angle-double-right" /> List
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/products/create">
+                    <i className="fa fa-angle-double-right" /> Create
+                  </Link>
                 </li>
               </ul>
             </li>
@@ -173,19 +171,23 @@ const Sidebar = () => {
               </ul>
             </li>
 
-            <li>
+            
+
+            {/* <li>
               <a href="pages/calendar.html">
                 <i className="fa fa-calendar" /> <span>Calendar</span>
                 <small className="badge pull-right bg-red">3</small>
               </a>
-            </li>
-            <li>
+            </li> */}
+
+            {/* <li>
               <a href="pages/mailbox.html">
                 <i className="fa fa-envelope" /> <span>Mailbox</span>
                 <small className="badge pull-right bg-yellow">12</small>
               </a>
-            </li>
-            <li className="treeview">
+            </li> */}
+
+            {/* <li className="treeview">
               <a href="#">
                 <i className="fa fa-folder" /> <span>Examples</span>
                 <i className="fa fa-angle-left pull-right" />
@@ -227,13 +229,12 @@ const Sidebar = () => {
                   </a>
                 </li>
               </ul>
-            </li>
+            </li> */}
+
           </ul>
         </section>
         {/* /.sidebar */}
       </aside>
-
-    </>
   );
 };
 

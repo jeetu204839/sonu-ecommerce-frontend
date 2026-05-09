@@ -3,21 +3,22 @@
 import { redirect } from "next/navigation";
 
 import {
-  createAdminProduct,
   groupFormEntriesIntoAttributePayload,
-  type CreateAdminProductPayload,
-  type CreateProductFormDraft,
-  type CreateProductFormState,
+  type EditProductFormDraft,
+  type EditProductFormState,
   type ProductAttributeFormEntry,
+  type UpdateAdminProductPayload,
+  updateAdminProduct,
 } from "@/lib/admin/product";
 
-function draftFromFormData(formData: FormData): CreateProductFormDraft {
+function draftFromFormData(formData: FormData): EditProductFormDraft {
   const text = (key: string): string => {
     const v = formData.get(key);
     return typeof v === "string" ? v : "";
   };
-  return {
+  const baseDraft: EditProductFormDraft = {
     name: text("name"),
+    slug: text("slug"),
     sku: text("sku"),
     categoryId: text("categoryId"),
     vendorId: (() => {
@@ -46,13 +47,14 @@ function draftFromFormData(formData: FormData): CreateProductFormDraft {
     metaDescription: text("metaDescription"),
     attributesJson: text("attributesJson"),
   };
+  return baseDraft;
 }
 
 function fail(
   formData: FormData,
   message: string,
   fieldErrors?: Record<string, string>,
-): Extract<CreateProductFormState, { ok: false }> {
+): Extract<EditProductFormState, { ok: false }> {
   return {
     ok: false,
     message,
@@ -63,26 +65,17 @@ function fail(
   };
 }
 
-/** Maps a validation message to one field so it shows inline (not only in a bottom alert). */
 function failField(
   formData: FormData,
   path: string,
   message: string,
-): Extract<CreateProductFormState, { ok: false }> {
+): Extract<EditProductFormState, { ok: false }> {
   return fail(formData, message, { [path]: message });
 }
 
 function optText(raw: FormDataEntryValue | null): string | null {
   const s = typeof raw === "string" ? raw.trim() : "";
   return s === "" ? null : s;
-}
-
-function slugifyName(name: string): string {
-  return name
-    .trim()
-    .toLowerCase()
-    .replaceAll(/\s+/g, "-")
-    .replaceAll(/[^a-z0-9-]/g, "");
 }
 
 function parseAttributesJson(
@@ -108,23 +101,21 @@ function parseAttributesJson(
   }
 }
 
-export async function createProductAction(
-  _prev: CreateProductFormState,
+export async function updateProductAction(
+  productId: number,
+  _prev: EditProductFormState,
   formData: FormData,
-): Promise<CreateProductFormState> {
+): Promise<EditProductFormState> {
   const nameRaw = formData.get("name");
   const name = typeof nameRaw === "string" ? nameRaw.trim() : "";
   if (!name) {
     return failField(formData, "name", "Please enter a product name.");
   }
 
-  const slug = slugifyName(name);
+  const slugRaw = formData.get("slug");
+  const slug = typeof slugRaw === "string" ? slugRaw.trim() : "";
   if (!slug) {
-    return failField(
-      formData,
-      "name",
-      "Product name must yield a valid slug.",
-    );
+    return failField(formData, "slug", "Please enter a slug.");
   }
 
   const skuRaw = formData.get("sku");
@@ -135,7 +126,9 @@ export async function createProductAction(
 
   const categoryRaw = formData.get("categoryId");
   const categoryId =
-    typeof categoryRaw === "string" ? Number.parseInt(categoryRaw.trim(), 10) : Number.NaN;
+    typeof categoryRaw === "string"
+      ? Number.parseInt(categoryRaw.trim(), 10)
+      : Number.NaN;
   if (!Number.isFinite(categoryId) || categoryId < 1) {
     return failField(formData, "categoryId", "Please choose a category.");
   }
@@ -147,7 +140,9 @@ export async function createProductAction(
 
   const mrp = Number.parseFloat(String(formData.get("mrp")));
   const price = Number.parseFloat(String(formData.get("price")));
-  const discountPercent = Number.parseFloat(String(formData.get("discountPercent")));
+  const discountPercent = Number.parseFloat(
+    String(formData.get("discountPercent")),
+  );
   const stock = Number.parseInt(String(formData.get("stock")), 10);
   const weight = Number.parseFloat(String(formData.get("weight")));
   const length = Number.parseFloat(String(formData.get("length")));
@@ -155,11 +150,7 @@ export async function createProductAction(
   const height = Number.parseFloat(String(formData.get("height")));
 
   if (!Number.isFinite(mrp) || mrp < 0) {
-    return failField(
-      formData,
-      "mrp",
-      "MRP must be a valid non‑negative number.",
-    );
+    return failField(formData, "mrp", "MRP must be a valid non‑negative number.");
   }
   if (!Number.isFinite(price) || price < 0) {
     return failField(
@@ -168,7 +159,11 @@ export async function createProductAction(
       "Price must be a valid non‑negative number.",
     );
   }
-  if (!Number.isFinite(discountPercent) || discountPercent < 0 || discountPercent > 100) {
+  if (
+    !Number.isFinite(discountPercent) ||
+    discountPercent < 0 ||
+    discountPercent > 100
+  ) {
     return failField(
       formData,
       "discountPercent",
@@ -176,39 +171,19 @@ export async function createProductAction(
     );
   }
   if (!Number.isFinite(stock) || stock < 0 || !Number.isInteger(stock)) {
-    return failField(
-      formData,
-      "stock",
-      "Stock must be a whole number ≥ 0.",
-    );
+    return failField(formData, "stock", "Stock must be a whole number ≥ 0.");
   }
   if (!Number.isFinite(weight) || weight < 0) {
-    return failField(
-      formData,
-      "weight",
-      "Weight must be a valid non‑negative number.",
-    );
+    return failField(formData, "weight", "Weight must be a valid non‑negative number.");
   }
   if (!Number.isFinite(length) || length < 0) {
-    return failField(
-      formData,
-      "length",
-      "Length must be a valid non‑negative number.",
-    );
+    return failField(formData, "length", "Length must be a valid non‑negative number.");
   }
   if (!Number.isFinite(width) || width < 0) {
-    return failField(
-      formData,
-      "width",
-      "Width must be a valid non‑negative number.",
-    );
+    return failField(formData, "width", "Width must be a valid non‑negative number.");
   }
   if (!Number.isFinite(height) || height < 0) {
-    return failField(
-      formData,
-      "height",
-      "Height must be a valid non‑negative number.",
-    );
+    return failField(formData, "height", "Height must be a valid non‑negative number.");
   }
 
   const weightUnit =
@@ -243,10 +218,11 @@ export async function createProductAction(
 
   const isFeatured = formData.get("isFeatured") === "true";
 
-  const payload: CreateAdminProductPayload = {
+  const payload: UpdateAdminProductPayload = {
     categoryId,
     name,
     sku,
+    slug,
     shortDescription: optText(formData.get("shortDescription")),
     longDescription: optText(formData.get("longDescription")),
     metaTitle: optText(formData.get("metaTitle")),
@@ -270,11 +246,18 @@ export async function createProductAction(
   };
 
   if (parsedAttrs.length > 0) {
-    payload.attributes =
-      groupFormEntriesIntoAttributePayload(parsedAttrs);
+    payload.attributes = groupFormEntriesIntoAttributePayload(parsedAttrs);
   }
 
-  const result = await createAdminProduct(payload);
+  const id =
+    Number.isFinite(productId) && productId >= 1
+      ? Math.floor(productId)
+      : NaN;
+  if (!Number.isFinite(id)) {
+    return fail(formData, "Invalid product.");
+  }
+
+  const result = await updateAdminProduct(id, payload);
   if (!result.ok) {
     return fail(formData, result.message, result.fieldErrors);
   }

@@ -87,16 +87,21 @@ export type ProductAttributeFormEntry = {
   value: string;
 };
 
-/** JSON body for `POST /admin/product` — fields requested for admin create + optional relations. */
+/**
+ * `POST /admin/product` — each attribute groups one or more string values (e.g. size options).
+ */
+export type CreateAdminProductAttribute = {
+  attributeId: number;
+  values: string[];
+};
+
+/**
+ * Domain payload for creating a product (mirrors backend JSON body).
+ * `vendorId` / `slug` are optional — include only if your API expects them.
+ */
 export type CreateAdminProductPayload = {
-  vendorId: number;
-  categoryId: number;
   name: string;
-  slug: string;
-  shortDescription: string | null;
-  longDescription: string | null;
-  metaTitle: string | null;
-  metaDescription: string | null;
+  categoryId: number;
   sku: string;
   mrp: number;
   price: number;
@@ -114,6 +119,14 @@ export type CreateAdminProductPayload = {
   visibility: string;
   stockStatus: string;
   isFeatured: boolean;
-  /** Optional — only sent if non-empty; shape must match backend contract. */
-  attributes?: ProductAttributeFormEntry[];
+  shortDescription: string | null;
+  longDescription: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  attributes?: CreateAdminProductAttribute[];
+  vendorId?: number;
+  slug?: string;
 };
+
+/** `PUT /admin/product/:id` — same JSON shape as create; `slug` is sent when updating. */
+export type UpdateAdminProductPayload = CreateAdminProductPayload;

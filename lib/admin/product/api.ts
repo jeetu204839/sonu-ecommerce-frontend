@@ -1,8 +1,25 @@
-import { adminApiGetEnvelope, adminApiPostEnvelope } from "@/lib/admin/http";
+import {
+  adminApiGetEnvelope,
+  adminApiPostEnvelope,
+  adminApiPutEnvelope,
+} from "@/lib/admin/http";
 
-import type { AdminProductRow, AdminProductsListData, CreateAdminProductPayload } from "./types";
+import {
+  serializeCreateAdminProductBody,
+  serializeUpdateAdminProductBody,
+} from "./create-product-request";
+import type {
+  AdminProductRow,
+  AdminProductsListData,
+  CreateAdminProductPayload,
+  UpdateAdminProductPayload,
+} from "./types";
 
 const ADMIN_PRODUCT_PATH = "/admin/product";
+
+function adminProductDetailSegment(productId: number): string {
+  return String(Math.floor(Number(productId)));
+}
 
 /**
  * Some backends use `search`, others the typo `serch`. Send both so filtering works.
@@ -30,7 +47,28 @@ export async function fetchAdminProductsPage(
   );
 }
 
+/** Creates a product: `POST /admin/product` with JSON body per backend contract. */
 export async function createAdminProduct(payload: CreateAdminProductPayload) {
-  const body: Record<string, unknown> = { ...payload };
-  return adminApiPostEnvelope<AdminProductRow>(ADMIN_PRODUCT_PATH, body);
+  return adminApiPostEnvelope<AdminProductRow>(
+    ADMIN_PRODUCT_PATH,
+    serializeCreateAdminProductBody(payload),
+  );
+}
+
+/** Single product for admin edit: `GET /admin/product/:id` */
+export async function fetchAdminProductById(productId: number) {
+  const path = `${ADMIN_PRODUCT_PATH}/${adminProductDetailSegment(productId)}`;
+  return adminApiGetEnvelope<AdminProductRow>(path);
+}
+
+/** Updates a product: `PUT /admin/product/:id`. */
+export async function updateAdminProduct(
+  productId: number,
+  payload: UpdateAdminProductPayload,
+) {
+  const path = `${ADMIN_PRODUCT_PATH}/${adminProductDetailSegment(productId)}`;
+  return adminApiPutEnvelope<AdminProductRow>(
+    path,
+    serializeUpdateAdminProductBody(payload),
+  );
 }

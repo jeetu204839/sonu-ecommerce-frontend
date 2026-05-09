@@ -29,6 +29,12 @@ a:focus {
   text-decoration: none;
   color: #72afd2;
 }
+
+hr{
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
 /* Layouts */
 .wrapper {
   min-height: 100%;

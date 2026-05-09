@@ -4,6 +4,23 @@ import { parseJsonText } from "@/lib/api/client";
 import { ADMIN_AUTH_TOKEN_COOKIE } from "@/lib/auth/constants";
 import { API_BASE_URL } from "@/lib/config";
 
+type ApiFieldErrorItem = { path?: unknown; msg?: unknown };
+
+/** Maps backend `errors: [{ path, msg }]` into `{ [path]: msg }` for inline form messages. */
+function collectFieldErrorsFromApiEnvelope(errors: unknown): Record<string, string> | undefined {
+  if (!Array.isArray(errors)) return undefined;
+  const out: Record<string, string> = {};
+  for (const raw of errors) {
+    if (!raw || typeof raw !== "object") continue;
+    const path = (raw as ApiFieldErrorItem).path;
+    const msg = (raw as ApiFieldErrorItem).msg;
+    const p = typeof path === "string" ? path.trim() : "";
+    const m = typeof msg === "string" ? msg.trim() : "";
+    if (p !== "" && m !== "") out[p] = m;
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
 /**
  * Authenticated GET to the backend admin API (Bearer token from admin login cookie).
  * Admin-only — not used by shop routes.
@@ -84,7 +101,12 @@ export async function adminApiPostEnvelope<TData>(
   body: Record<string, unknown>,
 ): Promise<
   | { ok: true; data: TData }
-  | { ok: false; message: string; unauthorized?: boolean }
+  | {
+      ok: false;
+      message: string;
+      unauthorized?: boolean;
+      fieldErrors?: Record<string, string>;
+    }
 > {
   const token = (await cookies()).get(ADMIN_AUTH_TOKEN_COOKIE)?.value;
   if (!token) {
@@ -130,7 +152,12 @@ export async function adminApiPostEnvelope<TData>(
     };
   }
 
-  type Envelope = { status: boolean; message: string; data: TData | null };
+  type Envelope = {
+    status: boolean;
+    message: string;
+    data: TData | null;
+    errors?: unknown;
+  };
 
   let envelope: Envelope | null;
   try {
@@ -146,7 +173,12 @@ export async function adminApiPostEnvelope<TData>(
   if (!envelope.status || envelope.data == null) {
     const msg =
       envelope.message?.trim() || "The request could not be completed.";
-    return { ok: false, message: msg };
+    const fieldErrors = collectFieldErrorsFromApiEnvelope(envelope.errors);
+    return {
+      ok: false,
+      message: msg,
+      ...(fieldErrors ? { fieldErrors } : {}),
+    };
   }
 
   return { ok: true, data: envelope.data };
@@ -160,7 +192,12 @@ export async function adminApiPutEnvelope<TData>(
   body: Record<string, unknown>,
 ): Promise<
   | { ok: true; data: TData }
-  | { ok: false; message: string; unauthorized?: boolean }
+  | {
+      ok: false;
+      message: string;
+      unauthorized?: boolean;
+      fieldErrors?: Record<string, string>;
+    }
 > {
   const token = (await cookies()).get(ADMIN_AUTH_TOKEN_COOKIE)?.value;
   if (!token) {
@@ -206,7 +243,12 @@ export async function adminApiPutEnvelope<TData>(
     };
   }
 
-  type Envelope = { status: boolean; message: string; data: TData | null };
+  type Envelope = {
+    status: boolean;
+    message: string;
+    data: TData | null;
+    errors?: unknown;
+  };
 
   let envelope: Envelope | null;
   try {
@@ -222,7 +264,12 @@ export async function adminApiPutEnvelope<TData>(
   if (!envelope.status || envelope.data == null) {
     const msg =
       envelope.message?.trim() || "The request could not be completed.";
-    return { ok: false, message: msg };
+    const fieldErrors = collectFieldErrorsFromApiEnvelope(envelope.errors);
+    return {
+      ok: false,
+      message: msg,
+      ...(fieldErrors ? { fieldErrors } : {}),
+    };
   }
 
   return { ok: true, data: envelope.data };

@@ -1,10 +1,10 @@
 "use client";
 
 import type { SyntheticEvent } from "react";
-import { useActionState, useEffect, useMemo, useState } from "react";
+import { useActionState, useCallback, useEffect, useMemo, useState } from "react";
 import { useFormStatus } from "react-dom";
 
-import { createProductAction } from "@/app/admin/products/create/actions";
+import { updateProductAction } from "@/app/admin/products/edit/[id]/actions";
 import {
   syncCkeditorLongDescriptionToTextarea,
   useCkeditorLongDescription,
@@ -12,12 +12,19 @@ import {
 import type { AdminAttributeRow } from "@/lib/admin/attribute/types";
 import type { AdminCategoryParentPick } from "@/lib/admin/category/types";
 import {
-  createProductInitialState,
-  emptyProductFormDraft,
-  type CreateProductFormDraft,
-  type CreateProductFormState,
-} from "@/lib/admin/product/create-form-state";
-import type { ProductAttributeFormEntry } from "@/lib/admin/product/types";
+  editProductInitialState,
+  type EditProductFormDraft,
+  type EditProductFormState,
+} from "@/lib/admin/product/edit-form-state";
+import {
+  mapAdminProductDetailToEditDraft,
+  productDetailToAttrRowSeeds,
+  type AdminProductAttrRowSeed,
+} from "@/lib/admin/product/product-detail-form-map";
+import type {
+  AdminProductRow,
+  ProductAttributeFormEntry,
+} from "@/lib/admin/product/types";
 
 declare global {
   interface Window {
@@ -31,8 +38,7 @@ declare global {
   }
 }
 
-/** Must match textarea `id` — `CKEDITOR.replace(id)` like editors.html */
-const LONG_DESCRIPTION_FIELD_ID = "product-long-description";
+const LONG_DESCRIPTION_FIELD_ID = "product-long-description-edit";
 
 const PRODUCT_STATUSES = ["ACTIVE", "INACTIVE", "DRAFT"] as const;
 const VISIBILITY_OPTIONS = [
@@ -59,14 +65,24 @@ function newAttrRow(): AttrRow {
   return { rowId: newRowId(), attributeId: "", value: "" };
 }
 
+function seedsToAttrRows(seeds: AdminProductAttrRowSeed[]): AttrRow[] {
+  if (!seeds.length) return [newAttrRow()];
+  return seeds.map((s) => ({
+    rowId: newRowId(),
+    attributeId: s.attributeId,
+    value: s.value,
+  }));
+}
+
 type Props = Readonly<{
+  productId: number;
+  initialProduct: AdminProductRow;
   categoryOptions: AdminCategoryParentPick[];
   attributeOptions: AdminAttributeRow[];
   categoriesLoadWarning?: string;
   attributesLoadWarning?: string;
 }>;
 
-/** Inline message under a control — matches `CreateAttributeForm` (red text on its own line under the input). */
 function FieldInlineError({ message }: Readonly<{ message?: string }>) {
   const m = message?.trim();
   if (!m) return null;
@@ -119,25 +135,32 @@ function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <button type="submit" className="btn btn-primary" disabled={pending}>
-      {pending ? "Saving…" : "Create product"}
+      {pending ? "Saving…" : "Save changes"}
     </button>
   );
 }
 
-export default function ProductCreateForm({
+export default function ProductEditForm({
+  productId,
+  initialProduct,
   categoryOptions,
   attributeOptions,
   categoriesLoadWarning,
   attributesLoadWarning,
 }: Props) {
+  const runUpdate = useCallback(
+    (prev: EditProductFormState, formData: FormData) =>
+      updateProductAction(productId, prev, formData),
+    [productId],
+  );
+
   const [state, formAction] = useActionState<
-    CreateProductFormState,
+    EditProductFormState,
     FormData
-  >(createProductAction, createProductInitialState);
+  >(runUpdate, editProductInitialState);
 
   const apiFieldErrors =
     state.ok === false ? state.fieldErrors : undefined;
-  /** Only when the server sent a message but no field paths (rare); avoid the old bottom alert bar. */
   const orphanErrorMessage =
     state.ok === false &&
     state.message.trim() !== "" &&
@@ -145,16 +168,24 @@ export default function ProductCreateForm({
       ? state.message.trim()
       : "";
 
-  const [attrRows, setAttrRows] = useState<AttrRow[]>(() => [newAttrRow()]);
+  const [attrRows, setAttrRows] = useState<AttrRow[]>(() =>
+    seedsToAttrRows(productDetailToAttrRowSeeds(initialProduct)),
+  );
 
-  const [fields, setFields] = useState<CreateProductFormDraft>(() => ({
-    ...emptyProductFormDraft,
-  }));
+  const [fields, setFields] = useState<EditProductFormDraft>(() =>
+    mapAdminProductDetailToEditDraft(initialProduct),
+  );
   const [longDescNonce, setLongDescNonce] = useState(0);
 
-  function patchFields(patch: Partial<CreateProductFormDraft>) {
+  function patchFields(patch: Partial<EditProductFormDraft>) {
     setFields((prev) => ({ ...prev, ...patch }));
   }
+
+  useEffect(() => {
+    setFields(mapAdminProductDetailToEditDraft(initialProduct));
+    setAttrRows(seedsToAttrRows(productDetailToAttrRowSeeds(initialProduct)));
+    setLongDescNonce((n) => n + 1);
+  }, [initialProduct.id]);
 
   const attributesJson = useMemo(() => {
     const compact: ProductAttributeFormEntry[] = [];
@@ -255,9 +286,12 @@ export default function ProductCreateForm({
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="product-name"> Name <span className="text-danger">*</span> </label>
+              <label htmlFor="product-edit-name">
+                {" "}
+                Name <span className="text-danger">*</span>{" "}
+              </label>
               <input
-                id="product-name"
+                id="product-edit-name"
                 name="name"
                 type="text"
                 className="form-control"
@@ -272,9 +306,12 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="product-sku"> SKU <span className="text-danger">*</span> </label>
+              <label htmlFor="product-edit-sku">
+                {" "}
+                SKU <span className="text-danger">*</span>{" "}
+              </label>
               <input
-                id="product-sku"
+                id="product-edit-sku"
                 name="sku"
                 type="text"
                 className="form-control"
@@ -290,19 +327,49 @@ export default function ProductCreateForm({
         </div>
 
         <div className="row">
+          <div className="col-md-12">
+            <div className="form-group">
+              <label htmlFor="product-edit-slug">
+                Slug <span className="text-danger">*</span>
+              </label>
+              <input
+                id="product-edit-slug"
+                name="slug"
+                type="text"
+                className="form-control"
+                placeholder="url-friendly-slug"
+                value={fields.slug}
+                onChange={(e) => patchFields({ slug: e.target.value })}
+              />
+              <FieldInlineError
+                message={apiFieldError(apiFieldErrors, "slug")}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="product-category"> Category <span className="text-danger">*</span> </label>
+              <label htmlFor="product-edit-category">
+                {" "}
+                Category <span className="text-danger">*</span>{" "}
+              </label>
               <select
-                id="product-category"
+                id="product-edit-category"
                 name="categoryId"
                 className="form-control"
                 value={fields.categoryId}
                 onChange={(e) => patchFields({ categoryId: e.target.value })}
               >
-                <option value="" disabled>  Select category </option>
+                <option value="" disabled>
+                  Select category
+                </option>
                 {categoryOptions.map((c) => (
-                  <option key={c.id} value={String(c.id)}> {c.name} </option>
+                  <option key={c.id} value={String(c.id)}>
+                    {" "}
+                    {c.name}{" "}
+                  </option>
                 ))}
               </select>
               <FieldInlineError
@@ -313,9 +380,9 @@ export default function ProductCreateForm({
 
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="product-vendor-id">Vendor ID</label>
+              <label htmlFor="product-edit-vendor-id">Vendor ID</label>
               <input
-                id="product-vendor-id"
+                id="product-edit-vendor-id"
                 name="vendorId"
                 type="number"
                 className="form-control"
@@ -325,25 +392,25 @@ export default function ProductCreateForm({
                 onChange={(e) => patchFields({ vendorId: e.target.value })}
               />
               <p className="help-block">
-                Defaults to 1; override if your catalog uses another vendor id.
+                Shown from the loaded product — change only if your API expects a
+                different vendor on update.
               </p>
               <FieldInlineError
                 message={apiFieldError(apiFieldErrors, "vendorId")}
               />
             </div>
           </div>
-
         </div>
 
-        <h4 >Pricing & inventory</h4>
+        <h4>Pricing & inventory</h4>
         <hr />
 
         <div className="row">
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-mrp">MRP</label>
+              <label htmlFor="product-edit-mrp">MRP</label>
               <input
-                id="product-mrp"
+                id="product-edit-mrp"
                 name="mrp"
                 type="number"
                 className="form-control"
@@ -359,9 +426,9 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-price">Price</label>
+              <label htmlFor="product-edit-price">Price</label>
               <input
-                id="product-price"
+                id="product-edit-price"
                 name="price"
                 type="number"
                 className="form-control"
@@ -377,9 +444,9 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-discount">Discount %</label>
+              <label htmlFor="product-edit-discount">Discount %</label>
               <input
-                id="product-discount"
+                id="product-edit-discount"
                 name="discountPercent"
                 type="number"
                 className="form-control"
@@ -387,7 +454,9 @@ export default function ProductCreateForm({
                 max={100}
                 step={0.1}
                 value={fields.discountPercent}
-                onChange={(e) => patchFields({ discountPercent: e.target.value })}
+                onChange={(e) =>
+                  patchFields({ discountPercent: e.target.value })
+                }
               />
               <FieldInlineError
                 message={apiFieldError(apiFieldErrors, "discountPercent")}
@@ -396,9 +465,9 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-stock">Stock</label>
+              <label htmlFor="product-edit-stock">Stock</label>
               <input
-                id="product-stock"
+                id="product-edit-stock"
                 name="stock"
                 type="number"
                 className="form-control"
@@ -417,16 +486,19 @@ export default function ProductCreateForm({
         <div className="row">
           <div className="col-md-4">
             <div className="form-group">
-              <label htmlFor="product-stock-status">Stock status</label>
+              <label htmlFor="product-edit-stock-status">Stock status</label>
               <select
-                id="product-stock-status"
+                id="product-edit-stock-status"
                 name="stockStatus"
                 className="form-control"
                 value={fields.stockStatus}
                 onChange={(e) => patchFields({ stockStatus: e.target.value })}
               >
                 {STOCK_STATUSES.map((v) => (
-                  <option key={v} value={v}> {v} </option>
+                  <option key={v} value={v}>
+                    {" "}
+                    {v}{" "}
+                  </option>
                 ))}
               </select>
               <FieldInlineError
@@ -436,9 +508,9 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-4">
             <div className="form-group">
-              <label htmlFor="product-status">Status</label>
+              <label htmlFor="product-edit-status">Status</label>
               <select
-                id="product-status"
+                id="product-edit-status"
                 name="status"
                 className="form-control"
                 value={fields.status}
@@ -457,16 +529,19 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-4">
             <div className="form-group">
-              <label htmlFor="product-visibility">Visibility</label>
+              <label htmlFor="product-edit-visibility">Visibility</label>
               <select
-                id="product-visibility"
+                id="product-edit-visibility"
                 name="visibility"
                 className="form-control"
                 value={fields.visibility}
                 onChange={(e) => patchFields({ visibility: e.target.value })}
               >
                 {VISIBILITY_OPTIONS.map((v) => (
-                  <option key={v} value={v}> {v} </option>
+                  <option key={v} value={v}>
+                    {" "}
+                    {v}{" "}
+                  </option>
                 ))}
               </select>
               <FieldInlineError
@@ -477,9 +552,9 @@ export default function ProductCreateForm({
         </div>
 
         <div className="form-group">
-          <label htmlFor="product-featured" className="checkbox-inline">
+          <label htmlFor="product-edit-featured" className="checkbox-inline">
             <input
-              id="product-featured"
+              id="product-edit-featured"
               name="isFeatured"
               type="checkbox"
               value="true"
@@ -500,9 +575,9 @@ export default function ProductCreateForm({
         <div className="row">
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-weight">Weight</label>
+              <label htmlFor="product-edit-weight">Weight</label>
               <input
-                id="product-weight"
+                id="product-edit-weight"
                 name="weight"
                 type="number"
                 className="form-control"
@@ -518,9 +593,9 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-weight-unit">Weight unit</label>
+              <label htmlFor="product-edit-weight-unit">Weight unit</label>
               <input
-                id="product-weight-unit"
+                id="product-edit-weight-unit"
                 name="weightUnit"
                 type="text"
                 className="form-control"
@@ -538,9 +613,9 @@ export default function ProductCreateForm({
         <div className="row">
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-length">Length</label>
+              <label htmlFor="product-edit-length">Length</label>
               <input
-                id="product-length"
+                id="product-edit-length"
                 name="length"
                 type="number"
                 className="form-control"
@@ -556,9 +631,9 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-length-unit">Length unit</label>
+              <label htmlFor="product-edit-length-unit">Length unit</label>
               <input
-                id="product-length-unit"
+                id="product-edit-length-unit"
                 name="lengthUnit"
                 type="text"
                 className="form-control"
@@ -573,9 +648,9 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-width">Width</label>
+              <label htmlFor="product-edit-width">Width</label>
               <input
-                id="product-width"
+                id="product-edit-width"
                 name="width"
                 type="number"
                 className="form-control"
@@ -591,9 +666,9 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-width-unit">Width unit</label>
+              <label htmlFor="product-edit-width-unit">Width unit</label>
               <input
-                id="product-width-unit"
+                id="product-edit-width-unit"
                 name="widthUnit"
                 type="text"
                 className="form-control"
@@ -611,9 +686,9 @@ export default function ProductCreateForm({
         <div className="row">
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-height">Height</label>
+              <label htmlFor="product-edit-height">Height</label>
               <input
-                id="product-height"
+                id="product-edit-height"
                 name="height"
                 type="number"
                 className="form-control"
@@ -629,9 +704,9 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-3">
             <div className="form-group">
-              <label htmlFor="product-height-unit">Height unit</label>
+              <label htmlFor="product-edit-height-unit">Height unit</label>
               <input
-                id="product-height-unit"
+                id="product-edit-height-unit"
                 name="heightUnit"
                 type="text"
                 className="form-control"
@@ -650,9 +725,11 @@ export default function ProductCreateForm({
         <hr />
 
         <div className="form-group">
-          <label htmlFor="product-short-description">Short description</label>
+          <label htmlFor="product-edit-short-description">
+            Short description
+          </label>
           <textarea
-            id="product-short-description"
+            id="product-edit-short-description"
             name="shortDescription"
             className="form-control"
             rows={3}
@@ -687,7 +764,6 @@ export default function ProductCreateForm({
               />
               <p className="help-block" style={{ marginTop: 12, marginBottom: 0 }}>
                 Self-hosted from <code>/admin/js/plugins/ckeditor/</code> (no CDN).
-                Spell-check cloud plugins (SCAYT/WSC) are disabled in config.
               </p>
               <FieldInlineError
                 message={apiFieldError(apiFieldErrors, "longDescription")}
@@ -702,9 +778,9 @@ export default function ProductCreateForm({
         <div className="row">
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="product-meta-title">Meta title</label>
+              <label htmlFor="product-edit-meta-title">Meta title</label>
               <input
-                id="product-meta-title"
+                id="product-edit-meta-title"
                 name="metaTitle"
                 type="text"
                 className="form-control"
@@ -719,15 +795,19 @@ export default function ProductCreateForm({
           </div>
           <div className="col-md-6">
             <div className="form-group">
-              <label htmlFor="product-meta-description">Meta description</label>
+              <label htmlFor="product-edit-meta-description">
+                Meta description
+              </label>
               <textarea
-                id="product-meta-description"
+                id="product-edit-meta-description"
                 name="metaDescription"
                 className="form-control"
                 rows={2}
                 placeholder="Meta description"
                 value={fields.metaDescription}
-                onChange={(e) => patchFields({ metaDescription: e.target.value })}
+                onChange={(e) =>
+                  patchFields({ metaDescription: e.target.value })
+                }
               />
               <FieldInlineError
                 message={apiFieldError(apiFieldErrors, "metaDescription")}
@@ -740,7 +820,7 @@ export default function ProductCreateForm({
         {apiAttributeErrors(apiFieldErrors).map((msg) => (
           <FieldInlineError key={msg} message={msg} />
         ))}
-        <hr/>
+        <hr />
 
         <table className="table table-condensed">
           <thead>
@@ -778,7 +858,7 @@ export default function ProductCreateForm({
                     onChange={(e) =>
                       setAttrRow(index, { value: e.target.value })
                     }
-                    placeholder='e.g. 2KG, Small'
+                    placeholder="e.g. 2KG, Small"
                     aria-label={`Attribute value ${index + 1}`}
                   />
                 </td>

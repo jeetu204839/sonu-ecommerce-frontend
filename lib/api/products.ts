@@ -269,10 +269,15 @@ export type ProductDetailAttributeOptionDto = {
   name: string;
 };
 
+/** Attribute group from API: label is `name` (e.g. "Color"); options in `attribute[]`. */
 export type ProductDetailAttributeDto = {
   id: number;
-  value: string;
+  productId?: number;
   attributeId: number;
+  /** Group label, e.g. "Color" */
+  name?: string;
+  /** Legacy / alternate label */
+  value?: string;
   attribute: ProductDetailAttributeOptionDto[];
 };
 
@@ -284,13 +289,18 @@ export type ProductDetailCategoryDto = {
 };
 
 export type ProductDetailVendorDto = {
+  id?: number;
   storeName: string;
   storeSlug: string;
   isVerified: boolean;
+  gstNumber?: string | null;
+  commissionRate?: number;
 };
 
 export type ProductDetailDto = {
   id: number;
+  vendorId?: number;
+  categoryId?: number;
   name: string;
   slug: string;
   sku: string;
@@ -310,6 +320,10 @@ export type ProductDetailDto = {
   widthUnit: string;
   height: number;
   heightUnit: string;
+  /** e.g. ACTIVE */
+  status?: string;
+  /** e.g. CATALOG, HIDDEN */
+  visibility?: string;
   stockStatus: string;
   isFeatured: boolean;
   category: ProductDetailCategoryDto;
@@ -321,9 +335,28 @@ export type ProductDetailDto = {
 export type ProductDetailApiEnvelope = {
   status: boolean;
   message: string;
-  data: { product: ProductDetailDto } | null;
+  /** Some backends wrap as `{ product }`; others return the product object at `data` root. */
+  data: { product: ProductDetailDto } | ProductDetailDto | null;
   errors: unknown;
 };
+
+function extractProductFromDetailData(
+  data: unknown,
+): ProductDetailDto | null {
+  if (!data || typeof data !== "object") return null;
+  const obj = data as Record<string, unknown>;
+  if (
+    "product" in obj &&
+    obj.product &&
+    typeof obj.product === "object"
+  ) {
+    return obj.product as ProductDetailDto;
+  }
+  if (typeof obj.id === "number" && typeof obj.slug === "string") {
+    return obj as ProductDetailDto;
+  }
+  return null;
+}
 
 export function galleryImagesFromProduct(
   product: Pick<ProductDetailDto, "name" | "productImages">,
@@ -376,14 +409,15 @@ async function fetchProductDetailImpl(
     return { product: null, message: "Empty response from server." };
   }
 
-  if (!payload.status || !payload.data?.product) {
+  const product = extractProductFromDetailData(payload.data);
+  if (!product) {
     return {
       product: null,
       message: payload.message || "Product not found.",
     };
   }
 
-  return { product: payload.data.product, message: payload.message };
+  return { product, message: payload.message };
 }
 
 /** Cached per request so `generateMetadata` and the page share one fetch. */

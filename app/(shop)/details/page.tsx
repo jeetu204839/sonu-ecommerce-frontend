@@ -33,10 +33,13 @@ export async function generateMetadata({
     return { title: "Product not found | Ray Enterprises" };
   }
 
+  const plainLong = product.longDescription?.trim()
+    ? stripHtml(product.longDescription)
+    : "";
   const description =
     product.metaDescription?.trim() ||
     product.shortDescription?.trim() ||
-    product.longDescription?.trim() ||
+    plainLong ||
     `Buy ${product.name} online.`;
 
   return {
@@ -50,6 +53,23 @@ function stockLabel(stockStatus: string): string {
   if (s === "IN_STOCK") return "In stock";
   if (s === "OUT_OF_STOCK") return "Out of stock";
   return stockStatus.replaceAll("_", " ").toLowerCase();
+}
+
+function humanizeToken(raw: string): string {
+  const s = raw.trim();
+  if (!s) return "";
+  return s
+    .replaceAll("_", " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/** Strip HTML for meta / previews */
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function specRows(
@@ -72,18 +92,84 @@ function specRows(
       label: "Seller",
       value: sellerVerified ? `${sellerName} (verified)` : sellerName,
     },
-    { label: "Stock on hand", value: String(product.stock) },
-    { label: "Availability", value: stockLabel(product.stockStatus) },
   ];
 
+  const gst = product.vendor?.gstNumber?.trim();
+  if (gst) {
+    rows.push({ label: "Seller GSTIN", value: gst });
+  }
+
+  if (product.status?.trim()) {
+    rows.push({
+      label: "Product status",
+      value: humanizeToken(product.status),
+    });
+  }
+  if (product.visibility?.trim()) {
+    rows.push({
+      label: "Visibility",
+      value: humanizeToken(product.visibility),
+    });
+  }
+
+  rows.push(
+    { label: "Stock on hand", value: String(product.stock) },
+    { label: "Availability", value: stockLabel(product.stockStatus) },
+  );
+
   for (const row of product.attributes ?? []) {
-    const options = row.attribute?.map((a) => a.name).filter(Boolean) ?? [];
-    if (row.value && options.length) {
-      rows.push({ label: row.value, value: options.join(", ") });
+    const options =
+      row.attribute?.map((a) => a.name).filter(Boolean) ?? [];
+    const label =
+      row.name?.trim() ||
+      row.value?.trim() ||
+      "";
+    if (options.length > 0 && label) {
+      rows.push({ label, value: options.join(", ") });
     }
   }
 
   return rows;
+}
+
+function ProductOverviewContent({
+  shortDescription,
+  longDescription,
+}: Readonly<{
+  shortDescription: string | null;
+  longDescription: string | null;
+}>) {
+  const long = longDescription?.trim() ?? "";
+  const short = shortDescription?.trim() ?? "";
+  const looksLikeHtml = /<[a-z][\s\S]*>/i.test(long);
+
+  if (!long && !short) {
+    return (
+      <p className="text-secondary mb-0">
+        Full description will appear here when provided by the seller.
+      </p>
+    );
+  }
+
+  return (
+    <>
+      {short ? (
+        <p className="text-secondary fw-medium mb-3">{short}</p>
+      ) : null}
+      {long ? (
+        looksLikeHtml ? (
+          <div
+            className="product-detail-html text-secondary mb-0"
+            dangerouslySetInnerHTML={{ __html: long }}
+          />
+        ) : (
+          <p className="text-secondary mb-0" style={{ whiteSpace: "pre-wrap" }}>
+            {long}
+          </p>
+        )
+      ) : null}
+    </>
+  );
 }
 
 export default async function DetailsPage({ searchParams }: PageProps) {
@@ -136,11 +222,6 @@ export default async function DetailsPage({ searchParams }: PageProps) {
       url: detailUrl,
     },
   };
-
-  const overviewText =
-    product.longDescription?.trim() ||
-    product.shortDescription?.trim() ||
-    "Full description will appear here when provided by the seller.";
 
   const badge = product.isFeatured
     ? "Featured"
@@ -209,6 +290,19 @@ export default async function DetailsPage({ searchParams }: PageProps) {
       </div>
 
       <div className="container py-5">
+        {product.visibility?.toUpperCase() === "HIDDEN" ? (
+          <div
+            className="alert alert-warning border-0 mb-4 d-flex align-items-start gap-2"
+            role="status"
+          >
+            <i className="fas fa-eye-slash mt-1" aria-hidden="true" />
+            <span>
+              This listing is marked <strong>hidden</strong> in the catalog.
+              You can still view details from this direct link.
+            </span>
+          </div>
+        ) : null}
+
         <div className="row g-4 g-xl-5 align-items-start">
           <div className="col-lg-6">
             <ProductGallery images={images} productName={product.name} />
@@ -222,15 +316,21 @@ export default async function DetailsPage({ searchParams }: PageProps) {
             </p>
             <div className="fs-3 fw-bold text-dark mb-3 d-flex flex-wrap align-items-baseline gap-2">
               <span>₹{product.price.toLocaleString("en-IN")}</span>
-              {product.mrp > product.price ? (
+              {product.mrp > product.price && product.mrp > 0 ? (
                 <>
                   <span className="fs-6 fw-normal text-muted text-decoration-line-through">
-                    ₹{product.mrp.toLocaleString("en-IN")}
+                    MRP ₹{product.mrp.toLocaleString("en-IN")}
                   </span>
-                  <span className="fs-6 fw-semibold text-success">
-                    {product.discountPercent}% off
-                  </span>
+                  {product.discountPercent > 0 ? (
+                    <span className="fs-6 fw-semibold text-success">
+                      {product.discountPercent}% off
+                    </span>
+                  ) : null}
                 </>
+              ) : product.mrp > 0 && product.price >= product.mrp ? (
+                <span className="fs-6 fw-normal text-muted">
+                  MRP ₹{product.mrp.toLocaleString("en-IN")}
+                </span>
               ) : null}
               <span className="fs-6 fw-normal text-muted w-100">
                 incl. GST where applicable
@@ -361,9 +461,10 @@ export default async function DetailsPage({ searchParams }: PageProps) {
               aria-labelledby="tab-desc"
             >
               <h3 className="h5 text-primary mb-3">Product overview</h3>
-              <p className="text-secondary mb-0" style={{ whiteSpace: "pre-wrap" }}>
-                {overviewText}
-              </p>
+              <ProductOverviewContent
+                shortDescription={product.shortDescription}
+                longDescription={product.longDescription}
+              />
             </div>
 
             <div

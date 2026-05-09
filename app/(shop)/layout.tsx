@@ -18,7 +18,8 @@ export const metadata: Metadata = {
 };
 
 import Navigation from "./component/Navigation";
-import Footer from './component/Footer';
+import Footer from "./component/Footer";
+import ShopAuthShell from "./component/ShopAuthShell";
 
 export default function RootLayout({
   children,
@@ -49,8 +50,8 @@ export default function RootLayout({
 
       </head>
       <body className="">
-        <Navigation /> {/* Add the Navigation component */}
-        {children}
+        <Navigation />
+        <ShopAuthShell>{children}</ShopAuthShell>
         <Footer />
 
         {/* Load JS with next/script — raw <script> in RSC triggers a runtime error */}

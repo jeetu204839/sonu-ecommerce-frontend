@@ -1,5 +1,16 @@
 import type { NextConfig } from "next";
 
+/**
+ * Shop OTP and other browser fetch calls need NEXT_PUBLIC_API_BASE_URL.
+ * If only API_BASE_URL is set in .env.local, expose it to the client bundle here.
+ */
+function resolvedPublicApiBaseUrl(): string {
+  const pub = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
+  const server = process.env.API_BASE_URL?.trim();
+  const raw = pub || server || "";
+  return raw.replace(/\/+$/, "");
+}
+
 function remotePatternsFromEnv(): NonNullable<
   NextConfig["images"]
 >["remotePatterns"] extends infer T
@@ -25,6 +36,9 @@ function remotePatternsFromEnv(): NonNullable<
 }
 
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_API_BASE_URL: resolvedPublicApiBaseUrl(),
+  },
   /**
    * Server Actions default body limit is 1 MB. Category forms upload multipart images.
    * Set in both places so dev/prod pick it up across Next versions (see Next.js docs).

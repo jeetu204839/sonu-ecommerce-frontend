@@ -3,3 +3,8 @@
  * HttpOnly cookie set after successful POST /auth/login.
  */
 export const ADMIN_AUTH_TOKEN_COOKIE = "admin_auth_token";
+
+/**
+ * Shop storefront session after POST /auth/phone/verify-otp (distinct from admin).
+ */
+export const SHOP_AUTH_TOKEN_COOKIE = "shop_auth_token";

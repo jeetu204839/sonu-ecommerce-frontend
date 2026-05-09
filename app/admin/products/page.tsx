@@ -112,7 +112,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   <th>Stock</th>
                   <th>Status</th>
                   <th>Featured</th>
-                  <th style={{ width: 72 }}>Actions</th>
+                  <th style={{ width: 140 }}>Actions</th>
                 </tr>
               </thead>
               <ProductListTable products={products} rowOffset={rowOffset} />

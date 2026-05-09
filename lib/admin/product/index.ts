@@ -22,9 +22,11 @@ export {
 } from "./create-product-request";
 
 export {
+  buildAdminProductImageUploadFormData,
   createAdminProduct,
   fetchAdminProductById,
   fetchAdminProductsPage,
+  uploadAdminProductImageMultipart,
   updateAdminProduct,
 } from "./api";
 
@@ -47,3 +49,4 @@ export {
   type EditProductFormDraft,
   type EditProductFormState,
 } from "./edit-form-state";
+

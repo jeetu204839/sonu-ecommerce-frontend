@@ -1,5 +1,6 @@
 import {
   adminApiGetEnvelope,
+  adminApiPostFormDataEnvelope,
   adminApiPostEnvelope,
   adminApiPutEnvelope,
 } from "@/lib/admin/http";
@@ -70,5 +71,31 @@ export async function updateAdminProduct(
   return adminApiPutEnvelope<AdminProductRow>(
     path,
     serializeUpdateAdminProductBody(payload),
+  );
+}
+
+const ADMIN_PRODUCT_UPLOAD_IMAGES_PATH = "/admin/product/upload-images";
+
+/**
+ * Build multipart body for `POST /admin/product/upload-images`.
+ * Expected keys: `productId`, `image`, `isPrimary`.
+ */
+export function buildAdminProductImageUploadFormData(input: Readonly<{
+  productId: number;
+  image: File;
+  isPrimary: boolean;
+}>): FormData {
+  const fd = new FormData();
+  fd.append("productId", String(Math.floor(Number(input.productId))));
+  fd.append("image", input.image);
+  fd.append("isPrimary", input.isPrimary ? "1" : "0");
+  return fd;
+}
+
+/** Upload one image to a product by id (multipart/form-data). */
+export async function uploadAdminProductImageMultipart(formBody: FormData) {
+  return adminApiPostFormDataEnvelope<unknown>(
+    ADMIN_PRODUCT_UPLOAD_IMAGES_PATH,
+    formBody,
   );
 }

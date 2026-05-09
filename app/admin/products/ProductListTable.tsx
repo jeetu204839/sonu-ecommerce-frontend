@@ -105,6 +105,13 @@ export default function ProductListTable({ products, rowOffset }: Props) {
           </td>
           <td>
             <Link
+              href={`/admin/products/details/${encodeURIComponent(String(p.id))}`}
+              className="btn btn-xs btn-info"
+              style={{ marginRight: 6 }}
+            >
+              View
+            </Link>
+            <Link
               href={`/admin/products/edit/${encodeURIComponent(String(p.id))}`}
               className="btn btn-xs btn-default"
             >

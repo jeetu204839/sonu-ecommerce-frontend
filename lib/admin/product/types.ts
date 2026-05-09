@@ -69,6 +69,8 @@ export type AdminProductRow = {
   status: string;
   isFeatured: boolean;
   createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
   category?: AdminProductCategorySummary | null;
   vendor?: AdminProductVendorSummary | null;
   productImages?: AdminProductImageRow[];

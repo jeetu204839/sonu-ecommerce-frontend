@@ -49,7 +49,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="/css/brand-overrides.css" />
 
       </head>
-      <body className="">
+      <body className="shop-layout-body">
         <Navigation />
         <ShopAuthShell>{children}</ShopAuthShell>
         <Footer />

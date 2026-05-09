@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -23,12 +24,16 @@ function normalizePhone(raw: string): string {
   return raw.replace(/\D/g, "").slice(-10);
 }
 
+function maskIndianMobile(digits: string): string {
+  if (digits.length < 10) return digits || "••••••••••";
+  return `••••••${digits.slice(-4)}`;
+}
+
 export default function ShopPhoneOtpGate({
   initiallyLoggedIn,
 }: ShopPhoneOtpGateProps) {
   const router = useRouter();
   const titleId = useId();
-  /** Browser timer ids are numbers (avoid NodeJS.Timeout mismatch). */
   const reminderTimerRef = useRef<number | undefined>(undefined);
 
   const [loggedIn, setLoggedIn] = useState(initiallyLoggedIn);
@@ -45,7 +50,6 @@ export default function ShopPhoneOtpGate({
     }
   }
 
-  /** Schedule one reminder: open modal after REMINDER_MS (used on load and after dismiss). */
   function scheduleNextReminder() {
     clearReminderTimer();
     reminderTimerRef.current = window.setTimeout(() => {
@@ -54,7 +58,6 @@ export default function ShopPhoneOtpGate({
     }, REMINDER_MS);
   }
 
-  /** First reminder after delay; cleanup when verified or unmount. Re-show uses scheduleNextReminder from close handler only — avoids setInterval + Strict Mode clearing the interval silently. */
   useEffect(() => {
     if (loggedIn) {
       clearReminderTimer();
@@ -176,9 +179,15 @@ export default function ShopPhoneOtpGate({
     }
   }
 
-  function handleCloseModal() {
+  function handleSkip() {
     setModalOpen(false);
     scheduleNextReminder();
+  }
+
+  function handleEditNumber() {
+    setChallengeId(null);
+    setOtp("");
+    setError(null);
   }
 
   if (loggedIn) {
@@ -189,108 +198,141 @@ export default function ShopPhoneOtpGate({
     return null;
   }
 
+  const otpStep = Boolean(challengeId);
+
   return (
     <div
-      className="modal fade show d-block"
-      tabIndex={-1}
+      className="shop-phone-otp-backdrop"
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
-      style={{ zIndex: 1080, backgroundColor: "rgba(33, 37, 41, 0.65)" }}
     >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content border-secondary shadow-lg">
-          <div className="modal-header border-secondary bg-light">
-            <div className="flex-grow-1 pe-2">
-              <h2 className="modal-title h5 mb-0" id={titleId}>
-                Sign in with mobile
-              </h2>
-              <p className="small text-muted mb-0 mt-1">
-                Enter your number to receive an OTP. You can close this and keep
-                browsing—we&apos;ll remind you every 2 minutes until you sign
-                in.
-              </p>
+      <div className="shop-phone-otp-card">
+        <div className="shop-phone-otp-head">
+          <h2 id={titleId}>
+            {otpStep ? "Verify your mobile" : "Login to connect with suppliers"}
+          </h2>
+          <p className="shop-phone-otp-tagline">
+            {otpStep ? (
+              <>
+                Enter the OTP sent to{" "}
+                <span className="text-white text-nowrap">
+                  +91 {maskIndianMobile(phoneDigits)}
+                </span>
+              </>
+            ) : (
+              <>Login to get verified sellers</>
+            )}
+          </p>
+        </div>
+
+        <div className="shop-phone-otp-body">
+          {error ? (
+            <div className="shop-phone-otp-alert" role="alert">
+              {error}
             </div>
-            <button
-              type="button"
-              className="btn-close"
-              aria-label="Close"
-              onClick={handleCloseModal}
-            />
-          </div>
+          ) : null}
 
-          <div className="modal-body">
-            {error ? (
-              <div
-                className="alert alert-warning border-0 mb-3 d-flex align-items-start gap-2"
-                role="alert"
+          {otpStep ? (
+            <form onSubmit={handleVerifyOtp}>
+              <button
+                type="button"
+                className="shop-phone-otp-back-top"
+                onClick={handleEditNumber}
               >
-                <i
-                  className="fas fa-exclamation-triangle mt-1"
-                  aria-hidden="true"
-                />
-                <span>{error}</span>
-              </div>
-            ) : null}
+                ← Change number
+              </button>
 
-            <form onSubmit={handleRequestOtp} className="mb-4">
-              <label htmlFor="shop-phone-otp-phone" className="form-label">
+              <div className="shop-phone-otp-otp-label">Enter OTP</div>
+              <label htmlFor="shop-phone-otp-code" className="visually-hidden">
+                One-time password
+              </label>
+              <input
+                id="shop-phone-otp-code"
+                className="shop-phone-otp-otp-input"
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                placeholder="• • • • • •"
+                maxLength={8}
+                value={otp}
+                onChange={(ev) => setOtp(ev.target.value)}
+                disabled={verifyPending}
+              />
+
+              <button
+                type="submit"
+                className="shop-phone-otp-btn-continue"
+                disabled={verifyPending || requestPending}
+              >
+                {verifyPending ? (
+                  "Verifying…"
+                ) : (
+                  <>
+                    Verify{" "}
+                    <i className="fas fa-play" aria-hidden="true" />
+                  </>
+                )}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleRequestOtp} noValidate>
+              <label htmlFor="shop-phone-otp-phone" className="visually-hidden">
                 Mobile number
               </label>
-              <div className="input-group">
-                <span className="input-group-text">+91</span>
+              <div className="shop-phone-otp-phone-row">
+                <div className="shop-phone-otp-cc" aria-hidden="true">
+                  <span className="shop-phone-otp-flag">🇮🇳</span>
+                  <span>+91</span>
+                </div>
                 <input
                   id="shop-phone-otp-phone"
                   type="tel"
                   inputMode="numeric"
                   autoComplete="tel-national"
-                  className="form-control"
-                  placeholder="10-digit mobile number"
+                  placeholder="Enter your mobile number"
                   maxLength={14}
                   value={phone}
                   onChange={(ev) => setPhone(ev.target.value)}
                   disabled={requestPending || verifyPending}
-                  required
                 />
               </div>
+
+              <div className="shop-phone-otp-trust">
+                <span className="shop-phone-otp-trust-icon" aria-hidden="true">
+                  <i className="fas fa-check" />
+                </span>
+                <span>Your mobile number is safe with us</span>
+              </div>
+
               <button
                 type="submit"
-                className="btn btn-primary mt-3 w-100"
+                className="shop-phone-otp-btn-continue"
                 disabled={requestPending || verifyPending}
               >
-                {requestPending ? "Sending OTP…" : "Send OTP"}
+                {requestPending ? (
+                  "Sending…"
+                ) : (
+                  <>
+                    Continue{" "}
+                    <i className="fas fa-play" aria-hidden="true" />
+                  </>
+                )}
               </button>
             </form>
+          )}
+        </div>
 
-            {challengeId ? (
-              <form onSubmit={handleVerifyOtp}>
-                <label htmlFor="shop-phone-otp-code" className="form-label">
-                  Enter OTP
-                </label>
-                <input
-                  id="shop-phone-otp-code"
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  className="form-control form-control-lg text-center"
-                  style={{ letterSpacing: "0.35em" }}
-                  placeholder="••••••"
-                  maxLength={8}
-                  value={otp}
-                  onChange={(ev) => setOtp(ev.target.value)}
-                  disabled={verifyPending}
-                  required
-                />
-                <button
-                  type="submit"
-                  className="btn btn-success mt-3 w-100"
-                  disabled={verifyPending || requestPending}
-                >
-                  {verifyPending ? "Verifying…" : "Verify & continue"}
-                </button>
-              </form>
-            ) : null}
-          </div>
+        <div className="shop-phone-otp-footer border-top border-secondary">
+          <button type="button" className="shop-phone-otp-skip" onClick={handleSkip}>
+            Skip
+          </button>
+          <Link href="/" className="shop-phone-otp-brand">
+            <img src="/img/logo.webp" alt="" width={28} height={28} />
+            <span className="shop-phone-otp-brand-text brand-enterprises">
+              Enterprises
+            </span>
+          </Link>
         </div>
       </div>
     </div>

@@ -233,20 +233,6 @@
     background-size: cover;
 }
 
-@media (min-width: 992px) {
-    .hero-header,
-    .page-header {
-        margin-top: 100px !important;
-    }
-}
-
-@media (max-width: 992px) {
-    .hero-header,
-    .page-header {
-        margin-top: 97px !important;
-    }
-}
-/*** Hero Header end ***/
 
 
 /*** featurs Start ***/

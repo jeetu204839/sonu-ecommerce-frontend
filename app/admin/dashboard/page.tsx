@@ -105,13 +105,7 @@ export default function Dashboard() {
               <div className="box-header">
                 {/* tools box */}
                 <div className="pull-right box-tools">
-                  <button
-                    className="btn btn-danger btn-sm refresh-btn"
-                    data-toggle="tooltip"
-                    title="Reload"
-                  >
-                    <i className="fa fa-refresh" />
-                  </button>
+                  
                   <button
                     className="btn btn-danger btn-sm"
                     data-widget="collapse"

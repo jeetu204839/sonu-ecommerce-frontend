@@ -66,7 +66,7 @@ const Navigation = () => {
               className="d-none d-xl-flex align-items-center flex-shrink-0 gap-2 gap-xxl-3"
               aria-label="Quick links"
             >
-              <NavUtilLink href="/shop" iconClass="fas fa-store-alt" label="Shop" />
+              <NavUtilLink href="/shop" iconClass="fas fa-warehouse" label="Shop" />
               <NavUtilLink href="/contact" iconClass="fas fa-question-circle" label="Contact" />
               <div className="dropdown">
                 <button

@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+
+import { SHOP_AUTH_TOKEN_COOKIE } from "@/lib/auth/constants";
 
 import {
   fetchProductDetail,
@@ -11,6 +14,7 @@ import {
 
 import ProductEnquiryModal from "./ProductEnquiryModal";
 import ProductGallery from "./ProductGallery";
+import ProductReviewTracker from "./ProductReviewTracker";
 
 type PageProps = Readonly<{
   searchParams: Promise<{ slug?: string }>;
@@ -200,6 +204,11 @@ export default async function DetailsPage({ searchParams }: PageProps) {
     notFound();
   }
 
+  const shopAuthToken = (await cookies())
+    .get(SHOP_AUTH_TOKEN_COOKIE)
+    ?.value?.trim();
+  const isShopLoggedIn = Boolean(shopAuthToken);
+
   const images = galleryImagesFromProduct(product);
   const sellerName = product.vendor?.storeName?.trim() || "Unknown seller";
   const sellerVerified = Boolean(product.vendor?.isVerified);
@@ -250,6 +259,10 @@ export default async function DetailsPage({ searchParams }: PageProps) {
 
   return (
     <>
+      <ProductReviewTracker
+        productId={product.id}
+        isLoggedIn={isShopLoggedIn}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

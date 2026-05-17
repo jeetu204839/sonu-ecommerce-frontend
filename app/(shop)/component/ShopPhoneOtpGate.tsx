@@ -5,6 +5,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { setShopAuthSessionAction } from "@/app/(shop)/shop-phone-auth-actions";
+import { SHOP_AUTH_READY_EVENT } from "@/lib/auth/constants";
 import {
   requestShopPhoneOtp,
   verifyShopPhoneOtp,
@@ -167,6 +168,8 @@ export default function ShopPhoneOtpGate({
         setError(session.message ?? "Could not save your session.");
         return;
       }
+
+      window.dispatchEvent(new Event(SHOP_AUTH_READY_EVENT));
 
       setLoggedIn(true);
       clearReminderTimer();

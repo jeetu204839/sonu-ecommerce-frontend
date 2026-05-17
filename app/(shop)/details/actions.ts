@@ -1,8 +1,25 @@
 "use server";
 
+import { cookies } from "next/headers";
+
 import { apiFetchJson } from "@/lib/api/client";
+import { recordProductReview } from "@/lib/api/product-review";
+import { SHOP_AUTH_TOKEN_COOKIE } from "@/lib/auth/constants";
 
 import type { ProductEnquiryFormState } from "./product-enquiry-state";
+
+/** Lead-gen: product detail view (requires shop OTP Bearer token in cookie). */
+export async function trackProductReview(
+  productId: number,
+): Promise<{ recorded: boolean }> {
+  const token = (await cookies()).get(SHOP_AUTH_TOKEN_COOKIE)?.value?.trim();
+  if (!token) {
+    return { recorded: false };
+  }
+
+  const recorded = await recordProductReview(productId, token);
+  return { recorded };
+}
 
 type SendEnquiryApiResponse = {
   status: boolean;

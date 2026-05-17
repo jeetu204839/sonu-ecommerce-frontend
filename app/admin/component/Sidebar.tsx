@@ -171,6 +171,35 @@ const Sidebar = () => {
               </ul>
             </li>
 
+            <li className="treeview">
+              <a href="#">
+                <i className="fa fa-table" /> <span>Leads</span>
+                <i className="fa fa-angle-left pull-right" />
+              </a>
+              <ul className="treeview-menu">
+                <li>
+                  <Link href="/admin/leads">
+                    <i className="fa fa-angle-double-right" /> Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/leads/daily">
+                    <i className="fa fa-angle-double-right" /> Daily reviews
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/leads/product-stats">
+                    <i className="fa fa-angle-double-right" /> Product stats
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin/leads/leads">
+                    <i className="fa fa-angle-double-right" /> Scored leads
+                  </Link>
+                </li>
+              </ul>
+            </li>
+
             
 
             {/* <li>

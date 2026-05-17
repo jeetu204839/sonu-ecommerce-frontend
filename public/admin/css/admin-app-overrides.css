@@ -81,3 +81,129 @@
   background: transparent;
   box-shadow: none;
 }
+
+/* Leads dashboard — AdminLTE small-box watermark icons (Ionicons) */
+.right-side .admin-loader-host .lead-kpi-row {
+  margin-left: -8px;
+  margin-right: -8px;
+}
+
+.right-side .admin-loader-host .lead-kpi-row > [class*="col-"] {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.right-side .admin-loader-host .lead-kpi-stat.small-box {
+  overflow: hidden;
+  min-height: 106px;
+  margin-bottom: 20px;
+  border-radius: 3px;
+}
+
+.right-side .admin-loader-host .lead-kpi-stat.small-box > .inner {
+  padding: 14px 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.right-side .admin-loader-host .lead-kpi-stat.small-box h3 {
+  font-size: 36px;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.right-side .admin-loader-host .lead-kpi-stat.small-box p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.right-side .admin-loader-host .lead-kpi-stat.small-box .icon {
+  position: absolute;
+  top: auto;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  width: auto;
+  height: auto;
+  font-size: 80px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.right-side .admin-loader-host .lead-kpi-stat.small-box .icon > i {
+  display: block;
+  line-height: 1;
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+}
+
+.right-side .admin-loader-host .lead-kpi-stat.small-box:hover .icon {
+  color: rgba(0, 0, 0, 0.18);
+  transform: scale(1.06);
+}
+
+.right-side .admin-loader-host .lead-tier-cell {
+  margin-bottom: 12px;
+}
+
+.right-side .admin-loader-host .lead-tier-count {
+  margin: 8px 0 0;
+  font-weight: 600;
+}
+
+/* Lead user detail — dl-horizontal only; do not put col-* on dt/dd */
+.right-side .admin-loader-host .lead-detail-dl {
+  margin-bottom: 0;
+}
+
+.right-side .admin-loader-host .lead-detail-dl dt {
+  font-weight: 600;
+}
+
+/* Narrow user card (col-md-5): tighter label column */
+.right-side .admin-loader-host .lead-detail-dl-compact dt {
+  width: 110px;
+}
+
+.right-side .admin-loader-host .lead-detail-dl-compact dd {
+  margin-left: 125px;
+}
+
+@media (max-width: 767px) {
+  .right-side .admin-loader-host .lead-detail-dl-compact dt {
+    width: auto;
+  }
+
+  .right-side .admin-loader-host .lead-detail-dl-compact dd {
+    margin-left: 0;
+  }
+}
+
+.right-side .admin-loader-host .lead-detail-metric {
+  padding: 8px 4px 12px;
+}
+
+.right-side .admin-loader-host .lead-detail-metric-value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #333;
+}
+
+.right-side .admin-loader-host .lead-kpi-card-link,
+.right-side .admin-loader-host .lead-kpi-card-link:hover,
+.right-side .admin-loader-host .lead-kpi-card-link:focus {
+  color: #fff;
+  display: block;
+  text-decoration: none;
+}
+
+.right-side .admin-loader-host .lead-kpi-card-link .inner p {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.right-side .admin-loader-host .lead-module-toolbar .btn-group .btn {
+  margin-left: 0;
+}

@@ -261,14 +261,48 @@ body {
 }
 
 /* Mobile: left drawer (offcanvas) — app-style nav */
-.shop-nav-drawer {
+.shop-nav-drawer.offcanvas {
+  display: flex;
+  flex-direction: column;
   width: min(300px, 88vw) !important;
+  max-height: 100dvh;
   border: none;
   box-shadow: 8px 0 32px rgba(20, 83, 45, 0.15);
 }
 
+.shop-nav-drawer .offcanvas-header {
+  flex-shrink: 0;
+}
+
 .shop-nav-drawer .offcanvas-body {
-  min-height: calc(100vh - 4rem);
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+
+.shop-nav-drawer-nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.shop-nav-drawer-footer {
+  flex-shrink: 0;
+  padding: 1rem 1.25rem;
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
+
+.shop-nav-drawer-cta {
+  display: block;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .shop-drawer-link {

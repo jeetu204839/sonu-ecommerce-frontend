@@ -1,4 +1,17 @@
-const MobileNavigation = () => {
+import Link from "next/link";
+import { cookies } from "next/headers";
+
+import ShopSignInTrigger from "@/app/(shop)/component/ShopSignInTrigger";
+import { shopLogoutAction } from "@/app/(shop)/user/actions";
+import { SHOP_AUTH_TOKEN_COOKIE } from "@/lib/auth/constants";
+
+const drawerLinkClass = "nav-link shop-drawer-link py-3 px-3 rounded";
+
+export default async function MobileNavigation() {
+  const isLoggedIn = Boolean(
+    (await cookies()).get(SHOP_AUTH_TOKEN_COOKIE)?.value?.trim(),
+  );
+
   return (
     <div
       className="offcanvas offcanvas-start shop-nav-drawer"
@@ -7,7 +20,7 @@ const MobileNavigation = () => {
       aria-labelledby="shopNavDrawerLabel"
     >
       <div className="offcanvas-header border-bottom py-3 d-flex align-items-center justify-content-between gap-2">
-        <a
+        <Link
           id="shopNavDrawerLabel"
           href="/"
           className="d-flex align-items-center gap-2 gap-sm-3 text-decoration-none text-reset flex-grow-1 min-w-0 me-1"
@@ -25,7 +38,7 @@ const MobileNavigation = () => {
           >
             Enterprises
           </span>
-        </a>
+        </Link>
         <button
           type="button"
           className="btn-close flex-shrink-0"
@@ -33,100 +46,72 @@ const MobileNavigation = () => {
           aria-label="Close menu"
         />
       </div>
-      <div className="offcanvas-body d-flex flex-column p-0">
-        <nav className="nav flex-column px-2 pt-2">
-          <a
-            className="nav-link shop-drawer-link py-3 px-3 rounded active"
+      <div className="offcanvas-body">
+        <nav
+          className="nav flex-column px-2 pt-2 shop-nav-drawer-nav"
+          aria-label="Mobile menu"
+        >
+          <Link
             href="/"
+            className={drawerLinkClass}
             data-bs-dismiss="offcanvas"
           >
             Home
-          </a>
-          <a
-            className="nav-link shop-drawer-link py-3 px-3 rounded"
+          </Link>
+          <Link
             href="/shop"
+            className={drawerLinkClass}
             data-bs-dismiss="offcanvas"
           >
             Shop
-          </a>
-          <a
-            className="nav-link shop-drawer-link py-3 px-3 rounded"
-            href="/shop-detail"
+          </Link>
+          <Link
+            href="/search"
+            className={drawerLinkClass}
             data-bs-dismiss="offcanvas"
           >
-            Shop Detail
-          </a>
-          <div className="px-3 py-2">
-            <div className="small text-muted text-uppercase fw-semibold mb-2">
-              Pages
-            </div>
-            <a
-              className="d-block py-2 text-decoration-none text-dark"
-              href="/cart"
-              data-bs-dismiss="offcanvas"
-            >
-              Cart
-            </a>
-            <a
-              className="d-block py-2 text-decoration-none text-dark"
-              href="/checkout"
-              data-bs-dismiss="offcanvas"
-            >
-              Checkout
-            </a>
-            <a
-              className="d-block py-2 text-decoration-none text-dark"
-              href="/testimonial"
-              data-bs-dismiss="offcanvas"
-            >
-              Testimonial
-            </a>
-            <a
-              className="d-block py-2 text-decoration-none text-dark"
-              href="/404"
-              data-bs-dismiss="offcanvas"
-            >
-              404 Page
-            </a>
-          </div>
-          <a
-            className="nav-link shop-drawer-link py-3 px-3 rounded"
+            Search
+          </Link>
+          <Link
             href="/contact"
+            className={drawerLinkClass}
             data-bs-dismiss="offcanvas"
           >
             Contact
-          </a>
+          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                href="/user"
+                className={drawerLinkClass}
+                data-bs-dismiss="offcanvas"
+              >
+                Profile
+              </Link>
+              <form action={shopLogoutAction} className="px-2">
+                <button
+                  type="submit"
+                  className={`${drawerLinkClass} w-100 text-start border-0 bg-transparent`}
+                  data-bs-dismiss="offcanvas"
+                >
+                  Logout
+                </button>
+              </form>
+            </>
+          ) : (
+            <ShopSignInTrigger variant="drawer" />
+          )}
         </nav>
-        <div className="mt-auto border-top p-3 d-flex align-items-center justify-content-around gap-2 bg-light">
-          <a
-            href="/cart"
-            className="position-relative text-primary d-inline-flex align-items-center justify-content-center text-decoration-none"
-            style={{ width: "48px", height: "48px" }}
-          >
-            <i className="fa fa-shopping-bag fa-2x" />
-            <span
-              className="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1 small"
-              style={{
-                top: "0",
-                right: "0",
-                height: "20px",
-                minWidth: "20px",
-              }}
-            >
-              3
-            </span>
-          </a>
-          <a
+        <div className="shop-nav-drawer-footer">
+          <Link
             href="/contact"
-            className="text-primary d-inline-flex align-items-center justify-content-center text-decoration-none"
-            style={{ width: "48px", height: "48px" }}
+            className="shop-mega-cta shop-nav-drawer-cta"
+            data-bs-dismiss="offcanvas"
           >
-            <i className="fas fa-user fa-2x" />
-          </a>
+            Get Best Price
+          </Link>
         </div>
       </div>
     </div>
   );
-};
-
-export default MobileNavigation;
+}

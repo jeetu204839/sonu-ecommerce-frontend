@@ -3,8 +3,8 @@
 import { SHOP_PHONE_OTP_OPEN_EVENT } from "@/lib/auth/constants";
 
 type ShopSignInTriggerProps = Readonly<{
-  /** Nav icon button (logged out) or dropdown menu item (legacy). */
-  variant?: "nav" | "dropdown";
+  /** Nav icon (header), mobile drawer row, or dropdown menu item. */
+  variant?: "nav" | "drawer" | "dropdown";
   className?: string;
 }>;
 
@@ -32,6 +32,23 @@ export default function ShopSignInTrigger({
           aria-hidden="true"
         />
         <span className="shop-nav-util-label">Sign In</span>
+      </button>
+    );
+  }
+
+  if (variant === "drawer") {
+    return (
+      <button
+        type="button"
+        className={
+          className ??
+          "nav-link shop-drawer-link py-3 px-3 rounded w-100 text-start border-0 bg-transparent"
+        }
+        data-bs-dismiss="offcanvas"
+        aria-label="Sign in with your mobile number"
+        onClick={handleClick}
+      >
+        Sign In
       </button>
     );
   }

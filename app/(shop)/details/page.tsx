@@ -532,7 +532,7 @@ export default async function DetailsPage({ searchParams }: PageProps) {
           </div>
         </div>
 
-        <div className="mt-5 pt-4 border-top border-secondary">
+        {/* <div className="mt-5 pt-4 border-top border-secondary">
           <h3 className="h4 text-primary mb-4">You may also need</h3>
           <div className="row g-4">
             {related.map((p) => (
@@ -560,7 +560,8 @@ export default async function DetailsPage({ searchParams }: PageProps) {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
+        
       </div>
     </>
   );

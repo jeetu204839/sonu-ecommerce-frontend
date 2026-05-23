@@ -5,7 +5,14 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { setShopAuthSessionAction } from "@/app/(shop)/shop-phone-auth-actions";
-import { SHOP_AUTH_READY_EVENT } from "@/lib/auth/constants";
+import {
+  SHOP_AUTH_READY_EVENT,
+  SHOP_PHONE_OTP_OPEN_EVENT,
+} from "@/lib/auth/constants";
+import {
+  mergeShopProfileSnapshots,
+  shopProfileFromUser,
+} from "@/lib/auth/shop-profile-snapshot";
 import {
   requestShopPhoneOtp,
   verifyShopPhoneOtp,
@@ -66,6 +73,22 @@ export default function ShopPhoneOtpGate({
     }
     scheduleNextReminder();
     return () => clearReminderTimer();
+  }, [loggedIn]);
+
+  useEffect(() => {
+    if (loggedIn) return;
+
+    function openSignInModal() {
+      clearReminderTimer();
+      setChallengeId(null);
+      setOtp("");
+      setError(null);
+      setModalOpen(true);
+    }
+
+    window.addEventListener(SHOP_PHONE_OTP_OPEN_EVENT, openSignInModal);
+    return () =>
+      window.removeEventListener(SHOP_PHONE_OTP_OPEN_EVENT, openSignInModal);
   }, [loggedIn]);
 
   const [phone, setPhone] = useState("");
@@ -163,7 +186,17 @@ export default function ShopPhoneOtpGate({
         return;
       }
 
-      const session = await setShopAuthSessionAction(token);
+      const profileSnapshot = mergeShopProfileSnapshots(
+        shopProfileFromUser(env?.data?.user, phoneDigits),
+        {
+          name: "",
+          email: "",
+          phoneNumber: phoneDigits,
+          countryCode: "91",
+        },
+      );
+
+      const session = await setShopAuthSessionAction(token, profileSnapshot);
       if (!session.ok) {
         setError(session.message ?? "Could not save your session.");
         return;

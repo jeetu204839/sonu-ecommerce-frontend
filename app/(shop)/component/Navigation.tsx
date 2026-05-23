@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import MobileNavigation from "@/app/(shop)/component/MobileNavigation";
 import NavSearchForm from "@/app/(shop)/component/NavSearchForm";
+import ShopNavAccountMenu from "@/app/(shop)/component/ShopNavAccountMenu";
 
 function NavUtilLink({
   href,
@@ -68,30 +69,7 @@ const Navigation = () => {
             >
               <NavUtilLink href="/shop" iconClass="fas fa-warehouse" label="Shop" />
               <NavUtilLink href="/contact" iconClass="fas fa-question-circle" label="Contact" />
-              <div className="dropdown">
-                <button
-                  type="button"
-                  className="shop-nav-signin btn btn-link text-white text-decoration-none p-0 border-0 shadow-none dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  aria-label="Sign in menu"
-                >
-                  <i className="fas fa-user d-block mx-auto shop-nav-util-icon" aria-hidden="true" />
-                  <span className="shop-nav-util-label">Sign In</span>
-                </button>
-                <ul className="dropdown-menu dropdown-menu-end shadow border-0 mt-2 py-2 small">
-                  <li>
-                    <Link href="/contact" className="dropdown-item">
-                      Continue as guest
-                    </Link>
-                  </li>
-                  <li>
-                    <span className="dropdown-item-text text-muted">
-                      Account login can be added here.
-                    </span>
-                  </li>
-                </ul>
-              </div>
+              <ShopNavAccountMenu />
             </nav>
           </div>
         </div>

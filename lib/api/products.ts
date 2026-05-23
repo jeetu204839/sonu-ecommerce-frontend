@@ -176,6 +176,15 @@ export async function fetchRandomProductsPage(options: {
   return fetchProductsByPath(path);
 }
 
+/** GET {API_BASE_URL}/public/products/featured?page=1 */
+export async function fetchFeaturedProductsPage(
+  page = 1,
+): Promise<FetchProductsResult> {
+  const safePage = Number.isFinite(page) && page > 0 ? page : 1;
+  const path = `/public/products/featured?page=${safePage}`;
+  return fetchProductsByPath(path);
+}
+
 async function fetchProductsByPath(path: string): Promise<FetchProductsResult> {
   const payload = await apiFetchJson<ProductsApiEnvelope>(path, {
     cache: "no-store",

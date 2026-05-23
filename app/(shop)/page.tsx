@@ -1,8 +1,12 @@
 
 import Link from "next/link";
 
+import FeaturedHeroCarousel from "@/app/(shop)/component/FeaturedHeroCarousel";
 import { fetchFeaturedCategories } from "@/lib/api/categories";
-import { fetchRandomProductsPage } from "@/lib/api/products";
+import {
+  fetchFeaturedProductsPage,
+  fetchRandomProductsPage,
+} from "@/lib/api/products";
 import SearchHeroForm from "./SearchHeroForm";
 
 type PageProps = Readonly<{
@@ -13,6 +17,8 @@ export default async function Shop({ searchParams }: PageProps) {
   const sp = await searchParams;
   const selectedCategory = sp.category?.trim() || "";
   const featuredCategories = await fetchFeaturedCategories();
+  const { products: featuredCarouselProducts } =
+    await fetchFeaturedProductsPage(1);
   const { products } = await fetchRandomProductsPage({
     page: 1,
     categorySlug: selectedCategory || undefined,
@@ -47,75 +53,7 @@ export default async function Shop({ searchParams }: PageProps) {
               <SearchHeroForm />
             </div>
             <div className="col-md-12 col-lg-5">
-              <div id="carouselId" className="carousel slide position-relative" data-bs-ride="carousel">
-                <div className="carousel-inner" role="listbox">
-
-                  <div className="carousel-item active rounded">
-                    <img
-                      src="/img/pipe-hooks.webp"
-                      className="rounded bg-secondary"
-                      alt="Pipe hooks"
-                    />
-                    <a href="#" className="btn px-4 py-2 text-white rounded">
-                      Silver 4inch GI J Shape Pipe Hook
-                    </a>
-                  </div>
-
-                  <div className="carousel-item rounded">
-                    <img
-                      src="/img/check-valve.webp"
-                      className="rounded bg-secondary"
-                      alt="Check valve"
-                    />
-                    <a href="#" className="btn px-4 py-2 text-white rounded">
-                      Ci Check Valve handi
-                    </a>
-                  </div>
-
-                  <div className="carousel-item rounded">
-                    <img
-                      src="/img/hose-nipple.webp"
-                      className="rounded bg-secondary"
-                      alt="Hose nipple"
-                    />
-                    <a href="#" className="btn px-4 py-2 text-white rounded">
-                      Ci Hose Nipple
-                    </a>
-                  </div>
-
-                  <div className="carousel-item rounded">
-                    <img
-                      src="/img/india-mark-2-hand-pump.webp"
-                      className="rounded bg-secondary"
-                      alt="Hand pump"
-                    />
-                    <a href="#" className="btn px-4 py-2 text-white rounded">
-                      India Mark 2 Hand Pump
-                    </a>
-                  </div>
-
-                  <div className="carousel-item rounded">
-                    <img
-                      src="/img/belcha-garden-square-hand.webp"
-                      className="rounded bg-secondary"
-                      alt="Garden belcha"
-                    />
-                    <a href="#" className="btn px-4 py-2 text-white rounded">
-                     BELCHA Garden SQUARE Hand
-                    </a>
-                  </div>
-
-                </div>
-
-                <button className="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
-                  <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span className="visually-hidden">Previous</span>
-                </button>
-                <button className="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
-                  <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span className="visually-hidden">Next</span>
-                </button>
-              </div>
+              <FeaturedHeroCarousel products={featuredCarouselProducts} />
             </div>
           </div>
         </div>

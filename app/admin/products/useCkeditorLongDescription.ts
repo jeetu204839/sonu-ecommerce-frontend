@@ -35,15 +35,16 @@ export function useCkeditorLongDescription(
       const orphan = CK.instances[textareaId];
       if (orphan) {
         try {
-          const raw = orphan.element?.$ as Element | undefined;
-          if (raw?.isConnected) return true;
+          const raw = (orphan as any).element?.$ as Element | undefined;
+         if (raw?.isConnected) return true;
         } catch {
           /* stale editor */
         }
         destroyInstance();
       }
 
-      const el = document.getElementById(textareaId);
+      const el = document.getElementById(textareaId) as HTMLTextAreaElement;
+
       if (
         !el ||
         !el.isConnected ||
@@ -54,7 +55,8 @@ export function useCkeditorLongDescription(
       }
 
       try {
-        CK.replace(el, {
+        // Pass the textarea id (string), not the element
+        CK.replace(el.id, {
           height: 320,
           removePlugins: "scayt,wsc",
         });

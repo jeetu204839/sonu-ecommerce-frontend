@@ -71,7 +71,7 @@ export default function FeaturedHeroCarousel({
         ride: "carousel",
         wrap: true,
       });
-      instance.cycle();
+      (instance as any).cycle();
     });
 
     return () => {

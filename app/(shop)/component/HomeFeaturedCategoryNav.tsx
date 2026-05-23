@@ -1,10 +1,12 @@
 import Link from "next/link";
 
 import type { CategoryListItem } from "@/lib/api/categories";
-import { resolveProductImageUrl } from "@/lib/api/products";
 
 import CategoryFilterChip from "@/app/(shop)/component/CategoryFilterChip";
-import { categoryIconClass } from "@/app/(shop)/component/category-display";
+import {
+  categoryIconClass,
+  getCategoryImageSrc,
+} from "@/app/(shop)/component/category-display";
 import {
   homeAllProductsHref,
   homeCategoryHref,
@@ -15,11 +17,25 @@ type HomeFeaturedCategoryNavProps = Readonly<{
   activeSlug?: string;
 }>;
 
-function categoryImageSrc(image?: string): string | null {
-  if (!image?.trim()) return null;
-  const resolved = resolveProductImageUrl(image);
-  const placeholder = resolveProductImageUrl(null);
-  return resolved === placeholder ? null : resolved;
+function CategoryCardMedia({ cat }: Readonly<{ cat: CategoryListItem }>) {
+  const imgSrc = getCategoryImageSrc(cat);
+
+  if (imgSrc) {
+    return (
+      <img
+        src={imgSrc}
+        alt=""
+        className="home-category-card-img"
+        loading="lazy"
+      />
+    );
+  }
+
+  return (
+    <span className="home-category-card-icon" aria-hidden="true">
+      <i className={categoryIconClass(cat)} />
+    </span>
+  );
 }
 
 function HomeCategoryCard({
@@ -29,8 +45,6 @@ function HomeCategoryCard({
   cat: CategoryListItem;
   active: boolean;
 }>) {
-  const imgSrc = categoryImageSrc(cat.image);
-
   return (
     <Link
       href={homeCategoryHref(cat.slug)}
@@ -39,13 +53,7 @@ function HomeCategoryCard({
       aria-current={active ? "page" : undefined}
     >
       <span className="home-category-card-media">
-        {imgSrc ? (
-          <img src={imgSrc} alt="" className="home-category-card-img" />
-        ) : (
-          <span className="home-category-card-icon" aria-hidden="true">
-            <i className={categoryIconClass(cat)} />
-          </span>
-        )}
+        <CategoryCardMedia cat={cat} />
       </span>
       <span className="home-category-card-body">
         <span className="home-category-card-name">{cat.name}</span>
@@ -91,6 +99,7 @@ export default function HomeFeaturedCategoryNav({
               count={cat.productCount}
               active={activeSlug === cat.slug}
               scroll={false}
+              imageSrc={getCategoryImageSrc(cat)}
             />
           ))}
         </div>

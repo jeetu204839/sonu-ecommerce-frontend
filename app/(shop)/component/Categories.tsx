@@ -5,7 +5,10 @@ import {
 } from "@/lib/api/categories";
 
 import CategoryFilterChip from "@/app/(shop)/component/CategoryFilterChip";
-import { categoryIconClass } from "@/app/(shop)/component/category-display";
+import {
+  categoryIconClass,
+  getCategoryImageSrc,
+} from "@/app/(shop)/component/category-display";
 import {
   shopAllProductsHref,
   shopCategoryHref,
@@ -26,6 +29,7 @@ function CategoryListItemRow({
 }>) {
   const isActive = activeSlug === cat.slug;
   const activeChildren = cat.children.filter((c) => c.isActive);
+  const imageSrc = getCategoryImageSrc(cat);
 
   return (
     <li
@@ -39,8 +43,22 @@ function CategoryListItemRow({
         aria-current={isActive ? "page" : undefined}
       >
         <span className="shop-category-row-main">
-          <span className="shop-category-row-icon" aria-hidden="true">
-            <i className={categoryIconClass(cat)} />
+          <span
+            className={`shop-category-row-icon${
+              imageSrc ? " shop-category-row-icon--img" : ""
+            }`}
+            aria-hidden="true"
+          >
+            {imageSrc ? (
+              <img
+                src={imageSrc}
+                alt=""
+                className="shop-category-row-icon-img"
+                loading="lazy"
+              />
+            ) : (
+              <i className={categoryIconClass(cat)} />
+            )}
           </span>
           <span className="shop-category-row-text">
             <span className="shop-category-row-name">{cat.name}</span>
@@ -116,6 +134,7 @@ export default async function Categories({ activeSlug }: CategoriesProps) {
                 label={cat.name}
                 count={cat.productCount}
                 active={activeSlug === cat.slug}
+                imageSrc={getCategoryImageSrc(cat)}
               />
             ))}
           </div>

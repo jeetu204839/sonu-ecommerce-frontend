@@ -1,4 +1,5 @@
 import { apiFetchJson } from "@/lib/api/client";
+import { API_BASE_URL, MEDIA_BASE_URL } from "@/lib/config";
 
 /**
  * Categories API: GET {API_BASE_URL}/public/categories
@@ -31,6 +32,74 @@ function optionalString(raw: RawCategory, keys: string[]): string | undefined {
     if (typeof v === "string" && v.trim()) return v;
   }
   return undefined;
+}
+
+function isUsableImagePath(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed || trimmed === "null" || trimmed.endsWith("/null")) return false;
+  return true;
+}
+
+function imageFromUnknown(value: unknown): string | undefined {
+  if (typeof value === "string" && isUsableImagePath(value)) return value.trim();
+  if (value && typeof value === "object") {
+    const o = value as Record<string, unknown>;
+    return optionalString(o as RawCategory, [
+      "url",
+      "path",
+      "src",
+      "image",
+      "imageUrl",
+      "image_url",
+    ]);
+  }
+  return undefined;
+}
+
+function pickCategoryImage(raw: RawCategory): string | undefined {
+  const direct = optionalString(raw, [
+    "image",
+    "image_url",
+    "imageUrl",
+    "image_path",
+    "imagePath",
+    "thumbnail",
+    "category_image",
+    "categoryImage",
+    "img",
+    "photo",
+  ]);
+  if (direct && isUsableImagePath(direct)) return direct.trim();
+
+  for (const key of ["image", "categoryImage", "thumbnail", "media"]) {
+    const nested = imageFromUnknown(raw[key]);
+    if (nested && isUsableImagePath(nested)) return nested.trim();
+  }
+
+  return undefined;
+}
+
+/** Build a browser-ready URL from API image path or full URL. */
+export function resolveCategoryImageUrl(
+  filename: string | null | undefined,
+): string {
+  if (!filename?.trim() || !isUsableImagePath(filename)) return "";
+  const name = filename.trim();
+  if (name.startsWith("http://") || name.startsWith("https://")) return name;
+  if (MEDIA_BASE_URL) {
+    return `${MEDIA_BASE_URL}/${name.replace(/^\//, "")}`;
+  }
+  const apiHost = API_BASE_URL.replace(/\/api\/?$/i, "");
+  if (apiHost) {
+    return `${apiHost}/${name.replace(/^\//, "")}`;
+  }
+  if (name.startsWith("/")) return name;
+  return `/${name.replace(/^\//, "")}`;
+}
+
+export function getCategoryImageSrc(cat: CategoryListItem): string | null {
+  const url = resolveCategoryImageUrl(cat.image);
+  return url || null;
 }
 
 function pickString(raw: RawCategory, keys: string[], fallback: string): string {
@@ -78,7 +147,7 @@ function mapRow(raw: RawCategory, index: number): CategoryListItem {
     "description",
     "category_description",
   ]);
-  const image = optionalString(raw, ["image", "image_url", "thumbnail"]);
+  const image = pickCategoryImage(raw);
   const icon = optionalString(raw, ["icon"]);
 
   const isActive = pickBool(raw, ["is_active", "isActive", "active"], true);

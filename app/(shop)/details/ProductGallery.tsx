@@ -34,13 +34,7 @@ export default function ProductGallery({
 
   return (
     <div className="product-detail-gallery">
-      <div
-        className="position-relative w-100 bg-white border border-secondary rounded overflow-hidden mb-3"
-        style={{
-          aspectRatio: "1 / 1",
-          maxHeight: "min(520px, 85vw)",
-        }}
-      >
+      <div className="product-detail-gallery-main">
         <div className="position-absolute top-0 start-0 w-100 h-100 p-2 p-md-4">
           <div className="position-relative h-100 w-100">
             {isRemoteImageSrc(main.src) ? (
@@ -70,7 +64,7 @@ export default function ProductGallery({
       </div>
 
       <div
-        className="d-flex flex-wrap gap-2"
+        className="product-detail-gallery-thumbs"
         role="listbox"
         aria-label={`${productName} gallery thumbnails`}
       >
@@ -82,10 +76,9 @@ export default function ProductGallery({
               type="button"
               role="option"
               aria-selected={isActive}
-              className={`p-1 border rounded bg-white ${
-                isActive ? "border-primary border-2" : "border-secondary"
+              className={`product-detail-gallery-thumb${
+                isActive ? " is-active" : ""
               }`}
-              style={{ width: "72px", height: "72px" }}
               onClick={() => setActive(index)}
               onKeyDown={(e) => onKeyNav(e, index)}
             >

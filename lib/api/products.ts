@@ -349,22 +349,252 @@ export type ProductDetailApiEnvelope = {
   errors: unknown;
 };
 
-function extractProductFromDetailData(
-  data: unknown,
-): ProductDetailDto | null {
-  if (!data || typeof data !== "object") return null;
-  const obj = data as Record<string, unknown>;
-  if (
-    "product" in obj &&
-    obj.product &&
-    typeof obj.product === "object"
-  ) {
-    return obj.product as ProductDetailDto;
+type RawRecord = Record<string, unknown>;
+
+function pickDetailString(
+  raw: RawRecord,
+  keys: string[],
+  fallback = "",
+): string {
+  for (const key of keys) {
+    const v = raw[key];
+    if (typeof v === "string" && v.trim()) return v.trim();
+    if (typeof v === "number" && !Number.isNaN(v)) return String(v);
   }
-  if (typeof obj.id === "number" && typeof obj.slug === "string") {
-    return obj as ProductDetailDto;
+  return fallback;
+}
+
+function pickDetailOptionalString(
+  raw: RawRecord,
+  keys: string[],
+): string | null {
+  const value = pickDetailString(raw, keys, "");
+  return value || null;
+}
+
+function pickDetailNumber(
+  raw: RawRecord,
+  keys: string[],
+  fallback = 0,
+): number {
+  for (const key of keys) {
+    const v = raw[key];
+    if (typeof v === "number" && !Number.isNaN(v)) return v;
+    if (typeof v === "string" && v.trim()) {
+      const parsed = Number.parseFloat(v);
+      if (!Number.isNaN(parsed)) return parsed;
+    }
+  }
+  return fallback;
+}
+
+function pickDetailBool(
+  raw: RawRecord,
+  keys: string[],
+  fallback = false,
+): boolean {
+  for (const key of keys) {
+    const v = raw[key];
+    if (typeof v === "boolean") return v;
+    if (v === 1 || v === "1" || v === "true") return true;
+    if (v === 0 || v === "0" || v === "false") return false;
+  }
+  return fallback;
+}
+
+function normalizeDetailImages(raw: unknown): ProductDetailImageDto[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((item, index) => {
+      if (!item || typeof item !== "object") return null;
+      const row = item as RawRecord;
+      const imageUrl = pickDetailString(row, [
+        "imageUrl",
+        "image_url",
+        "url",
+        "path",
+        "src",
+      ]);
+      if (!imageUrl) return null;
+      return {
+        id: pickDetailNumber(row, ["id"], index + 1),
+        imageUrl,
+        isPrimary: pickDetailBool(row, ["isPrimary", "is_primary"], false),
+      };
+    })
+    .filter((row): row is ProductDetailImageDto => row !== null);
+}
+
+function normalizeDetailAttributes(raw: unknown): ProductDetailAttributeDto[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((item, index) => {
+      if (!item || typeof item !== "object") return null;
+      const row = item as RawRecord;
+      const optionsRaw = row.attribute ?? row.options ?? row.values;
+      const options: ProductDetailAttributeOptionDto[] = Array.isArray(
+        optionsRaw,
+      )
+        ? optionsRaw
+            .map((opt, optIndex) => {
+              if (!opt || typeof opt !== "object") return null;
+              const o = opt as RawRecord;
+              const name = pickDetailString(o, ["name", "value", "label"]);
+              if (!name) return null;
+              return {
+                id: pickDetailNumber(o, ["id"], optIndex + 1),
+                name,
+              };
+            })
+            .filter(
+              (opt): opt is ProductDetailAttributeOptionDto => opt !== null,
+            )
+        : [];
+
+      const name =
+        pickDetailOptionalString(row, ["name", "label", "attribute_name"]) ??
+        undefined;
+      const value = pickDetailOptionalString(row, ["value"]) ?? undefined;
+      const label = name ?? value ?? "";
+
+      if (!label && options.length === 0) return null;
+
+      const mapped: ProductDetailAttributeDto = {
+        id: pickDetailNumber(row, ["id"], index + 1),
+        attributeId: pickDetailNumber(
+          row,
+          ["attributeId", "attribute_id"],
+          index + 1,
+        ),
+        name: name ?? value ?? undefined,
+        value,
+        attribute: options,
+      };
+      const productId = pickDetailNumber(row, ["productId", "product_id"], 0);
+      if (productId > 0) mapped.productId = productId;
+      return mapped;
+    })
+    .filter((row): row is ProductDetailAttributeDto => row !== null);
+}
+
+function normalizeDetailCategory(raw: unknown): ProductDetailCategoryDto {
+  if (!raw || typeof raw !== "object") {
+    return {
+      id: 0,
+      name: "Uncategorized",
+      slug: "",
+      description: null,
+    };
+  }
+  const row = raw as RawRecord;
+  return {
+    id: pickDetailNumber(row, ["id"], 0),
+    name: pickDetailString(row, ["name", "title", "category_name"], "Uncategorized"),
+    slug: pickDetailString(row, ["slug"], ""),
+    description: pickDetailOptionalString(row, ["description", "category_description"]),
+  };
+}
+
+function normalizeDetailVendor(raw: unknown): ProductDetailVendorDto {
+  if (!raw || typeof raw !== "object") {
+    return {
+      storeName: "Ray Enterprises",
+      storeSlug: "",
+      isVerified: false,
+      gstNumber: null,
+    };
+  }
+  const row = raw as RawRecord;
+  const commission = pickDetailNumber(row, ["commissionRate", "commission_rate"], 0);
+  return {
+    id: pickDetailNumber(row, ["id"], 0) || undefined,
+    storeName: pickDetailString(
+      row,
+      ["storeName", "store_name", "name"],
+      "Ray Enterprises",
+    ),
+    storeSlug: pickDetailString(row, ["storeSlug", "store_slug", "slug"], ""),
+    isVerified: pickDetailBool(row, ["isVerified", "is_verified"], false),
+    gstNumber: pickDetailOptionalString(row, ["gstNumber", "gst_number"]),
+    commissionRate: commission > 0 ? commission : undefined,
+  };
+}
+
+function extractProductRawFromDetailData(data: unknown): RawRecord | null {
+  if (!data || typeof data !== "object") return null;
+  const obj = data as RawRecord;
+  if (obj.product && typeof obj.product === "object") {
+    return obj.product as RawRecord;
+  }
+  if (typeof obj.slug === "string" && obj.slug.trim()) {
+    return obj;
   }
   return null;
+}
+
+export function normalizeProductDetail(raw: RawRecord): ProductDetailDto {
+  const category = normalizeDetailCategory(raw.category ?? raw.Category);
+  const vendor = normalizeDetailVendor(raw.vendor ?? raw.Vendor);
+  const productImages = normalizeDetailImages(
+    raw.productImages ?? raw.product_images ?? raw.images,
+  );
+  const attributes = normalizeDetailAttributes(raw.attributes);
+
+  return {
+    id: pickDetailNumber(raw, ["id"], 0),
+    vendorId:
+      pickDetailNumber(raw, ["vendorId", "vendor_id"], 0) ||
+      vendor.id ||
+      undefined,
+    categoryId:
+      pickDetailNumber(raw, ["categoryId", "category_id"], 0) ||
+      category.id ||
+      undefined,
+    name: pickDetailString(raw, ["name", "title"], "Product"),
+    slug: pickDetailString(raw, ["slug"], ""),
+    sku: pickDetailString(raw, ["sku", "SKU"], "—"),
+    shortDescription: pickDetailOptionalString(raw, [
+      "shortDescription",
+      "short_description",
+    ]),
+    longDescription: pickDetailOptionalString(raw, [
+      "longDescription",
+      "long_description",
+    ]),
+    metaTitle: pickDetailOptionalString(raw, ["metaTitle", "meta_title"]),
+    metaDescription: pickDetailOptionalString(raw, [
+      "metaDescription",
+      "meta_description",
+    ]),
+    mrp: pickDetailNumber(raw, ["mrp", "MRP"], 0),
+    price: pickDetailNumber(raw, ["price"], 0),
+    discountPercent: pickDetailNumber(
+      raw,
+      ["discountPercent", "discount_percent"],
+      0,
+    ),
+    stock: pickDetailNumber(raw, ["stock", "quantity"], 0),
+    weight: pickDetailNumber(raw, ["weight"], 0),
+    weightUnit: pickDetailString(raw, ["weightUnit", "weight_unit"], "kg"),
+    length: pickDetailNumber(raw, ["length"], 0),
+    lengthUnit: pickDetailString(raw, ["lengthUnit", "length_unit"], "cm"),
+    width: pickDetailNumber(raw, ["width"], 0),
+    widthUnit: pickDetailString(raw, ["widthUnit", "width_unit"], "cm"),
+    height: pickDetailNumber(raw, ["height"], 0),
+    heightUnit: pickDetailString(raw, ["heightUnit", "height_unit"], "cm"),
+    status: pickDetailOptionalString(raw, ["status"]) ?? undefined,
+    visibility: pickDetailOptionalString(raw, ["visibility"]) ?? undefined,
+    stockStatus: pickDetailString(
+      raw,
+      ["stockStatus", "stock_status"],
+      "IN_STOCK",
+    ),
+    isFeatured: pickDetailBool(raw, ["isFeatured", "is_featured"], false),
+    category,
+    vendor,
+    productImages,
+    attributes,
+  };
 }
 
 export function galleryImagesFromProduct(
@@ -418,15 +648,38 @@ async function fetchProductDetailImpl(
     return { product: null, message: "Empty response from server." };
   }
 
-  const product = extractProductFromDetailData(payload.data);
-  if (!product) {
+  const raw = extractProductRawFromDetailData(payload.data);
+  if (!raw) {
     return {
       product: null,
       message: payload.message || "Product not found.",
     };
   }
 
-  return { product, message: payload.message };
+  if (!payload.status) {
+    return {
+      product: null,
+      message: payload.message || "Product not found.",
+    };
+  }
+
+  return {
+    product: normalizeProductDetail(raw),
+    message: payload.message,
+  };
+}
+
+export function formatProductInr(amount: number): string {
+  return new Intl.NumberFormat("en-IN", {
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+export function isProductInStock(product: Pick<ProductDetailDto, "stock" | "stockStatus">): boolean {
+  const status = product.stockStatus.toUpperCase();
+  if (status === "OUT_OF_STOCK") return false;
+  if (status === "IN_STOCK") return product.stock > 0;
+  return product.stock > 0;
 }
 
 /** Cached per request so `generateMetadata` and the page share one fetch. */

@@ -244,8 +244,7 @@ export default function ProductEnquiryModal({
     <>
       <button
         type="button"
-        className="btn btn-primary btn-lg d-inline-flex align-items-center justify-content-center gap-2 px-4 px-xl-5 py-3 rounded-pill fw-semibold shadow"
-        style={{ letterSpacing: "0.03em" }}
+        className="btn btn-primary btn-lg product-detail-enquiry-btn d-inline-flex align-items-center justify-content-center gap-2 w-100"
         onClick={openModal}
       >
         <i className="fas fa-envelope-open-text" aria-hidden="true" />

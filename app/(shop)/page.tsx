@@ -1,7 +1,6 @@
-
-import Link from "next/link";
-
 import FeaturedHeroCarousel from "@/app/(shop)/component/FeaturedHeroCarousel";
+import HomeFeaturedCategoryNav from "@/app/(shop)/component/HomeFeaturedCategoryNav";
+import ShopProductCard from "@/app/(shop)/component/ShopProductCard";
 import { fetchFeaturedCategories } from "@/lib/api/categories";
 import {
   fetchFeaturedProductsPage,
@@ -61,98 +60,41 @@ export default async function Shop({ searchParams }: PageProps) {
 {/* Hero Section */}
 
       {/* Products Section */}
-      <div className="container-fluid fruite py-5">
-        <div className="container">
-          <div className="tab-class text-center">
-            
-            <div className="row g-3 g-lg-4 align-items-lg-start">
-              <div className="col-12 col-lg-4 text-start">
-                <h1 className="mb-2 mb-lg-0">Premium Quality Cast Iron Products</h1>
-              </div>
-              <div className="col-12 col-lg-8 text-lg-end">
-                <div className="shop-product-tabs-scroll">
+      <div className="container-fluid fruite shop-products-section home-products-section py-4 py-lg-5 px-0">
+        <div className="shop-products-inner container px-0 px-lg-3">
+          <header className="home-products-header">
+            <h2 className="home-products-title">
+              Premium Quality Cast Iron Products
+            </h2>
+            <p className="home-products-sub mb-0">
+              Shop by category or browse the full collection below
+            </p>
+          </header>
 
-                  {/* Product Tabs */}
-                  <ul className="nav nav-pills d-flex flex-nowrap justify-content-lg-end gap-2 mb-3 mb-lg-5 pb-1">
-                    <li className="nav-item flex-shrink-0">
-                      <Link
-                        className={`d-flex align-items-center justify-content-center px-3 py-1 py-lg-2 bg-light rounded-pill ${
-                          selectedCategory === "" ? "active" : ""
-                        }`}
-                        href="/"
-                        scroll={false}
-                      >
-                        <span className="text-dark text-nowrap shop-product-tab-label">All Products</span>
-                      </Link>
-                    </li>
-                    {featuredCategories.map((category) => (
-                      <li className="nav-item flex-shrink-0" key={category.id}>
-                        <Link
-                          className={`d-flex align-items-center justify-content-center px-3 py-1 py-lg-2 bg-light rounded-pill ${
-                            selectedCategory === category.slug ? "active" : ""
-                          }`}
-                          href={`/category=${encodeURIComponent(category.slug)}`}
-                          scroll={false}
-                        >
-                          <span className="text-dark text-nowrap shop-product-tab-label">
-                            {category.name}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                  {/* Product Tabs */}
-                </div>
-              </div>
-            </div>
+          <HomeFeaturedCategoryNav
+            categories={featuredCategories}
+            activeSlug={selectedCategory}
+          />
 
-            <div className="tab-content">
-              <div id="tab-1" className="tab-pane fade show p-0 active">
-                <div className="row g-4">
-                  {products.length ? (
-                    products.map((product) => (
-                      <div className="col-6 col-md-6 col-lg-4 col-xl-3" key={product.id}>
-                        <div className="rounded position-relative fruite-item h-100 d-flex flex-column">
-                          <div className="fruite-img">
-                            <img
-                              src={product.imageSrc}
-                              className="img-fluid w-100 rounded-top"
-                              alt={product.name}
-                            />
-                          </div>
-                          <div
-                            className="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                            style={{ top: "10px", left: "10px" }}
-                          >
-                            {selectedCategory || "All Products"}
-                          </div>
-                          <div className="p-4 border border-secondary border-top-0 rounded-bottom d-flex flex-column flex-grow-1">
-                            <h4 className="mb-2">{product.name}</h4>
-                            <div className="d-flex justify-content-between flex-lg-wrap mt-auto">
-                              <p className="text-dark fs-5 fw-bold mb-0">
-                                ₹{product.price.toLocaleString("en-IN")}
-                              </p>
-                              <Link
-                                href={`/details/${encodeURIComponent(product.slug)}`}
-                                className="btn border border-secondary rounded-pill px-3 text-primary"
-                              >
-                                View details
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="col-12">
-                      <div className="alert alert-light border border-secondary mb-0">
-                        No products found for this category.
-                      </div>
-                    </div>
-                  )}
+          <div className="home-products-grid-wrap">
+            <div className="row shop-product-grid g-0 g-md-3 g-lg-4 mx-0">
+              {products.length ? (
+                products.map((product) => (
+                  <div className="col-6 col-lg-4 col-xl-3" key={product.id}>
+                    <ShopProductCard
+                      product={product}
+                      categoryLabel={selectedCategory || "All Products"}
+                      showCategoryBadge
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="col-12 px-3">
+                  <div className="alert alert-light border mb-0 home-products-empty">
+                    No products found for this category.
+                  </div>
                 </div>
-              </div>
-              {/* Repeat similar structure for other tabs */}
+              )}
             </div>
           </div>
         </div>

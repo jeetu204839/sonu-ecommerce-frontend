@@ -1,47 +1,74 @@
-import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   fetchCategories,
   type CategoryListItem,
 } from "@/lib/api/categories";
 
-function categoryHref(slug: string): string {
-  const q = new URLSearchParams();
-  q.set("page", "1");
-  q.set("category", slug);
-  return `/shop?${q.toString()}`;
-}
+import CategoryFilterChip from "@/app/(shop)/component/CategoryFilterChip";
+import { categoryIconClass } from "@/app/(shop)/component/category-display";
+import {
+  shopAllProductsHref,
+  shopCategoryHref,
+} from "@/app/(shop)/component/shop-category-links";
 
-function CategoryRow({ cat }: Readonly<{ cat: CategoryListItem }>) {
-  const iconClass = cat.icon?.trim() ? cat.icon : "fas fa-folder";
+type CategoriesProps = Readonly<{
+  activeSlug?: string;
+}>;
+
+function CategoryListItemRow({
+  cat,
+  activeSlug,
+  depth = 0,
+}: Readonly<{
+  cat: CategoryListItem;
+  activeSlug?: string;
+  depth?: number;
+}>) {
+  const isActive = activeSlug === cat.slug;
+  const activeChildren = cat.children.filter((c) => c.isActive);
 
   return (
-    <li>
-      <div className="d-flex justify-content-between fruite-name">
-        <Link href={categoryHref(cat.slug)}>
-          <i className={`${iconClass} me-2`} aria-hidden="true" />
-          {cat.name}
-        </Link>
-        <span>({cat.productCount})</span>
-      </div>
-      {cat.children.length > 0 ? (
-        <ul className="list-unstyled ms-3 mt-2 small">
-          {cat.children
-            .filter((c) => c.isActive)
-            .map((child) => (
-              <CategoryRow key={child.id} cat={child} />
-            ))}
+    <li
+      className={
+        depth > 0 ? "shop-category-list-item shop-category-list-item--sub" : "shop-category-list-item"
+      }
+    >
+      <Link
+        href={shopCategoryHref(cat.slug)}
+        className={`shop-category-row${isActive ? " is-active" : ""}`}
+        aria-current={isActive ? "page" : undefined}
+      >
+        <span className="shop-category-row-main">
+          <span className="shop-category-row-icon" aria-hidden="true">
+            <i className={categoryIconClass(cat)} />
+          </span>
+          <span className="shop-category-row-text">
+            <span className="shop-category-row-name">{cat.name}</span>
+            {cat.description?.trim() && depth === 0 ? (
+              <span className="shop-category-row-desc">{cat.description}</span>
+            ) : null}
+          </span>
+        </span>
+        <span className="shop-category-count">{cat.productCount}</span>
+      </Link>
+
+      {activeChildren.length > 0 ? (
+        <ul className="shop-category-sublist list-unstyled mb-0">
+          {activeChildren.map((child) => (
+            <CategoryListItemRow
+              key={child.id}
+              cat={child}
+              activeSlug={activeSlug}
+              depth={depth + 1}
+            />
+          ))}
         </ul>
       ) : null}
     </li>
   );
 }
 
-/**
- * Server Component: runs on the server, calls your backend using API_BASE_URL.
- * Final request URL: {API_BASE_URL}/public/categories
- */
-export default async function Categories() {
+export default async function Categories({ activeSlug }: CategoriesProps) {
   let items: CategoryListItem[] = [];
   let errorMessage: string | null = null;
 
@@ -53,36 +80,72 @@ export default async function Categories() {
   }
 
   const visible = items.filter((c) => c.isActive);
+  const isAllActive = !activeSlug?.trim();
+  const totalProducts = visible.reduce((sum, c) => sum + c.productCount, 0);
 
-  let body: ReactNode;
-  if (errorMessage) {
-    body = (
-      <p className="small text-danger mb-0" role="alert">
+  const listContent =
+    errorMessage ? (
+      <p className="shop-category-empty text-danger mb-0" role="alert">
         {errorMessage}
       </p>
-    );
-  } else if (visible.length === 0) {
-    body = <p className="small text-muted mb-0">No categories found.</p>;
-  } else {
-    body = (
-      <ul className="list-unstyled fruite-categorie">
+    ) : visible.length === 0 ? (
+      <p className="shop-category-empty text-muted mb-0">No categories found.</p>
+    ) : (
+      <ul className="shop-category-list list-unstyled mb-0">
         {visible.map((cat) => (
-          <CategoryRow key={cat.id} cat={cat} />
+          <CategoryListItemRow key={cat.id} cat={cat} activeSlug={activeSlug} />
         ))}
       </ul>
     );
-  }
 
   return (
-    <div className="col-lg-3">
-      <div className="row g-4">
-        <div className="col-lg-12">
-          <div className="mb-3">
-            <h4>Categories</h4>
-            {body}
+    <>
+      <div className="col-12 d-lg-none shop-category-chips-wrap px-0">
+        <nav className="shop-category-chips" aria-label="Browse by category">
+          <div className="shop-category-chips-scroll">
+            <CategoryFilterChip
+              href={shopAllProductsHref()}
+              label="All"
+              count={totalProducts > 0 ? totalProducts : undefined}
+              active={isAllActive}
+            />
+            {visible.map((cat) => (
+              <CategoryFilterChip
+                key={cat.id}
+                href={shopCategoryHref(cat.slug)}
+                label={cat.name}
+                count={cat.productCount}
+                active={activeSlug === cat.slug}
+              />
+            ))}
           </div>
-        </div>
+        </nav>
       </div>
-    </div>
+
+      <aside className="col-lg-3 d-none d-lg-block shop-category-sidebar-col">
+        <div className="shop-category-panel">
+          <header className="shop-category-panel-head">
+            <h2 className="shop-category-panel-title">Categories</h2>
+            <p className="shop-category-panel-sub mb-0">
+              Filter products by category
+            </p>
+          </header>
+
+          <Link
+            href={shopAllProductsHref()}
+            className={`shop-category-all-link${isAllActive ? " is-active" : ""}`}
+            aria-current={isAllActive ? "page" : undefined}
+          >
+            <i className="fas fa-th-large me-2" aria-hidden="true" />
+            All products
+            {totalProducts > 0 ? (
+              <span className="shop-category-count ms-auto">{totalProducts}</span>
+            ) : null}
+          </Link>
+
+          <div className="shop-category-panel-body">{listContent}</div>
+        </div>
+      </aside>
+    </>
   );
 }

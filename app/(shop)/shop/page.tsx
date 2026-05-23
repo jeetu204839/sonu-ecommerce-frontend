@@ -46,12 +46,12 @@ export default async function ShopPage({ searchParams }: PageProps) {
         </ol>
       </div>
 
-      <div className="container-fluid fruite py-3">
-        <div className="container-fluid">
-          <div className="row g-4">
-            <div className="col-lg-12">
-              <div className="row g-4">
-                <Categories />
+      <div className="container-fluid fruite shop-products-section py-3 py-lg-4 px-0">
+        <div className="shop-products-inner container-fluid px-0 px-lg-3">
+          <div className="row g-3 g-lg-4 mx-0">
+            <div className="col-lg-12 px-0">
+              <div className="row g-0 g-lg-4 mx-0 align-items-start">
+                <Categories activeSlug={categorySlug} />
 
                 <ShopProductGrid
                   products={products}

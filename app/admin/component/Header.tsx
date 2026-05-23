@@ -1,10 +1,11 @@
-import Link from 'next/link';
+import Link from "next/link";
+
+import { adminLogoutAction } from "@/app/auth/actions";
 
 const Header = () => {
 
   return (
-    <>
-      <header className="header">
+    <header className="header">
         <Link href="/admin/dashboard" className="logo">\  Admin </Link>
         {/* Header Navbar: style can be found in header.less */}
         <nav className="navbar navbar-static-top" role="navigation">
@@ -326,9 +327,14 @@ const Header = () => {
                       </a>
                     </div>
                     <div className="pull-right">
-                      <a href="#" className="btn btn-default btn-flat">
-                        Sign out
-                      </a>
+                      <form action={adminLogoutAction}>
+                        <button
+                          type="submit"
+                          className="btn btn-default btn-flat"
+                        >
+                          Sign out
+                        </button>
+                      </form>
                     </div>
                   </li>
                 </ul>
@@ -336,8 +342,7 @@ const Header = () => {
             </ul>
           </div>
         </nav>
-      </header>
-    </>
+    </header>
   );
 };
 

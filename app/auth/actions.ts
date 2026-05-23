@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { postAuthLogout } from "@/lib/api/auth-logout";
 import { parseJsonText } from "@/lib/api/client";
 import { ADMIN_AUTH_TOKEN_COOKIE } from "@/lib/auth/constants";
 import type { AdminLoginFormState } from "@/lib/auth/login-form-state";
@@ -81,4 +82,15 @@ export async function adminLoginAction(
   });
 
   redirect("/admin/dashboard");
+}
+
+export async function adminLogoutAction(): Promise<void> {
+  const token = (await cookies()).get(ADMIN_AUTH_TOKEN_COOKIE)?.value?.trim();
+  if (token) {
+    await postAuthLogout(token);
+  }
+
+  const jar = await cookies();
+  jar.delete(ADMIN_AUTH_TOKEN_COOKIE);
+  redirect("/auth/login");
 }

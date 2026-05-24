@@ -81,11 +81,14 @@ export async function adminLoginAction(
     maxAge,
   });
 
+  console.log("GET auth token:", json.data.token);
+
   redirect("/admin/dashboard");
 }
 
 export async function adminLogoutAction(): Promise<void> {
   const token = (await cookies()).get(ADMIN_AUTH_TOKEN_COOKIE)?.value?.trim();
+  console.log("Logout auth token:", token);
   if (token) {
     await postAuthLogout(token);
   }

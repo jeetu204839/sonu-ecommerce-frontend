@@ -38,6 +38,7 @@ export async function recordProductReview(
   source: ProductReviewSource = "WEB",
 ): Promise<boolean> {
   const token = authToken.trim();
+  console.log('product review token', token, 'productId', productId, 'source', source);
   if (!token || !Number.isFinite(productId) || productId < 1) return false;
 
   try {

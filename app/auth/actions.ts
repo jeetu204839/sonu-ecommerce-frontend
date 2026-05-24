@@ -75,7 +75,7 @@ export async function adminLoginAction(
   const jar = await cookies();
   jar.set(ADMIN_AUTH_TOKEN_COOKIE, json.data.token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     sameSite: "lax",
     path: "/",
     maxAge,

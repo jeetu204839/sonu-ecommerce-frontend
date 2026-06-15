@@ -1853,9 +1853,13 @@ body {
 }
 
 .shop-mega-nav {
-  background: linear-gradient(180deg, #2e3192 0%, #252a78 100%);
+  background: linear-gradient(180deg,#0B1220 0%,#111827 50%,#1E293B 100%);
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.35);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer-section{
+  background: linear-gradient(180deg,#0B1220 0%,#111827 50%,#1E293B 100%);
 }
 
 .shop-mega-brand .shop-mega-logo {

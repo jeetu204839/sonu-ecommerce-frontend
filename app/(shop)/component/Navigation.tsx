@@ -41,7 +41,7 @@ const Navigation = () => {
               height={44}
             />
             <span className="shop-mega-wordmark fw-bold mb-0 lh-sm d-none d-sm-inline">
-              Enterprises
+              Irozen
             </span>
           </Link>
 

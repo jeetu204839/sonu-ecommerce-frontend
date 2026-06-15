@@ -23,10 +23,8 @@ type ShopPhoneOtpGateProps = Readonly<{
 }>;
 
 const IN_PHONE = /^\d{10}$/;
-/** First popup after load; same delay before each reminder until verified. */
-//const REMINDER_MS = 2 * 60 * 1000; // use `6 * 1000` temporarily to test reminders
 
-const REMINDER_MS = 6 * 1000;
+const REMINDER_MS = 30 * 1000;
 
 function normalizePhone(raw: string): string {
   return raw.replace(/\D/g, "").slice(-10);

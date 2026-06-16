@@ -36,6 +36,7 @@ function remotePatternsFromEnv(): NonNullable<
 }
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   env: {
     NEXT_PUBLIC_API_BASE_URL: resolvedPublicApiBaseUrl(),
   },

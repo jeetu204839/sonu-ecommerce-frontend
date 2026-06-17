@@ -34,7 +34,7 @@ const Navigation = () => {
             className="shop-mega-brand d-flex align-items-center gap-sm-3 text-decoration-none flex-shrink-0"
           >
             <img
-              src="/img/logo.webp"
+              src="/img/logo.png"
               className="shop-mega-logo img-fluid"
               alt="Brand logo"
               width={44}

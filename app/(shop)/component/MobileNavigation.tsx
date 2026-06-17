@@ -27,7 +27,7 @@ export default async function MobileNavigation() {
           data-bs-dismiss="offcanvas"
         >
           <img
-            src="/img/logo.webp"
+            src="/img/logo.png"
             className="img-fluid rounded-top flex-shrink-0"
             alt="Brand logo"
             style={{ maxHeight: "48px", width: "auto" }}
@@ -36,7 +36,7 @@ export default async function MobileNavigation() {
             className="brand-enterprises fw-bold mb-0 lh-sm"
             style={{ fontSize: "clamp(0.85rem, 3.5vw, 1.25rem)" }}
           >
-            Enterprises
+            Irozen
           </span>
         </Link>
         <button

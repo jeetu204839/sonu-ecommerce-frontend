@@ -272,7 +272,7 @@ export default function SearchResultsView({
 
   return (
     <>
-      <div className="container-fluid page-header py-4 py-lg-5">
+      {/* <div className="container-fluid page-header py-4 py-lg-5">
         <div className="container">
           <div className="row g-4 align-items-center">
             <div className="col-lg-5 text-center text-lg-start text-white">
@@ -290,12 +290,12 @@ export default function SearchResultsView({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="container py-4 py-lg-5">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
           <div>
-            <h2 className="h5 text-primary mb-1">Search results</h2>
+            {/* <h2 className="h5 text-primary mb-1">Search results</h2> */}
             <p className="text-secondary small mb-0">
               {term ? (
                 <>

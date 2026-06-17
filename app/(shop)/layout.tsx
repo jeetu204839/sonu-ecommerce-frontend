@@ -53,9 +53,9 @@ export default function RootLayout({
         <link rel="stylesheet" href="/css/brand-overrides.css" />
 
       </head>
-      <body className="shop-layout-body">
+      <body>
         <Navigation />
-        <ShopAuthShell>{children}</ShopAuthShell>
+        <ShopAuthShell> <main>{children}</main> </ShopAuthShell>
         <Footer />
 
         {/* Load JS with next/script — raw <script> in RSC triggers a runtime error */}

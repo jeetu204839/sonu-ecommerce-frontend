@@ -1173,7 +1173,7 @@ body {
 
 /* ─── Product detail page (PDP) ─── */
 .product-detail-page {
-  max-width: 100%;
+  /* max-width: 98%; */
 }
 
 .product-detail-gallery-main {
@@ -1842,7 +1842,7 @@ body {
 }
 
 /* ─── Shop header: marketplace-style dark bar (IndiaMART-inspired) ─── */
-.shop-layout-body {
+/* .shop-layout-body {
   padding-top: 5rem;
 }
 
@@ -1850,6 +1850,18 @@ body {
   .shop-layout-body {
     padding-top: 3rem;
   }
+} */
+
+/* Desktop */
+main {
+    margin-top: 60px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    /* main {
+        margin-top: 110px;
+    } */
 }
 
 .shop-mega-nav {
@@ -1860,6 +1872,8 @@ body {
 
 .footer-section{
   background: linear-gradient(180deg,#0B1220 0%,#111827 50%,#1E293B 100%);
+  position:fixed;
+  bottom:0px;
 }
 
 .shop-mega-brand .shop-mega-logo {

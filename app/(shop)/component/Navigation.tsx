@@ -31,7 +31,7 @@ const Navigation = () => {
         <div className="d-flex align-items-center justify-content-between gap-2 py-2">
           <Link
             href="/"
-            className="shop-mega-brand d-flex align-items-center gap-2 gap-sm-3 text-decoration-none flex-shrink-0"
+            className="shop-mega-brand d-flex align-items-center gap-sm-3 text-decoration-none flex-shrink-0"
           >
             <img
               src="/img/logo.webp"
@@ -45,7 +45,11 @@ const Navigation = () => {
             </span>
           </Link>
 
-          <div className="d-flex d-lg-none align-items-center gap-1 flex-shrink-0">
+          <div className="d-lg-none">
+            <NavSearchForm compact />
+          </div>
+
+          <div className="d-flex d-lg-none align-items-center flex-shrink-0">
             <button
               type="button"
               className="shop-nav-toggler shop-nav-toggler--on-dark py-2 px-3"
@@ -64,7 +68,7 @@ const Navigation = () => {
               Get Best Price
             </Link>
             <nav
-              className="d-none d-xl-flex align-items-center flex-shrink-0 gap-2 gap-xxl-3"
+              className="d-none d-xl-flex align-items-center flex-shrink-0  gap-xxl-3"
               aria-label="Quick links"
             >
               <NavUtilLink href="/shop" iconClass="fas fa-warehouse" label="Shop" />
@@ -74,9 +78,10 @@ const Navigation = () => {
           </div>
         </div>
 
-        <div className="d-lg-none pb-2">
+        {/* <div className="d-lg-none pb-2">
           <NavSearchForm compact />
-        </div>
+        </div> */}
+
       </div>
 
       <MobileNavigation />

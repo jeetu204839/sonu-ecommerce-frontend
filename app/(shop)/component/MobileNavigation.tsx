@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { cookies } from "next/headers";
 
 import ShopSignInTrigger from "@/app/(shop)/component/ShopSignInTrigger";
@@ -26,11 +27,19 @@ export default async function MobileNavigation() {
           className="d-flex align-items-center gap-2 gap-sm-3 text-decoration-none text-reset flex-grow-1 min-w-0 me-1"
           data-bs-dismiss="offcanvas"
         >
-          <img
+          {/* <img
             src="/img/logo.png"
             className="img-fluid rounded-top flex-shrink-0"
             alt="Brand logo"
             style={{ maxHeight: "48px", width: "auto" }}
+          /> */}
+          <Image
+            src="/img/logo.png"
+            alt="Brand logo"
+            width={120}
+            height={48}
+            className="rounded-top flex-shrink-0"
+            style={{ height: "48px", width: "auto" }}
           />
           <span
             className="brand-enterprises fw-bold mb-0 lh-sm"

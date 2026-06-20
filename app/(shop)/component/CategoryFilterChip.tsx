@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 type CategoryFilterChipProps = Readonly<{
   href: string;
@@ -27,7 +28,14 @@ export default function CategoryFilterChip({
       aria-current={active ? "page" : undefined}
     >
       {imageSrc ? (
-        <img src={imageSrc} alt="" className="shop-category-chip-img" />
+        // <img src={imageSrc} alt="" className="shop-category-chip-img" />
+        <Image
+          src={imageSrc}
+          alt="category chip image"
+          width={60}
+          height={60}
+          className="shop-category-chip-img"
+        />
       ) : null}
       <span className="shop-category-chip-label">{label}</span>
       {count === undefined ? null : (

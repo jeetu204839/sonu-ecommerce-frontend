@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   fetchCategories,
   type CategoryListItem,
@@ -50,9 +51,18 @@ function CategoryListItemRow({
             aria-hidden="true"
           >
             {imageSrc ? (
-              <img
+              // <img
+              //   src={imageSrc}
+              //   alt=""
+              //   className="shop-category-row-icon-img"
+              //   loading="lazy"
+              // />
+
+              <Image
                 src={imageSrc}
-                alt=""
+                alt="category icon"
+                width={80}
+                height={80}
                 className="shop-category-row-icon-img"
                 loading="lazy"
               />

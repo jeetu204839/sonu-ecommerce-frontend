@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import type { ShopProductCard as ShopProductCardData } from "@/lib/api/products";
 
@@ -29,10 +30,17 @@ export default function ShopProductCard({
         aria-label={`View ${product.name}`}
       >
         <div className="shop-product-tile-media fruite-img">
-          <img
+          {/* <img
             src={product.imageSrc}
             className="shop-product-tile-img"
             alt=""
+          /> */}
+          <Image
+            src={product.imageSrc}
+            alt={product.name || "product image"}
+            width={400}
+            height={400}
+            className="shop-product-tile-img"
           />
           {showCategoryBadge && categoryLabel ? (
             <span className="shop-product-category-badge">{categoryLabel}</span>

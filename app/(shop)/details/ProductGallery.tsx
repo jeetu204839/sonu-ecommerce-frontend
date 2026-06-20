@@ -39,14 +39,23 @@ export default function ProductGallery({
           <div className="position-relative h-100 w-100">
             {isRemoteImageSrc(main.src) ? (
               // eslint-disable-next-line @next/next/no-img-element -- API URLs: avoid optimizer fetching localhost/backend (often fails); browser loads fine.
-              <img
+              // <img
+              //   key={main.src}
+              //   src={main.src}
+              //   alt={main.alt}
+              //   className="position-absolute top-0 start-0 h-100 w-100"
+              //   style={{ objectFit: "contain" }}
+              //   fetchPriority="high"
+              //   decoding="async"
+              // />
+              <Image
                 key={main.src}
                 src={main.src}
-                alt={main.alt}
-                className="position-absolute top-0 start-0 h-100 w-100"
+                alt={main.alt || "image"}
+                fill
+                className="position-absolute top-0 start-0"
                 style={{ objectFit: "contain" }}
-                fetchPriority="high"
-                decoding="async"
+                priority
               />
             ) : (
               <Image
@@ -84,15 +93,24 @@ export default function ProductGallery({
             >
               {isRemoteImageSrc(img.src) ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
+                // <img
+                //   src={img.src}
+                //   alt=""
+                //   width={64}
+                //   height={64}
+                //   className="w-100 h-100 rounded"
+                //   style={{ objectFit: "contain" }}
+                //   loading="lazy"
+                //   decoding="async"
+                // />
+                <Image
                   src={img.src}
-                  alt=""
+                  alt={img.alt || "image"}
                   width={64}
                   height={64}
-                  className="w-100 h-100 rounded"
+                  className="rounded"
                   style={{ objectFit: "contain" }}
                   loading="lazy"
-                  decoding="async"
                 />
               ) : (
                 <Image

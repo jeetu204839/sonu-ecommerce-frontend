@@ -92,7 +92,14 @@ export default function FeaturedHeroCarousel({
       >
         <div className="carousel-inner rounded">
           <div className="carousel-item active rounded">
-            <img src="/img/coming-soon.png"  className="rounded"  alt="Featured products coming soon"/>
+            {/* <img src="/img/coming-soon.png"  className="rounded"  alt="Featured products coming soon"/> */}
+            <Image
+              src="/img/coming-soon.png"
+              alt="Featured products coming soon"
+              width={400}
+              height={300}
+              className="rounded"
+            />
           </div>
         </div>
       </div>

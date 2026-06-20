@@ -44,7 +44,7 @@ export default async function Shop({ searchParams }: PageProps) {
 
       {/* Hero Section — mobile: carousel only; desktop: headline + carousel */}
       <div className="container-fluid hero-header">
-        <div className=" hero-header-inner py-3 py-lg-5">
+        <div className="container hero-header-inner py-3 py-lg-5">
           <div className="row g-lg-5 align-items-center">
             <div className="col-lg-7 d-none d-lg-block">
               <h1 className="mb-0 display-3 text-primary">

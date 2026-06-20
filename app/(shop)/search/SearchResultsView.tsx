@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import type {
   FetchProductSearchResult,
@@ -376,12 +377,20 @@ export default function SearchResultsView({
                             className="flex-shrink-0 rounded border bg-light overflow-hidden"
                             style={{ width: "56px", height: "56px" }}
                           >
-                            <img
+                            {/* <img
                               src={row.imageSrc}
                               alt=""
                               className="w-100 h-100"
                               style={{ objectFit: "cover" }}
-                            />
+                            /> */}
+                           <div className="position-relative w-100 h-100">
+                              <Image
+                                src={row.imageSrc}
+                                alt="image"
+                                fill
+                                style={{ objectFit: "cover" }}
+                              />
+                            </div>
                           </div>
                           <div className="min-w-0">
                             <Link

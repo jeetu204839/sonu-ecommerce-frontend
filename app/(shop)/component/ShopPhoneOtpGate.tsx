@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -362,7 +363,15 @@ export default function ShopPhoneOtpGate({
             Skip
           </button>
           <Link href="/" className="shop-phone-otp-brand">
-            <img src="/img/logo.webp" alt="" width={28} height={28} />
+            {/* <img src="/img/logo.webp" alt="" width={28} height={28} /> */}
+            <div style={{ width: 28, height: 28, position: "relative" }}>
+              <Image
+                src="/img/logo.webp"
+                alt="logo"
+                fill
+                style={{ objectFit: "contain" }}
+              />
+            </div>
             <span className="shop-phone-otp-brand-text brand-enterprises">
               Enterprises
             </span>

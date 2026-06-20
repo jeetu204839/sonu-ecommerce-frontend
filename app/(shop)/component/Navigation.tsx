@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import MobileNavigation from "@/app/(shop)/component/MobileNavigation";
 import NavSearchForm from "@/app/(shop)/component/NavSearchForm";
@@ -33,12 +34,19 @@ const Navigation = () => {
             href="/"
             className="shop-mega-brand d-flex align-items-center gap-sm-3 text-decoration-none flex-shrink-0"
           >
-            <img
+            {/* <img
               src="/img/logo.png"
               className="shop-mega-logo img-fluid"
               alt="Brand logo"
               width={44}
               height={44}
+            /> */}
+            <Image
+              src="/img/logo.png"
+              alt="Brand logo"
+              width={44}
+              height={44}
+              className="shop-mega-logo"
             />
             <span className="shop-mega-wordmark fw-bold mb-0 lh-sm d-none d-sm-inline">
               Irozen

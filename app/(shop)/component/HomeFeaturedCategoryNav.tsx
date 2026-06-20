@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import type { CategoryListItem } from "@/lib/api/categories";
 
@@ -22,9 +23,17 @@ function CategoryCardMedia({ cat }: Readonly<{ cat: CategoryListItem }>) {
 
   if (imgSrc) {
     return (
-      <img
+      // <img
+      //   src={imgSrc}
+      //   alt=""
+      //   className="home-category-card-img"
+      //   loading="lazy"
+      // />
+      <Image
         src={imgSrc}
-        alt=""
+        alt="category image"
+        width={120}
+        height={120}
         className="home-category-card-img"
         loading="lazy"
       />

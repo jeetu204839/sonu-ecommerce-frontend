@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 
-import { shopCategoryHref } from "@/app/(shop)/component/shop-category-links";
 import {
   fetchCategories,
   type CategoryListItem,
@@ -22,6 +21,16 @@ const SHOP_STATIC_ROUTES: Array<{
   { path: "/contact", changeFrequency: "monthly", priority: 0.6 },
   { path: "/search", changeFrequency: "weekly", priority: 0.5 },
 ];
+
+/**
+ * Single query param only — avoids `&` in URLs which breaks XML sitemap parsing.
+ * Shop page defaults to page 1 when `page` is omitted.
+ */
+function sitemapCategoryPath(slug: string): string {
+  const q = new URLSearchParams();
+  q.set("category", slug);
+  return `/shop?${q.toString()}`;
+}
 
 function collectCategorySlugs(categories: CategoryListItem[]): string[] {
   const slugs: string[] = [];
@@ -64,6 +73,7 @@ async function fetchAllProductSlugs(): Promise<string[]> {
 }
 
 function entry(
+  siteUrl: string,
   path: string,
   options: {
     changeFrequency: NonNullable<
@@ -73,16 +83,18 @@ function entry(
   },
 ): MetadataRoute.Sitemap[number] {
   return {
-    url: absoluteUrl(path),
+    url: absoluteUrl(path, siteUrl),
     lastModified: new Date(),
     changeFrequency: options.changeFrequency,
     priority: options.priority,
   };
 }
 
-export async function buildShopSitemap(): Promise<MetadataRoute.Sitemap> {
+export async function buildShopSitemap(
+  siteUrl: string,
+): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = SHOP_STATIC_ROUTES.map((route) =>
-    entry(route.path, {
+    entry(siteUrl, route.path, {
       changeFrequency: route.changeFrequency,
       priority: route.priority,
     }),
@@ -97,7 +109,7 @@ export async function buildShopSitemap(): Promise<MetadataRoute.Sitemap> {
     const uniqueProductSlugs = [...new Set(productSlugs)];
     for (const slug of uniqueProductSlugs) {
       entries.push(
-        entry(`/details/${encodeURIComponent(slug)}`, {
+        entry(siteUrl, `/details/${encodeURIComponent(slug)}`, {
           changeFrequency: "weekly",
           priority: 0.8,
         }),
@@ -107,7 +119,7 @@ export async function buildShopSitemap(): Promise<MetadataRoute.Sitemap> {
     const uniqueCategorySlugs = [...new Set(collectCategorySlugs(categories))];
     for (const slug of uniqueCategorySlugs) {
       entries.push(
-        entry(shopCategoryHref(slug), {
+        entry(siteUrl, sitemapCategoryPath(slug), {
           changeFrequency: "weekly",
           priority: 0.7,
         }),

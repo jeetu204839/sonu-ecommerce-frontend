@@ -42,7 +42,7 @@ export default function NavSearchForm({
           autoComplete="off"
         />
         
-        <button type="submit" className="shop-nav-search-submit">
+        <button type="submit" name="search" className="shop-nav-search-submit">
           <i className="fas fa-search" aria-hidden="true" />
           {/* <span className="ms-1">Search</span> */}
         </button>

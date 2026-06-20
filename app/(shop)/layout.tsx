@@ -67,13 +67,14 @@ export default function RootLayout({
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
           strategy="afterInteractive"
         />
-        <Script src="/lib/easing/easing.min.js" strategy="afterInteractive" />
-        <Script src="/lib/waypoints/waypoints.min.js" strategy="afterInteractive" />
-        <Script src="/lib/lightbox/js/lightbox.min.js" strategy="afterInteractive" />
-        <Script
-          src="/lib/owlcarousel/owl.carousel.min.js"
-          strategy="afterInteractive"
-        />
+        {/* <Script src="/lib/easing/easing.min.js" strategy="afterInteractive" /> */}
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js" strategy="afterInteractive"/>
+        {/* <Script src="/lib/waypoints/waypoints.min.js" strategy="afterInteractive" /> */}
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" strategy="afterInteractive" />
+        {/* <Script src="/lib/lightbox/js/lightbox.min.js" strategy="afterInteractive" /> */}
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js" strategy="afterInteractive" />
+        {/* <Script src="/lib/owlcarousel/owl.carousel.min.js" strategy="afterInteractive" /> */}
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" strategy="afterInteractive" />
       </body> 
     </html>
   );

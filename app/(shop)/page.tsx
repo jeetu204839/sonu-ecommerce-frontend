@@ -6,7 +6,6 @@ import {
   fetchFeaturedProductsPage,
   fetchRandomProductsPage,
 } from "@/lib/api/products";
-import SearchHeroForm from "./SearchHeroForm";
 
 type PageProps = Readonly<{
   searchParams: Promise<{ category?: string }>;
@@ -43,27 +42,30 @@ export default async function Shop({ searchParams }: PageProps) {
         </div>
       </div>
 
-      {/* Hero Section */}
+      {/* Hero Section — mobile: carousel only; desktop: headline + carousel */}
       <div className="container-fluid hero-header">
-        <div className="container py-5">
-          <div className="row g-5 align-items-center">
-            <div className="col-md-12 col-lg-7">
-              <h1 className="mb-5 display-3 text-primary">Premium Quality Cast Iron Products</h1>
-              <SearchHeroForm />
+        <div className=" hero-header-inner py-3 py-lg-5">
+          <div className="row g-lg-5 align-items-center">
+            <div className="col-lg-7 d-none d-lg-block">
+              <h1 className="mb-0 display-3 text-primary">
+                Premium Quality Cast Iron Products
+              </h1>
             </div>
-            <div className="col-md-12 col-lg-5">
+            <div className="col-12 col-lg-5">
               <FeaturedHeroCarousel products={featuredCarouselProducts} />
             </div>
           </div>
         </div>
       </div>
-{/* Hero Section */}
 
       {/* Products Section */}
       <div className="container-fluid fruite shop-products-section home-products-section py-4 py-lg-5 px-0">
         <div className="shop-products-inner container px-0 px-lg-3">
           <header className="home-products-header">
-            <h2 className="home-products-title">
+            <h1 className="home-products-title d-lg-none">
+              Premium Quality Cast Iron Products
+            </h1>
+            <h2 className="home-products-title d-none d-lg-block">
               Premium Quality Cast Iron Products
             </h2>
             <p className="home-products-sub mb-0">

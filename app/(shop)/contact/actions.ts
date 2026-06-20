@@ -10,8 +10,6 @@ export async function submitContactForm(formData: FormData) {
 
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
-  const phone = String(formData.get("phone") ?? "").trim();
-  const subject = String(formData.get("subject") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
 
   if (!name || !email || !message) {
@@ -19,8 +17,13 @@ export async function submitContactForm(formData: FormData) {
   }
 
   // TODO: integrate email (Resend, etc.) or internal CRM.
-  void phone;
-  void subject;
+  void String(formData.get("company") ?? "").trim();
+  void String(formData.get("phone") ?? "").trim();
+  void String(formData.get("city") ?? "").trim();
+  void String(formData.get("state") ?? "").trim();
+  void String(formData.get("country") ?? "").trim();
+  void String(formData.get("product_requirement") ?? "").trim();
+  void String(formData.get("quantity") ?? "").trim();
 
   redirect("/contact?thanks=1");
 }

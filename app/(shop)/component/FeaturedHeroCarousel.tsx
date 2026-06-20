@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import Image from "next/image";
+
 
 import type { ShopProductCard } from "@/lib/api/products";
 
@@ -90,11 +92,7 @@ export default function FeaturedHeroCarousel({
       >
         <div className="carousel-inner rounded">
           <div className="carousel-item active rounded">
-            <img
-              src="/img/coming-soon.png"
-              className="rounded bg-secondary"
-              alt="Featured products coming soon"
-            />
+            <img src="/img/coming-soon.png"  className="rounded"  alt="Featured products coming soon"/>
           </div>
         </div>
       </div>
@@ -112,17 +110,14 @@ export default function FeaturedHeroCarousel({
       data-bs-interval="5000"
       aria-label="Featured products"
     >
-      <div className="carousel-inner">
+      <div className="carousel-inner" style={{backgroundColor: "white", borderRadius: "16px",}}>
         {products.map((product, index) => (
           <div
             key={product.id}
             className={`carousel-item rounded${index === 0 ? " active" : ""}`}
           >
-            <img
-              src={product.imageSrc}
-              className="rounded bg-secondary"
-              alt={product.name}
-            />
+            {/* <img src={product.imageSrc} className="rounded " alt={product.name} style={{ objectFit: "contain" }} /> */}
+            <Image src={product.imageSrc} alt={product.name} width={500} height={500} className="rounded" style={{ objectFit: "contain" }} />
             <Link
               href={`/details/${encodeURIComponent(product.slug)}`}
               className="btn px-4 py-2 text-white rounded"

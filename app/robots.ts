@@ -2,7 +2,10 @@ import type { MetadataRoute } from "next";
 
 import { absoluteUrl, resolveSiteUrl } from "@/app/(shop)/lib/seo/site-url";
 
-/** Crawl rules for the public storefront only; blocks admin and auth areas. */
+/**
+ * Served at /robots.txt (must live in app/ root for reliable production routing).
+ * Rules target the public shop only; admin/auth paths stay blocked.
+ */
 export default async function robots(): Promise<MetadataRoute.Robots> {
   const siteUrl = await resolveSiteUrl();
 

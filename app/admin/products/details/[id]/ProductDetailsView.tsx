@@ -170,7 +170,25 @@ export default function ProductDetailsView({ product }: Props) {
           <div className="box-body">
             <div className="row">
               {(product.productImages ?? []).map((img) => (
-                <div className="col-sm-2 col-xs-4" key={img.id} style={{ marginBottom: 10 }}>
+                <div className="col-sm-2 col-xs-4" key={img.id} style={{ marginBottom: 10, position: "relative" }}>
+                  <button
+                    id={img.id.toString()}
+                    style={{
+                      position: "absolute",
+                      top: -10,
+                      right: 0,
+                      background: "red",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "50%",
+                      width: 22,
+                      height: 22,
+                      cursor: "pointer",
+                    }}
+                  >
+                    ×
+                  </button>
+
                   <img
                     src={resolveProductImageUrl(img.imageUrl)}
                     alt={product.name}

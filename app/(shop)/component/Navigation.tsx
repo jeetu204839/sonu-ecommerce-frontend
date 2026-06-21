@@ -79,7 +79,8 @@ const Navigation = () => {
               className="d-none d-xl-flex align-items-center flex-shrink-0  gap-xxl-3"
               aria-label="Quick links"
             >
-              <NavUtilLink href="/shop" iconClass="fas fa-warehouse" label="Shop" />
+              <NavUtilLink href="/" iconClass="fas fa-home" label="Home" />
+              <NavUtilLink href="/shop" iconClass="fas fa-store" label="Shop" />
               <NavUtilLink href="/contact" iconClass="fas fa-question-circle" label="Contact" />
               <ShopNavAccountMenu />
             </nav>

@@ -9,132 +9,142 @@
  */
 
 html {
-  /* ── Brand core (Irozen industrial green) ── */
-  --brand-primary: #14532d;
-  --brand-primary-dark: #0f3d22;
-  --brand-primary-mid: #166534;
-  --brand-primary-light: #1a6b3a;
-  --brand-primary-deep: #134e2e;
-  --brand-primary-soft: #dcfce7;
-  --brand-primary-soft-hover: #bbf7d0;
-  --brand-nav-deep: #082818;
+  /* ── Brand core (Irozen Tech Blue System derived from logo) ── */
+  --brand-primary: #0E2A77;
+  --brand-primary-dark: #05185E;
+  --brand-primary-mid: #1236A8;
+  --brand-primary-light: #2F5BFF;
+  --brand-primary-deep: #041245;
+  --brand-primary-soft: #E8EEFF;
+  --brand-primary-soft-hover: #D6E2FF;
+  --brand-nav-deep: #040B2E;
 
-  --brand-secondary: #c2410c;
-  --brand-secondary-dark: #9a3412;
-  --brand-secondary-soft: #ffedd5;
+  /* ── Accent (Cyan tech highlight) ── */
+  --brand-secondary: #64D5F3;
+  --brand-secondary-dark: #2BB6DA;
+  --brand-secondary-soft: #E6F8FF;
 
-  /* ── Typography (stone scale — WCAG AA on white) ── */
-  --brand-ink: #1c1917;
-  --brand-text: #1c1917;
-  --brand-text-secondary: #44403c;
-  --brand-text-muted: #57534e;
-  --brand-text-subtle: #78716c;
-  --brand-text-disabled: #a8a29e;
+  /* ── Warm accent (CTA / alerts / highlight) ── */
+  --brand-accent: #FDA230;
+  --brand-accent-dark: #D97A12;
+  --brand-accent-soft: #FFF3E0;
+
+  /* ── Typography (neutral modern slate system) ── */
+  --brand-ink: #0B1220;
+  --brand-text: #0F172A;
+  --brand-text-secondary: #334155;
+  --brand-text-muted: #475569;
+  --brand-text-subtle: #64748B;
+  --brand-text-disabled: #94A3B8;
   --brand-text-inverse: #ffffff;
 
-  /* ── Surfaces ── */
+  /* ── Surfaces (clean SaaS background system) ── */
   --brand-surface: #ffffff;
-  --brand-surface-page: #f7f9f6;
-  --brand-surface-subtle: #f4f6f2;
-  --brand-surface-muted: #eef2eb;
-  --brand-surface-hover: #e7ece3;
-  --brand-surface-elevated: #fafbf9;
+  --brand-surface-page: #F6F8FC;
+  --brand-surface-subtle: #EEF2F9;
+  --brand-surface-muted: #E8EDF6;
+  --brand-surface-hover: #E2E8F0;
+  --brand-surface-elevated: #FFFFFF;
 
   /* ── Borders ── */
-  --brand-border: #dfe5d8;
-  --brand-border-soft: #eaefe4;
-  --brand-border-strong: #c8d0bf;
+  --brand-border: #D7DEEA;
+  --brand-border-soft: #E8EDF6;
+  --brand-border-strong: #B8C4D6;
 
   /* ── Semantic states ── */
-  --brand-success: #15803d;
-  --brand-success-soft: #dcfce7;
+  --brand-success: #16A34A;
+  --brand-success-soft: #DCFCE7;
   --brand-success-text: #166534;
-  --brand-warning: #92400e;
-  --brand-warning-soft: #fef3c7;
-  --brand-danger: #991b1b;
-  --brand-danger-soft: #fee2e2;
-  --brand-info: #0f3d22;
+
+  --brand-warning: #D97706;
+  --brand-warning-soft: #FEF3C7;
+
+  --brand-danger: #DC2626;
+  --brand-danger-soft: #FEE2E2;
+
+  --brand-info: #0E2A77;
 
   /* ── Overlays & elevation ── */
-  --brand-overlay-dark: rgba(12, 12, 14, 0.78);
-  --brand-overlay-scrim: rgba(28, 25, 23, 0.72);
-  --brand-shadow-sm: rgba(28, 25, 23, 0.06);
-  --brand-shadow-md: rgba(28, 25, 23, 0.1);
-  --brand-shadow-lg: rgba(28, 25, 23, 0.18);
-  --brand-shadow-primary: rgba(20, 83, 45, 0.2);
-  --brand-focus-ring: rgba(20, 83, 45, 0.35);
+  --brand-overlay-dark: rgba(2, 6, 23, 0.78);
+  --brand-overlay-scrim: rgba(15, 23, 42, 0.72);
+
+  --brand-shadow-sm: rgba(2, 6, 23, 0.06);
+  --brand-shadow-md: rgba(2, 6, 23, 0.12);
+  --brand-shadow-lg: rgba(2, 6, 23, 0.18);
+
+  --brand-shadow-primary: rgba(14, 42, 119, 0.25);
+  --brand-focus-ring: rgba(99, 102, 241, 0.35);
+
   --brand-white-alpha-85: rgba(255, 255, 255, 0.85);
   --brand-white-alpha-45: rgba(255, 255, 255, 0.45);
-  --brand-white-alpha-35: rgba(255, 255, 255, 0.35);
   --brand-white-alpha-20: rgba(255, 255, 255, 0.2);
-  --brand-white-alpha-08: rgba(255, 255, 255, 0.08);
-  --brand-black-alpha-25: rgba(0, 0, 0, 0.25);
-  --brand-black-alpha-20: rgba(0, 0, 0, 0.2);
-  --brand-black-alpha-18: rgba(0, 0, 0, 0.18);
-  --brand-black-alpha-12: rgba(28, 25, 23, 0.12);
-  --brand-black-alpha-08: rgba(28, 25, 23, 0.08);
-  --brand-primary-alpha-08: rgba(20, 83, 45, 0.08);
-  --brand-primary-alpha-10: rgba(20, 83, 45, 0.1);
-  --brand-primary-alpha-12: rgba(20, 83, 45, 0.12);
-  --brand-primary-alpha-18: rgba(20, 83, 45, 0.18);
-  --brand-primary-alpha-22: rgba(20, 83, 45, 0.22);
-  --brand-primary-alpha-35: rgba(20, 83, 45, 0.35);
-  --brand-secondary-alpha-45: rgba(194, 65, 12, 0.45);
 
-  /* ── Gradients ── */
+  --brand-black-alpha-25: rgba(0, 0, 0, 0.25);
+  --brand-black-alpha-12: rgba(2, 6, 23, 0.12);
+
+  /* ── Gradients (modern SaaS depth system) ── */
   --brand-gradient-primary: linear-gradient(
     100deg,
-    var(--brand-primary) 0%,
-    var(--brand-primary-dark) 45%,
-    var(--brand-primary-deep) 100%
+    var(--brand-primary-dark) 0%,
+    var(--brand-primary) 45%,
+    var(--brand-primary-light) 100%
   );
-  --brand-gradient-primary-vertical: linear-gradient(
-    180deg,
-    var(--brand-primary-mid) 0%,
-    var(--brand-primary) 100%
-  );
+
   --brand-gradient-nav: linear-gradient(
     180deg,
     var(--brand-nav-deep) 0%,
-    var(--brand-primary-dark) 50%,
+    var(--brand-primary-dark) 60%,
     var(--brand-primary) 100%
   );
-  --brand-gradient-text: linear-gradient(
+
+  --brand-gradient-accent: linear-gradient(
     110deg,
-    var(--brand-primary-dark) 0%,
-    var(--brand-primary) 22%,
-    var(--brand-primary-light) 42%,
-    var(--brand-primary-mid) 55%,
-    var(--brand-primary) 78%,
-    var(--brand-primary-dark) 100%
-  );
-  --brand-gradient-surface: linear-gradient(
-    180deg,
-    var(--brand-surface-elevated) 0%,
-    var(--brand-surface) 100%
+    var(--brand-secondary) 0%,
+    var(--brand-primary-light) 100%
   );
 
-  /* ── Bootstrap bridge ── */
+  --brand-gradient-text: linear-gradient(
+    120deg,
+    var(--brand-primary-dark),
+    var(--brand-primary),
+    var(--brand-secondary)
+  );
+
+  --brand-gradient-surface: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    var(--brand-surface-page) 100%
+  );
+
+  /* ── Bootstrap bridge (critical overrides) ── */
   --bs-primary: var(--brand-primary) !important;
   --bs-secondary: var(--brand-secondary) !important;
-  --bs-primary-rgb: 20, 83, 45 !important;
-  --bs-secondary-rgb: 194, 65, 12 !important;
+
+  --bs-primary-rgb: 14, 42, 119 !important;
+  --bs-secondary-rgb: 100, 213, 243 !important;
+
   --bs-dark: var(--brand-ink) !important;
-  --bs-dark-rgb: 28, 25, 23 !important;
+  --bs-dark-rgb: 11, 18, 32 !important;
+
   --bs-body-color: var(--brand-text) !important;
   --bs-body-bg: var(--brand-surface-page) !important;
-  --bs-link-color: var(--brand-primary-mid) !important;
-  --bs-link-hover-color: var(--brand-primary) !important;
+
+  --bs-link-color: var(--brand-primary) !important;
+  --bs-link-hover-color: var(--brand-primary-light) !important;
+
   --bs-focus-ring-color: var(--brand-focus-ring) !important;
+
   --bs-light: var(--brand-surface-page) !important;
-  --bs-light-rgb: 247, 249, 246 !important;
+  --bs-light-rgb: 246, 248, 252 !important;
+
   --bs-border-color: var(--brand-border) !important;
+
   --bs-success: var(--brand-success) !important;
   --bs-danger: var(--brand-danger) !important;
   --bs-warning: var(--brand-warning) !important;
+
   --bs-white: var(--brand-surface) !important;
 
-  /* Bootstrap 5 text utilities read accent vars — map to readable body tones */
   --bs-secondary-color: var(--brand-text-secondary) !important;
   --bs-secondary-text-emphasis: var(--brand-text) !important;
 }

@@ -33,7 +33,7 @@ export default async function ShopPage({ searchParams }: PageProps) {
 
   return (
     <>
-      <div className="container-fluid page-header py-5">
+      {/* <div className="container-fluid page-header py-5">
         <h1 className="text-center text-white display-6">Shop</h1>
         <ol className="breadcrumb justify-content-center mb-0">
           <li className="breadcrumb-item">
@@ -44,7 +44,7 @@ export default async function ShopPage({ searchParams }: PageProps) {
           </li>
           <li className="breadcrumb-item active text-white">Shop</li>
         </ol>
-      </div>
+      </div> */}
 
       <div className="container-fluid fruite shop-products-section py-3 py-lg-4 px-0">
         <div className="shop-products-inner container-fluid px-0 px-lg-3">

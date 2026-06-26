@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 
 import { SHOP_AUTH_TOKEN_COOKIE } from "@/lib/auth/constants";
 
-import ShopPhoneOtpGate from "@/app/(shop)/component/ShopPhoneOtpGate";
+import ShopAuthShellClient from "@/app/(shop)/component/ShopAuthShellClient";
 
 export default async function ShopAuthShell({
   children,
@@ -13,9 +13,8 @@ export default async function ShopAuthShell({
   const isLoggedIn = Boolean(token?.trim());
 
   return (
-    <>
-      <ShopPhoneOtpGate initiallyLoggedIn={isLoggedIn} />
+    <ShopAuthShellClient initiallyLoggedIn={isLoggedIn}>
       {children}
-    </>
+    </ShopAuthShellClient>
   );
 }

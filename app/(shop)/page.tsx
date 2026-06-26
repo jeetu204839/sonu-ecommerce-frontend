@@ -1,3 +1,5 @@
+import { preload } from "react-dom";
+
 import FeaturedHeroCarousel from "@/app/(shop)/component/FeaturedHeroCarousel";
 import HomeFeaturedCategoryNav from "@/app/(shop)/component/HomeFeaturedCategoryNav";
 import ShopProductCard from "@/app/(shop)/component/ShopProductCard";
@@ -14,13 +16,22 @@ type PageProps = Readonly<{
 export default async function Shop({ searchParams }: PageProps) {
   const sp = await searchParams;
   const selectedCategory = sp.category?.trim() || "";
-  const featuredCategories = await fetchFeaturedCategories();
-  const { products: featuredCarouselProducts } =
-    await fetchFeaturedProductsPage(1);
-  const { products } = await fetchRandomProductsPage({
-    page: 1,
-    categorySlug: selectedCategory || undefined,
-  });
+
+  const [featuredCategories, featuredResult, randomResult] = await Promise.all([
+    fetchFeaturedCategories(),
+    fetchFeaturedProductsPage(1),
+    fetchRandomProductsPage({
+      page: 1,
+      categorySlug: selectedCategory || undefined,
+    }),
+  ]);
+
+  const featuredCarouselProducts = featuredResult.products;
+  const products = randomResult.products;
+
+  const lcpImageSrc =
+    featuredCarouselProducts[0]?.imageSrc ?? "/img/coming-soon.png";
+  preload(lcpImageSrc, { as: "image", fetchPriority: "high" });
   return (
     <>
       {/* Hero Section — mobile: carousel only; desktop: headline + carousel */}

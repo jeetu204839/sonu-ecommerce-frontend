@@ -6,6 +6,7 @@ import Footer from "./component/Footer";
 import Navigation from "./component/Navigation";
 import ShopAuthShell from "./component/ShopAuthShell";
 import ShopDeferredStyles from "./component/ShopDeferredStyles";
+import ShopLayoutHeadHints from "./component/ShopLayoutHeadHints";
 
 const openSans = Open_Sans({
   subsets: ["latin"],
@@ -33,9 +34,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={openSans.className}>
       <head>
+        <ShopLayoutHeadHints />
         <link rel="preconnect" href="https://use.fontawesome.com" crossOrigin="anonymous" />
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/brand-overrides.css" />
       </head>
       <body>

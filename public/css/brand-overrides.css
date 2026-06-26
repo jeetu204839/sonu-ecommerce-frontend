@@ -1,55 +1,64 @@
 /**
  * Irozen brand layer — load LAST after Bootstrap + style.css.
  *
+ * Palette derived from the IROZEN logo:
+ * - Electric blue (logo “Z” / icon) → primary actions, nav, links
+ * - Warm orange (logo “I” / top bar) → secondary accent, highlights, CTAs
+ * - Silver grey (logo letter chrome) → borders, muted surfaces
+ *
  * Design goals (SEO / UX / a11y):
  * - WCAG 2.1 AA contrast for body text (≥ 4.5:1) and large UI (≥ 3:1)
  * - Single source of truth via CSS custom properties (no magic hex in components)
  * - Semantic tokens (text, surface, border, state) for maintainability
- * - Consistent green industrial palette (replaces legacy blue #252a78 accents)
  */
 
 html {
-  /* ── Brand core (Irozen Tech Blue System derived from logo) ── */
-  --brand-primary: #0E2A77;
-  --brand-primary-dark: #05185E;
-  --brand-primary-mid: #1236A8;
-  --brand-primary-light: #2F5BFF;
-  --brand-primary-deep: #041245;
-  --brand-primary-soft: #E8EEFF;
-  --brand-primary-soft-hover: #D6E2FF;
-  --brand-nav-deep: #040B2E;
+  /* ── Brand core (logo electric blue) ── */
+  --brand-primary: #008FD4;
+  --brand-primary-dark: #006EA3;
+  --brand-primary-mid: #0096DC;
+  --brand-primary-light: #33B5E5;
+  --brand-primary-deep: #004A70;
+  --brand-primary-soft: #E6F4FC;
+  --brand-primary-soft-hover: #CCE9F9;
+  --brand-nav-deep: #004A70;
 
-  /* ── Accent (Cyan tech highlight) ── */
-  --brand-secondary: #64D5F3;
-  --brand-secondary-dark: #2BB6DA;
-  --brand-secondary-soft: #E6F8FF;
+  /* ── Warm accent (logo orange — Bootstrap secondary bridge) ── */
+  --brand-secondary: #F58220;
+  --brand-secondary-dark: #D96A10;
+  --brand-secondary-soft: #FFF0E3;
 
-  /* ── Warm accent (CTA / alerts / highlight) ── */
-  --brand-accent: #FDA230;
-  --brand-accent-dark: #D97A12;
-  --brand-accent-soft: #FFF3E0;
+  /* ── Logo orange alias (badges, sale tags, highlight CTAs) ── */
+  --brand-accent: #F58220;
+  --brand-accent-dark: #D96A10;
+  --brand-accent-soft: #FFF0E3;
 
-  /* ── Typography (neutral modern slate system) ── */
-  --brand-ink: #0B1220;
-  --brand-text: #0F172A;
-  --brand-text-secondary: #334155;
-  --brand-text-muted: #475569;
-  --brand-text-subtle: #64748B;
-  --brand-text-disabled: #94A3B8;
+  /* ── Logo silver chrome ── */
+  --brand-chrome: #A8B0B8;
+  --brand-chrome-dark: #8B939C;
+  --brand-chrome-soft: #ECEEF1;
+
+  /* ── Typography (charcoal — logo shadow / letter depth) ── */
+  --brand-ink: #2D3439;
+  --brand-text: #333333;
+  --brand-text-secondary: #4A5568;
+  --brand-text-muted: #5C6773;
+  --brand-text-subtle: #6B7280;
+  --brand-text-disabled: #9CA3AF;
   --brand-text-inverse: #ffffff;
 
-  /* ── Surfaces (clean SaaS background system) ── */
+  /* ── Surfaces (logo white background) ── */
   --brand-surface: #ffffff;
-  --brand-surface-page: #F6F8FC;
-  --brand-surface-subtle: #EEF2F9;
-  --brand-surface-muted: #E8EDF6;
+  --brand-surface-page: #F8FAFC;
+  --brand-surface-subtle: #F1F3F5;
+  --brand-surface-muted: #ECEEF1;
   --brand-surface-hover: #E2E8F0;
   --brand-surface-elevated: #FFFFFF;
 
-  /* ── Borders ── */
-  --brand-border: #D7DEEA;
-  --brand-border-soft: #E8EDF6;
-  --brand-border-strong: #B8C4D6;
+  /* ── Borders (silver-tinted) ── */
+  --brand-border: #D1D5DB;
+  --brand-border-soft: #E5E7EB;
+  --brand-border-strong: #A8B0B8;
 
   /* ── Semantic states ── */
   --brand-success: #16A34A;
@@ -62,27 +71,40 @@ html {
   --brand-danger: #DC2626;
   --brand-danger-soft: #FEE2E2;
 
-  --brand-info: #0E2A77;
+  --brand-info: #008FD4;
 
   /* ── Overlays & elevation ── */
-  --brand-overlay-dark: rgba(2, 6, 23, 0.78);
-  --brand-overlay-scrim: rgba(15, 23, 42, 0.72);
+  --brand-overlay-dark: rgba(45, 52, 57, 0.78);
+  --brand-overlay-scrim: rgba(51, 51, 51, 0.72);
 
-  --brand-shadow-sm: rgba(2, 6, 23, 0.06);
-  --brand-shadow-md: rgba(2, 6, 23, 0.12);
-  --brand-shadow-lg: rgba(2, 6, 23, 0.18);
+  --brand-shadow-sm: rgba(45, 52, 57, 0.06);
+  --brand-shadow-md: rgba(45, 52, 57, 0.12);
+  --brand-shadow-lg: rgba(45, 52, 57, 0.18);
 
-  --brand-shadow-primary: rgba(14, 42, 119, 0.25);
-  --brand-focus-ring: rgba(99, 102, 241, 0.35);
+  --brand-shadow-primary: rgba(0, 143, 212, 0.28);
+  --brand-focus-ring: rgba(0, 143, 212, 0.35);
 
   --brand-white-alpha-85: rgba(255, 255, 255, 0.85);
   --brand-white-alpha-45: rgba(255, 255, 255, 0.45);
   --brand-white-alpha-20: rgba(255, 255, 255, 0.2);
+  --brand-white-alpha-08: rgba(255, 255, 255, 0.08);
 
   --brand-black-alpha-25: rgba(0, 0, 0, 0.25);
-  --brand-black-alpha-12: rgba(2, 6, 23, 0.12);
+  --brand-black-alpha-20: rgba(0, 0, 0, 0.2);
+  --brand-black-alpha-18: rgba(0, 0, 0, 0.18);
+  --brand-black-alpha-12: rgba(45, 52, 57, 0.12);
+  --brand-black-alpha-08: rgba(45, 52, 57, 0.08);
 
-  /* ── Gradients (modern SaaS depth system) ── */
+  --brand-primary-alpha-08: rgba(0, 143, 212, 0.08);
+  --brand-primary-alpha-10: rgba(0, 143, 212, 0.1);
+  --brand-primary-alpha-12: rgba(0, 143, 212, 0.12);
+  --brand-primary-alpha-18: rgba(0, 143, 212, 0.18);
+  --brand-primary-alpha-22: rgba(0, 143, 212, 0.22);
+  --brand-primary-alpha-35: rgba(0, 143, 212, 0.35);
+
+  --brand-secondary-alpha-45: rgba(245, 130, 32, 0.45);
+
+  /* ── Gradients (logo blue depth + orange highlight) ── */
   --brand-gradient-primary: linear-gradient(
     100deg,
     var(--brand-primary-dark) 0%,
@@ -93,13 +115,13 @@ html {
   --brand-gradient-nav: linear-gradient(
     180deg,
     var(--brand-nav-deep) 0%,
-    var(--brand-primary-dark) 60%,
+    var(--brand-primary-dark) 55%,
     var(--brand-primary) 100%
   );
 
   --brand-gradient-accent: linear-gradient(
     110deg,
-    var(--brand-secondary) 0%,
+    var(--brand-accent) 0%,
     var(--brand-primary-light) 100%
   );
 
@@ -107,7 +129,7 @@ html {
     120deg,
     var(--brand-primary-dark),
     var(--brand-primary),
-    var(--brand-secondary)
+    var(--brand-accent)
   );
 
   --brand-gradient-surface: linear-gradient(
@@ -120,22 +142,22 @@ html {
   --bs-primary: var(--brand-primary) !important;
   --bs-secondary: var(--brand-secondary) !important;
 
-  --bs-primary-rgb: 14, 42, 119 !important;
-  --bs-secondary-rgb: 100, 213, 243 !important;
+  --bs-primary-rgb: 0, 143, 212 !important;
+  --bs-secondary-rgb: 245, 130, 32 !important;
 
   --bs-dark: var(--brand-ink) !important;
-  --bs-dark-rgb: 11, 18, 32 !important;
+  --bs-dark-rgb: 45, 52, 57 !important;
 
   --bs-body-color: var(--brand-text) !important;
   --bs-body-bg: var(--brand-surface-page) !important;
 
   --bs-link-color: var(--brand-primary) !important;
-  --bs-link-hover-color: var(--brand-primary-light) !important;
+  --bs-link-hover-color: var(--brand-primary-dark) !important;
 
   --bs-focus-ring-color: var(--brand-focus-ring) !important;
 
   --bs-light: var(--brand-surface-page) !important;
-  --bs-light-rgb: 246, 248, 252 !important;
+  --bs-light-rgb: 248, 250, 252 !important;
 
   --bs-border-color: var(--brand-border) !important;
 
@@ -164,7 +186,7 @@ body {
   color: var(--brand-text-muted) !important;
 }
 
-/* Body copy utilities — never use accent orange (--bs-secondary / #FFB524) for text */
+/* Body copy utilities — never use accent orange for body text (use --brand-text-* instead) */
 .text-secondary,
 .text-secondary.text-opacity-100 {
   color: var(--brand-text-secondary) !important;
@@ -1416,8 +1438,8 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):hover {
 }
 
 .product-detail-badge--featured {
-  background: var(--brand-primary-alpha-12);
-  color: var(--brand-primary);
+  background: var(--brand-accent-soft);
+  color: var(--brand-accent-dark);
 }
 
 .product-detail-badge--category {
@@ -1502,8 +1524,8 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):hover {
 .product-detail-discount {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--brand-success);
-  background: var(--brand-success-soft);
+  color: var(--brand-accent-dark);
+  background: var(--brand-accent-soft);
   padding: 0.15rem 0.45rem;
   border-radius: 0.25rem;
 }
@@ -2227,21 +2249,21 @@ main {
 }
 
 .shop-mega-cta {
-  background: var(--brand-surface) !important;
-  color: var(--brand-primary) !important;
+  background: var(--brand-accent) !important;
+  color: var(--brand-text-inverse) !important;
   font-weight: 800;
   font-size: 0.8125rem;
   padding: 0.55rem 1rem;
   border-radius: 4px;
   white-space: nowrap;
-  box-shadow: 0 2px 8px var(--brand-black-alpha-18);
+  box-shadow: 0 2px 8px var(--brand-secondary-alpha-45);
   text-decoration: none !important;
   line-height: 1.2;
 }
 
 .shop-mega-cta:hover {
-  filter: brightness(1.06);
-  color: var(--brand-primary-dark) !important;
+  background: var(--brand-accent-dark) !important;
+  color: var(--brand-text-inverse) !important;
 }
 
 .shop-nav-util-icon {

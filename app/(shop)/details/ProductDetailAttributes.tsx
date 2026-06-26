@@ -17,13 +17,13 @@ export default function ProductDetailAttributes({
   return (
     <div className="product-detail-attributes">
       <h3 className="product-detail-attributes-title">Available options</h3>
-      <div className="product-detail-attributes-list">
+      <dl className="product-detail-attributes-row">
         {groups.map((group) => {
           const label = group.name?.trim() || group.value?.trim() || "Option";
           return (
-            <div key={group.id} className="product-detail-attribute-group">
-              <span className="product-detail-attribute-label">{label}</span>
-              <div className="product-detail-attribute-options">
+            <div key={group.id} className="product-detail-attribute-item">
+              <dt className="product-detail-attribute-label">{label}</dt>
+              <dd className="product-detail-attribute-values">
                 {group.attribute.map((opt) => (
                   <span
                     key={opt.id}
@@ -32,11 +32,11 @@ export default function ProductDetailAttributes({
                     {opt.name}
                   </span>
                 ))}
-              </div>
+              </dd>
             </div>
           );
         })}
-      </div>
+      </dl>
     </div>
   );
 }

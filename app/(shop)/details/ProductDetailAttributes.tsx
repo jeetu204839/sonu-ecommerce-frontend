@@ -17,11 +17,11 @@ export default function ProductDetailAttributes({
   return (
     <div className="product-detail-attributes">
       <h3 className="product-detail-attributes-title">Available options</h3>
-      <dl className="product-detail-attributes-row">
+      <dl className="product-detail-attributes-list">
         {groups.map((group) => {
           const label = group.name?.trim() || group.value?.trim() || "Option";
           return (
-            <div key={group.id} className="product-detail-attribute-item">
+            <div key={group.id} className="product-detail-attribute-row">
               <dt className="product-detail-attribute-label">{label}</dt>
               <dd className="product-detail-attribute-values">
                 {group.attribute.map((opt) => (

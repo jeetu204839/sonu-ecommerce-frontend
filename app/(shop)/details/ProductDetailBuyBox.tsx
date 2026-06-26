@@ -133,7 +133,10 @@ export default function ProductDetailBuyBox({ product }: ProductDetailBuyBoxProp
               Currently unavailable
             </button>
           )}
-          <ProductDetailQuickContact />
+          <ProductDetailQuickContact
+            productName={product.name}
+            productSku={product.sku}
+          />
           <Link
             href={`/contact?sku=${encodeURIComponent(product.sku)}`}
             className="product-detail-contact-link"

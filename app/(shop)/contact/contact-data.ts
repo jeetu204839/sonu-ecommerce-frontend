@@ -1,9 +1,22 @@
 export const CONTACT_PHONE = "+91 6202668606";
 export const CONTACT_PHONE_TEL = "+916202668606";
+export const CONTACT_WHATSAPP_NUMBER = "916202668606";
 export const CONTACT_EMAIL = "sonuecom05@gmail.com";
 export const CONTACT_WEBSITE = "https://irozen.in";
-export const CONTACT_WHATSAPP =
-  "https://wa.me/message/QFBAARYYFZHEE1";
+
+/** Standard wa.me link — avoids wa.me/message/* codes appearing in the chat. */
+export function buildWhatsAppUrl(text?: string): string {
+  const base = `https://wa.me/${CONTACT_WHATSAPP_NUMBER}`;
+  const trimmed = text?.trim();
+  if (!trimmed) {
+    return base;
+  }
+  return `${base}?text=${encodeURIComponent(trimmed)}`;
+}
+
+export const CONTACT_WHATSAPP = buildWhatsAppUrl(
+  "Hello Irozen, I have an enquiry. Please share details.",
+);
 
 export const CONTACT_INTRO = [
   "Thank you for visiting Irozen. We are a trusted manufacturer and supplier of premium Hardware Items, Agriculture Tools, Hand Pumps, Hand Pump Parts, Industrial Equipment, Scaffolding Fittings, Construction Hardware, and Engineering Products across India.",

@@ -8,6 +8,32 @@ type FeaturedHeroCarouselProps = Readonly<{
   products: ShopProductCard[];
 }>;
 
+function HeroSlideImage({
+  src,
+  alt,
+  priority,
+}: Readonly<{
+  src: string;
+  alt: string;
+  priority?: boolean;
+}>) {
+  return (
+    <div className="featured-hero-slide-media">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="featured-hero-slide-img"
+        priority={priority}
+        fetchPriority={priority ? "high" : undefined}
+        loading={priority ? undefined : "lazy"}
+        sizes="(max-width: 991px) 100vw, 42vw"
+        quality={priority ? 75 : 65}
+      />
+    </div>
+  );
+}
+
 export default function FeaturedHeroCarousel({
   products,
 }: FeaturedHeroCarouselProps) {
@@ -15,21 +41,15 @@ export default function FeaturedHeroCarousel({
     return (
       <div
         id="carouselId"
-        className="carousel slide position-relative"
+        className="carousel slide position-relative featured-hero-carousel"
         aria-label="Featured products"
       >
         <div className="carousel-inner rounded">
           <div className="carousel-item active rounded">
-            <Image
+            <HeroSlideImage
               src="/img/coming-soon.png"
               alt="Featured products coming soon"
-              width={640}
-              height={400}
-              className="rounded w-100 h-auto"
               priority
-              fetchPriority="high"
-              sizes="(max-width: 991px) 100vw, 42vw"
-              quality={75}
             />
           </div>
         </div>
@@ -43,36 +63,25 @@ export default function FeaturedHeroCarousel({
     <>
       <div
         id="carouselId"
-        className="carousel slide position-relative"
+        className="carousel slide position-relative featured-hero-carousel"
         data-bs-ride={showControls ? "carousel" : undefined}
         data-bs-interval={showControls ? "5000" : undefined}
         aria-label="Featured products"
       >
-        <div
-          className="carousel-inner"
-          style={{ backgroundColor: "white", borderRadius: "16px" }}
-        >
+        <div className="carousel-inner featured-hero-carousel-inner">
           {products.map((product, index) => (
             <div
               key={product.id}
               className={`carousel-item rounded${index === 0 ? " active" : ""}`}
             >
-              <Image
+              <HeroSlideImage
                 src={product.imageSrc}
                 alt={product.name}
-                width={640}
-                height={400}
-                className="rounded w-100 h-auto"
-                style={{ objectFit: "contain" }}
                 priority={index === 0}
-                fetchPriority={index === 0 ? "high" : undefined}
-                loading={index === 0 ? undefined : "lazy"}
-                sizes="(max-width: 991px) 100vw, 42vw"
-                quality={index === 0 ? 80 : 70}
               />
               <Link
                 href={`/details/${encodeURIComponent(product.slug)}`}
-                className="btn px-4 py-2 text-white rounded"
+                className="btn px-4 py-2 text-white rounded featured-hero-slide-cta"
                 aria-label={`View ${product.name}`}
               >
                 {product.name}

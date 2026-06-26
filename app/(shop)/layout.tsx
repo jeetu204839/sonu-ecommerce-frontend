@@ -5,7 +5,6 @@ import { Open_Sans } from "next/font/google";
 import Footer from "./component/Footer";
 import Navigation from "./component/Navigation";
 import ShopAuthShell from "./component/ShopAuthShell";
-import ShopDeferredStyles from "./component/ShopDeferredStyles";
 import ShopLayoutHeadHints from "./component/ShopLayoutHeadHints";
 
 const openSans = Open_Sans({
@@ -37,7 +36,12 @@ export default function RootLayout({
         <ShopLayoutHeadHints />
         <link rel="preconnect" href="https://use.fontawesome.com" crossOrigin="anonymous" />
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/brand-overrides.css" />
+        <link
+          rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+        />
       </head>
       <body>
         <a href="#main-content" className="shop-skip-link">
@@ -48,7 +52,6 @@ export default function RootLayout({
           <main id="main-content">{children}</main>
         </ShopAuthShell>
         <Footer />
-        <ShopDeferredStyles />
 
         <Script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"

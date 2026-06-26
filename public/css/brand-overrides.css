@@ -204,7 +204,9 @@ body {
   color: var(--brand-text-muted) !important;
 }
 
-a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):hover {
+a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):not(
+    .footer-policy-link
+  ):not(.footer-brand):hover {
   color: var(--bs-link-hover-color);
 }
 
@@ -328,7 +330,26 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):hover {
   }
 }
 
-/* Hero product carousel — same slot every slide (no jump on slide change) */
+/* Hero product carousel — reserved space prevents CLS while image loads */
+.featured-hero-carousel-inner {
+  background-color: #fff;
+  border-radius: 16px;
+}
+
+.featured-hero-slide-media {
+  position: relative;
+  width: 100%;
+  height: clamp(220px, 42vw, 400px);
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--brand-surface);
+}
+
+.featured-hero-slide-img {
+  object-fit: contain;
+  object-position: center;
+}
+
 #carouselId .carousel-inner {
   min-height: clamp(220px, 42vw, 400px);
 }
@@ -336,13 +357,13 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):hover {
 #carouselId .carousel-item img {
   width: 100%;
   height: clamp(220px, 42vw, 400px);
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   display: block;
 }
 
-/* Product title overlay — bottom strip (darker blackish panel + soft shadow) */
-#carouselId .carousel-item a {
+#carouselId .carousel-item a,
+.featured-hero-slide-cta {
   top: auto;
   bottom: 0.65rem;
   left: 50%;
@@ -1925,8 +1946,12 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):hover {
   line-height: 1.5;
 }
 
+.footer-brand:hover {
+  color: var(--brand-secondary) !important;
+}
+
 .footer-policy-link:hover {
-  color: #fff;
+  color: var(--brand-secondary) !important;
   text-decoration: underline;
 }
 

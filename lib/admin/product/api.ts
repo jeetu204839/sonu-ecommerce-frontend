@@ -1,4 +1,5 @@
 import {
+  adminApiDeleteEnvelope,
   adminApiGetEnvelope,
   adminApiPostFormDataEnvelope,
   adminApiPostEnvelope,
@@ -98,4 +99,16 @@ export async function uploadAdminProductImageMultipart(formBody: FormData) {
     ADMIN_PRODUCT_UPLOAD_IMAGES_PATH,
     formBody,
   );
+}
+
+const ADMIN_PRODUCT_IMAGE_PATH = "/admin/product/image";
+
+function adminProductImageSegment(imageId: number): string {
+  return String(Math.floor(Number(imageId)));
+}
+
+/** Deletes a product image: `DELETE /admin/product/image/:id`. */
+export async function deleteAdminProductImage(imageId: number) {
+  const path = `${ADMIN_PRODUCT_IMAGE_PATH}/${adminProductImageSegment(imageId)}`;
+  return adminApiDeleteEnvelope<null>(path);
 }

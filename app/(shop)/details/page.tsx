@@ -124,44 +124,6 @@ export default async function DetailsPage({ searchParams }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* <div className="container-fluid page-header py-4 py-lg-5">
-        <div className="container text-center text-white">
-          <h1 className="display-6 fw-bold mb-3 text-white text-truncate px-2">
-            {product.name}
-          </h1>
-          <nav aria-label="Breadcrumb">
-            <ol className="breadcrumb justify-content-center mb-0 flex-wrap">
-              <li className="breadcrumb-item">
-                <Link href="/" className="text-white text-decoration-none">
-                  Home
-                </Link>
-              </li>
-              <li className="breadcrumb-item">
-                <Link href="/shop" className="text-white text-decoration-none">
-                  Shop
-                </Link>
-              </li>
-              {product.category.slug ? (
-                <li className="breadcrumb-item">
-                  <Link
-                    href={`/shop?category=${encodeURIComponent(product.category.slug)}&page=1`}
-                    className="text-white text-decoration-none"
-                  >
-                    {product.category.name}
-                  </Link>
-                </li>
-              ) : null}
-              <li
-                className="breadcrumb-item active text-white-50"
-                aria-current="page"
-              >
-                {product.name}
-              </li>
-            </ol>
-          </nav>
-        </div>
-      </div> */}
-
       <div className="container product-detail-page py-4 py-lg-5">
         {product.visibility?.toUpperCase() === "HIDDEN" ? (
           <div className="alert alert-warning border-0 mb-4 d-flex align-items-start gap-2 product-detail-alert">

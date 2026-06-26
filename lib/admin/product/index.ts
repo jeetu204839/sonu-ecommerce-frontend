@@ -24,6 +24,7 @@ export {
 export {
   buildAdminProductImageUploadFormData,
   createAdminProduct,
+  deleteAdminProductImage,
   fetchAdminProductById,
   fetchAdminProductsPage,
   uploadAdminProductImageMultipart,

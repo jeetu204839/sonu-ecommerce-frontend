@@ -7,6 +7,7 @@ import {
 } from "@/lib/api/products";
 
 import ProductDetailAttributes from "./ProductDetailAttributes";
+import ProductDetailQuickContact from "./ProductDetailQuickContact";
 import ProductEnquiryModal from "./ProductEnquiryModal";
 import { stockBadgeClass, stockLabel } from "./product-detail-utils";
 
@@ -126,12 +127,13 @@ export default function ProductDetailBuyBox({ product }: ProductDetailBuyBoxProp
           ) : (
             <button
               type="button"
-              className="btn btn-secondary btn-lg rounded-pill px-4 py-3 fw-semibold w-100"
+              className="btn btn-secondary product-detail-action-btn w-100"
               disabled
             >
               Currently unavailable
             </button>
           )}
+          <ProductDetailQuickContact />
           <Link
             href={`/contact?sku=${encodeURIComponent(product.sku)}`}
             className="product-detail-contact-link"

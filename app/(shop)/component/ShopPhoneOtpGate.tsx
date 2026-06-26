@@ -305,7 +305,7 @@ export default function ShopPhoneOtpGate({
                 ) : (
                   <>
                     Verify{" "}
-                    <i className="fas fa-play" aria-hidden="true" />
+                    <i className="fas fa-chevron-right" aria-hidden="true" />
                   </>
                 )}
               </button>
@@ -350,7 +350,7 @@ export default function ShopPhoneOtpGate({
                 ) : (
                   <>
                     Continue{" "}
-                    <i className="fas fa-play" aria-hidden="true" />
+                    <i className="fas fa-chevron-right" aria-hidden="true" />
                   </>
                 )}
               </button>
@@ -358,23 +358,21 @@ export default function ShopPhoneOtpGate({
           )}
         </div>
 
-        <div className="shop-phone-otp-footer border-top border-secondary">
+        <div className="shop-phone-otp-footer">
           <button type="button" className="shop-phone-otp-skip" onClick={handleSkip}>
             Skip
           </button>
           <Link href="/" className="shop-phone-otp-brand">
-            {/* <img src="/img/logo.webp" alt="" width={28} height={28} /> */}
-            <div style={{ width: 28, height: 28, position: "relative" }}>
+            <div className="shop-phone-otp-brand-logo">
               <Image
-                src="/img/logo.webp"
-                alt="logo"
-                fill
+                src="/img/logo.png"
+                alt=""
+                width={32}
+                height={32}
                 style={{ objectFit: "contain" }}
               />
             </div>
-            <span className="shop-phone-otp-brand-text brand-enterprises">
-              Enterprises
-            </span>
+            <span className="shop-phone-otp-brand-text">Irozen</span>
           </Link>
         </div>
       </div>

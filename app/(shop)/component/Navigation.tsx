@@ -43,10 +43,11 @@ const Navigation = () => {
             /> */}
             <Image
               src="/img/logo.png"
-              alt="Brand logo"
+              alt="Irozen — home"
               width={44}
               height={44}
               className="shop-mega-logo"
+              priority
             />
             <span className="shop-mega-wordmark fw-bold mb-0 lh-sm d-none d-sm-inline">
               Irozen

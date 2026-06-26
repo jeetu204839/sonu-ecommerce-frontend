@@ -59,6 +59,11 @@ export default function FeaturedHeroCarousel({
     const root = rootRef.current;
     if (!root || products.length < 2) return;
 
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) return;
+
     let disposed = false;
     let instance: { dispose: () => void } | null = null;
 
@@ -99,6 +104,8 @@ export default function FeaturedHeroCarousel({
               width={400}
               height={300}
               className="rounded"
+              priority
+              sizes="(max-width: 991px) 100vw, 42vw"
             />
           </div>
         </div>
@@ -124,10 +131,21 @@ export default function FeaturedHeroCarousel({
             className={`carousel-item rounded${index === 0 ? " active" : ""}`}
           >
             {/* <img src={product.imageSrc} className="rounded " alt={product.name} style={{ objectFit: "contain" }} /> */}
-            <Image src={product.imageSrc} alt={product.name} width={500} height={500} className="rounded" style={{ objectFit: "contain" }} />
+            <Image
+              src={product.imageSrc}
+              alt={product.name}
+              width={500}
+              height={500}
+              className="rounded"
+              style={{ objectFit: "contain" }}
+              priority={index === 0}
+              fetchPriority={index === 0 ? "high" : "auto"}
+              sizes="(max-width: 991px) 100vw, 42vw"
+            />
             <Link
               href={`/details/${encodeURIComponent(product.slug)}`}
               className="btn px-4 py-2 text-white rounded"
+              aria-label={`View ${product.name}`}
             >
               {product.name}
             </Link>
@@ -142,6 +160,7 @@ export default function FeaturedHeroCarousel({
             type="button"
             data-bs-target="#carouselId"
             data-bs-slide="prev"
+            aria-label="Previous featured product"
           >
             <span className="carousel-control-prev-icon" aria-hidden="true" />
             <span className="visually-hidden">Previous</span>
@@ -151,6 +170,7 @@ export default function FeaturedHeroCarousel({
             type="button"
             data-bs-target="#carouselId"
             data-bs-slide="next"
+            aria-label="Next featured product"
           >
             <span className="carousel-control-next-icon" aria-hidden="true" />
             <span className="visually-hidden">Next</span>

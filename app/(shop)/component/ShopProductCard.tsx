@@ -37,10 +37,12 @@ export default function ShopProductCard({
           /> */}
           <Image
             src={product.imageSrc}
-            alt={product.name || "product image"}
+            alt={product.name || "Product image"}
             width={400}
             height={400}
             className="shop-product-tile-img"
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+            loading="lazy"
           />
           {showCategoryBadge && categoryLabel ? (
             <span className="shop-product-category-badge">{categoryLabel}</span>

@@ -336,7 +336,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
                     </span>
                     <span>
                       <span className="d-block fw-semibold text-dark small">
-                        Phone &amp; WhatsApp
+                        Phone
                       </span>
                       <a
                         href={`tel:${CONTACT_PHONE_TEL}`}
@@ -346,23 +346,29 @@ export default async function ContactPage({ searchParams }: PageProps) {
                       </a>
                     </span>
                   </li>
-                  <li className="d-flex gap-3 mb-3">
-                    <span className="text-primary flex-shrink-0 mt-1" aria-hidden="true">
-                      <i className="fab fa-whatsapp fa-lg" />
-                    </span>
-                    <span>
-                      <span className="d-block fw-semibold text-dark small">
-                        WhatsApp Direct
+                  <li className="mb-3">
+                    <a
+                      href={CONTACT_WHATSAPP}
+                      className="contact-whatsapp-btn"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span className="contact-whatsapp-btn-icon" aria-hidden="true">
+                        <i className="fab fa-whatsapp" />
                       </span>
-                      <a
-                        href={CONTACT_WHATSAPP}
-                        className="text-decoration-none text-secondary"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Chat on WhatsApp
-                      </a>
-                    </span>
+                      <span className="contact-whatsapp-btn-text">
+                        <span className="contact-whatsapp-btn-label">
+                          WhatsApp Direct
+                        </span>
+                        <span className="contact-whatsapp-btn-hint">
+                          Chat on WhatsApp · {CONTACT_PHONE}
+                        </span>
+                      </span>
+                      <i
+                        className="fas fa-chevron-right contact-whatsapp-btn-arrow"
+                        aria-hidden="true"
+                      />
+                    </a>
                   </li>
                   <li className="d-flex gap-3 mb-3">
                     <span className="text-primary flex-shrink-0 mt-1" aria-hidden="true">
@@ -520,7 +526,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
             </a>
             <a
               href={CONTACT_WHATSAPP}
-              className="btn btn-outline-light btn-lg rounded-pill px-4 fw-semibold"
+              className="btn contact-whatsapp-cta-btn btn-lg rounded-pill px-4 fw-semibold"
               target="_blank"
               rel="noopener noreferrer"
             >

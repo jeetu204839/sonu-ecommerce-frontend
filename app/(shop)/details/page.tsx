@@ -9,6 +9,8 @@ import {
   galleryImagesFromProduct,
 } from "@/lib/api/products";
 
+import { absoluteUrl, resolveSiteUrl } from "@/app/(shop)/lib/seo/site-url";
+
 import ProductDetailBuyBox from "./ProductDetailBuyBox";
 import ProductDetailTabs from "./ProductDetailTabs";
 import ProductGallery from "./ProductGallery";
@@ -87,7 +89,9 @@ export default async function DetailsPage({ searchParams }: PageProps) {
   const images = galleryImagesFromProduct(product);
   const sellerName = product.vendor?.storeName?.trim() || "Ray Enterprises";
   const sellerVerified = Boolean(product.vendor?.isVerified);
-  const detailUrl = `/details/${encodeURIComponent(product.slug)}`;
+  const detailPath = `/details/${encodeURIComponent(product.slug)}`;
+  const siteUrl = await resolveSiteUrl();
+  const productPageUrl = absoluteUrl(detailPath, siteUrl);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -109,7 +113,7 @@ export default async function DetailsPage({ searchParams }: PageProps) {
         product.stockStatus.toUpperCase() === "IN_STOCK" && product.stock > 0
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
-      url: detailUrl,
+      url: productPageUrl,
     },
   };
 
@@ -140,7 +144,7 @@ export default async function DetailsPage({ searchParams }: PageProps) {
             <ProductGallery images={images} productName={product.name} />
           </div>
           <div className="col-lg-6">
-            <ProductDetailBuyBox product={product} />
+            <ProductDetailBuyBox product={product} productUrl={productPageUrl} />
           </div>
         </div>
 

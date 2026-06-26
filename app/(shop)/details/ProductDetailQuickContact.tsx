@@ -1,25 +1,24 @@
 import {
   CONTACT_PHONE,
   CONTACT_PHONE_TEL,
+  buildProductWhatsAppMessage,
   buildWhatsAppUrl,
 } from "@/app/(shop)/contact/contact-data";
 
 type ProductDetailQuickContactProps = Readonly<{
   productName?: string;
   productSku?: string;
+  productUrl?: string;
 }>;
 
 export default function ProductDetailQuickContact({
   productName,
   productSku,
+  productUrl,
 }: ProductDetailQuickContactProps) {
-  let whatsappMessage =
-    "Hello Irozen, I have an enquiry. Please share details.";
-
-  if (productName) {
-    const skuPart = productSku ? ` (SKU: ${productSku})` : "";
-    whatsappMessage = `Hello Irozen, I am interested in ${productName}${skuPart}. Please share price and availability.`;
-  }
+  const whatsappMessage = productName
+    ? buildProductWhatsAppMessage({ productName, productSku, productUrl })
+    : "Hello Irozen, I have an enquiry. Please share details.";
 
   const whatsappHref = buildWhatsAppUrl(whatsappMessage);
 

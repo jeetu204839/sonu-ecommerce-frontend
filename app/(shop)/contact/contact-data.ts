@@ -14,6 +14,43 @@ export function buildWhatsAppUrl(text?: string): string {
   return `${base}?text=${encodeURIComponent(trimmed)}`;
 }
 
+/** Full https URL so WhatsApp auto-links it as a tappable link in chat. */
+export function toWhatsAppClickableUrl(url: string): string {
+  const trimmed = url.trim();
+  if (!trimmed) {
+    return "";
+  }
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+  const path = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+  return `${CONTACT_WEBSITE.replace(/\/+$/, "")}${path}`;
+}
+
+export function buildProductWhatsAppMessage(options: {
+  productName: string;
+  productSku?: string;
+  productUrl?: string;
+}): string {
+  const skuPart = options.productSku?.trim()
+    ? ` (SKU: ${options.productSku.trim()})`
+    : "";
+  const lines = [
+    `Hello Irozen, I am interested in ${options.productName}${skuPart}. Please share price and availability.`,
+  ];
+
+  const clickableUrl = options.productUrl
+    ? toWhatsAppClickableUrl(options.productUrl)
+    : "";
+
+  if (clickableUrl) {
+    // Blank line + URL on its own line — WhatsApp detects https:// as a tap link.
+    lines.push("", clickableUrl);
+  }
+
+  return lines.join("\n");
+}
+
 export const CONTACT_WHATSAPP = buildWhatsAppUrl(
   "Hello Irozen, I have an enquiry. Please share details.",
 );

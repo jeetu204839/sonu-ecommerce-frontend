@@ -13,9 +13,13 @@ import { stockBadgeClass, stockLabel } from "./product-detail-utils";
 
 type ProductDetailBuyBoxProps = Readonly<{
   product: ProductDetailDto;
+  productUrl: string;
 }>;
 
-export default function ProductDetailBuyBox({ product }: ProductDetailBuyBoxProps) {
+export default function ProductDetailBuyBox({
+  product,
+  productUrl,
+}: ProductDetailBuyBoxProps) {
   const sellerName = product.vendor?.storeName?.trim() || "Ray Enterprises";
   const sellerVerified = Boolean(product.vendor?.isVerified);
   const inStock = isProductInStock(product);
@@ -136,6 +140,7 @@ export default function ProductDetailBuyBox({ product }: ProductDetailBuyBoxProp
           <ProductDetailQuickContact
             productName={product.name}
             productSku={product.sku}
+            productUrl={productUrl}
           />
           <Link
             href={`/contact?sku=${encodeURIComponent(product.sku)}`}

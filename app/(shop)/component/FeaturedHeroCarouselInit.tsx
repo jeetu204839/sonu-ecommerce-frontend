@@ -2,12 +2,17 @@
 
 import { useEffect } from "react";
 
+type BootstrapCarouselInstance = {
+  cycle: () => void;
+  dispose: () => void;
+};
+
 type BootstrapCarouselCtor = {
-  getInstance: (element: Element) => { dispose: () => void } | null;
+  getInstance: (element: Element) => BootstrapCarouselInstance | null;
   new (
     element: Element,
     options?: { interval?: number; ride?: string | boolean; wrap?: boolean },
-  ): { cycle: () => void; dispose: () => void };
+  ): BootstrapCarouselInstance;
 };
 
 function getBootstrapCarousel(): BootstrapCarouselCtor | undefined {
@@ -32,7 +37,7 @@ export default function FeaturedHeroCarouselInit({ enabled }: Props) {
     if (prefersReducedMotion) return;
 
     let disposed = false;
-    let instance: { dispose: () => void } | null = null;
+    let instance: BootstrapCarouselInstance | null = null;
     let timer: number | undefined;
 
     function tryInit() {

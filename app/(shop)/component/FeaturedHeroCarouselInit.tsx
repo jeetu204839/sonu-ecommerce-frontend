@@ -2,28 +2,17 @@
 
 import { useEffect } from "react";
 
-type BootstrapCarouselInstance = {
-  cycle: () => void;
-  dispose: () => void;
-};
-
-type BootstrapCarouselCtor = {
-  getInstance: (element: Element) => BootstrapCarouselInstance | null;
-  new (
-    element: Element,
-    options?: { interval?: number; ride?: string | boolean; wrap?: boolean },
-  ): BootstrapCarouselInstance;
-};
-
-function getBootstrapCarousel(): BootstrapCarouselCtor | undefined {
-  return globalThis.window?.bootstrap?.Carousel;
-}
+import {
+  getShopBootstrap,
+  loadShopBootstrap,
+  SHOP_BOOTSTRAP_READY_EVENT,
+} from "@/app/(shop)/lib/bootstrap-loader";
 
 type Props = Readonly<{
   enabled: boolean;
 }>;
 
-/** Initializes Bootstrap carousel after hydration — markup is server-rendered for LCP. */
+/** Initializes Bootstrap carousel after JS loads — no polling (avoids forced reflow). */
 export default function FeaturedHeroCarouselInit({ enabled }: Props) {
   useEffect(() => {
     if (!enabled) return;
@@ -37,12 +26,13 @@ export default function FeaturedHeroCarouselInit({ enabled }: Props) {
     if (prefersReducedMotion) return;
 
     let disposed = false;
-    let instance: BootstrapCarouselInstance | null = null;
-    let timer: number | undefined;
+    let instance: ReturnType<
+      NonNullable<ReturnType<typeof getShopBootstrap>>["Carousel"]["getInstance"]
+    > | null = null;
 
-    function tryInit() {
-      const Carousel = getBootstrapCarousel();
-      if (!Carousel || disposed) return false;
+    function initCarousel() {
+      const Carousel = getShopBootstrap()?.Carousel;
+      if (!Carousel || disposed) return;
 
       const previous = Carousel.getInstance(root!);
       previous?.dispose();
@@ -53,36 +43,29 @@ export default function FeaturedHeroCarouselInit({ enabled }: Props) {
         wrap: true,
       });
       instance.cycle();
-      return true;
     }
 
-    if (!tryInit()) {
-      const started = Date.now();
-      timer = globalThis.window.setInterval(() => {
-        if (tryInit() || Date.now() - started >= 8000) {
-          if (timer !== undefined) {
-            globalThis.window.clearInterval(timer);
-          }
-        }
-      }, 50);
+    function onReady() {
+      initCarousel();
+    }
+
+    if (getShopBootstrap()?.Carousel) {
+      initCarousel();
+    } else {
+      globalThis.window.addEventListener(SHOP_BOOTSTRAP_READY_EVENT, onReady, {
+        once: true,
+      });
+      void loadShopBootstrap().then(() => {
+        if (!disposed) initCarousel();
+      });
     }
 
     return () => {
       disposed = true;
-      if (timer !== undefined) {
-        globalThis.window.clearInterval(timer);
-      }
+      globalThis.window.removeEventListener(SHOP_BOOTSTRAP_READY_EVENT, onReady);
       instance?.dispose();
     };
   }, [enabled]);
 
   return null;
-}
-
-declare global {
-  interface Window {
-    bootstrap?: {
-      Carousel?: BootstrapCarouselCtor;
-    };
-  }
 }

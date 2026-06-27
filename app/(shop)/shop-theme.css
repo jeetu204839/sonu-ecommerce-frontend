@@ -1,15 +1,29 @@
 /**
- * IROZEN shop theme — typography, layout sections, hero, cards, forms.
- * Loaded in app/(shop)/layout.tsx after Bootstrap + brand-overrides.
+ * IROZEN shop theme — typography, hero, cards, forms (no Tailwind — reduces CSS bundle).
  */
 
 html {
   scroll-behavior: smooth;
 }
 
+:root {
+  --shop-nav-height: 60px;
+}
+
+@media (max-width: 991.98px) {
+  :root {
+    --shop-nav-height: 110px;
+  }
+}
+
 body {
   overflow-x: hidden;
   font-family: var(--font-inter), Inter, sans-serif;
+}
+
+main {
+  margin-top: var(--shop-nav-height);
+  min-height: calc(100vh - var(--shop-nav-height));
 }
 
 h1,
@@ -50,7 +64,6 @@ h4,
   background: var(--brand-primary-soft);
 }
 
-/* Page hero banners */
 .page-header,
 .hero {
   position: relative;
@@ -115,7 +128,6 @@ h4,
   font-weight: 600;
 }
 
-/* Cards */
 #main-content .card,
 .card.shop-card {
   background: var(--brand-surface);
@@ -140,7 +152,6 @@ h4,
   transform: scale(1.05);
 }
 
-/* Form controls */
 .form-control,
 .form-select,
 textarea.form-control {
@@ -159,7 +170,6 @@ textarea.form-control:focus {
   box-shadow: 0 0 0 4px var(--brand-focus-ring);
 }
 
-/* Footer links */
 .footer-section a.footer-policy-link,
 .footer-section a.footer-brand {
   color: #cbd5e1;
@@ -169,6 +179,17 @@ textarea.form-control:focus {
 .footer-section a.footer-policy-link:hover,
 .footer-section a.footer-brand:hover {
   color: var(--brand-secondary);
+}
+
+/* Below-fold product grid — skip layout/paint until near viewport */
+.home-products-grid-wrap {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+.shop-products-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1200px;
 }
 
 @media (max-width: 768px) {

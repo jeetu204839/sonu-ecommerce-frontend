@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Inter, Poppins } from "next/font/google";
 
+import BootstrapClient from "./component/BootstrapClient";
+import BootstrapInteractionWarmup from "./component/BootstrapInteractionWarmup";
+import DeferredShopStyles from "./component/DeferredShopStyles";
 import Footer from "./component/Footer";
 import Navigation from "./component/Navigation";
 import ShopAuthShell from "./component/ShopAuthShell";
 import ShopLayoutHeadHints from "./component/ShopLayoutHeadHints";
 
-import "./tailwind.css";
+import "./shop-globals.css";
 import "./shop-theme.css";
 
 const poppins = Poppins({
@@ -15,12 +17,16 @@ const poppins = Poppins({
   weight: ["500", "600", "700"],
   variable: "--font-poppins",
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -44,14 +50,6 @@ export default function RootLayout({
     <html lang="en" className={`${inter.className} ${poppins.variable} ${inter.variable}`}>
       <head>
         <ShopLayoutHeadHints />
-        <link rel="preconnect" href="https://use.fontawesome.com" crossOrigin="anonymous" />
-        <link rel="stylesheet" href="/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="/css/style.css" />
-        <link rel="stylesheet" href="/css/brand-overrides.css" />
-        <link
-          rel="stylesheet"
-          href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
-        />
       </head>
       <body>
         <a href="#main-content" className="shop-skip-link">
@@ -62,11 +60,9 @@ export default function RootLayout({
           <main id="main-content">{children}</main>
         </ShopAuthShell>
         <Footer />
-
-        <Script
-          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
-          strategy="afterInteractive"
-        />
+        <BootstrapClient />
+        <BootstrapInteractionWarmup />
+        <DeferredShopStyles />
       </body>
     </html>
   );

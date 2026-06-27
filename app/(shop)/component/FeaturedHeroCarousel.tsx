@@ -28,7 +28,7 @@ function HeroSlideImage({
         fetchPriority={priority ? "high" : undefined}
         loading={priority ? undefined : "lazy"}
         sizes="(max-width: 991px) 100vw, 42vw"
-        quality={priority ? 75 : 65}
+        quality={priority ? 70 : 55}
       />
     </div>
   );

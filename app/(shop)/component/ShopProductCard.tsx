@@ -43,6 +43,7 @@ export default function ShopProductCard({
             className="shop-product-tile-img"
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
             loading="lazy"
+            quality={60}
           />
           {showCategoryBadge && categoryLabel ? (
             <span className="shop-product-category-badge">{categoryLabel}</span>

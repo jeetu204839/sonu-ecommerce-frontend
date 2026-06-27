@@ -2475,7 +2475,7 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):not(
 
 /* Desktop */
 main {
-    margin-top: 60px;
+    margin-top: var(--shop-nav-height, 60px);
 }
 
 /* Mobile */

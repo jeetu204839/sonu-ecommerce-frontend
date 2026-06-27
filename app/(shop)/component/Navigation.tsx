@@ -47,7 +47,8 @@ const Navigation = () => {
               width={44}
               height={44}
               className="shop-mega-logo"
-              priority
+              loading="eager"
+              decoding="async"
             />
             <span className="shop-mega-wordmark fw-bold mb-0 lh-sm d-none d-sm-inline">
               Irozen

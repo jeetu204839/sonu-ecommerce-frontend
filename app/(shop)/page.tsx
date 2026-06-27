@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import FeaturedHeroCarousel from "@/app/(shop)/component/FeaturedHeroCarousel";
+import HomeLcpPreload from "@/app/(shop)/component/HomeLcpPreload";
 import HomeProductsSection from "@/app/(shop)/component/HomeProductsSection";
 import HomeProductsSectionFallback from "@/app/(shop)/component/HomeProductsSectionFallback";
 import { fetchFeaturedProductsPage } from "@/lib/api/products";
@@ -16,8 +17,13 @@ export default async function Shop({ searchParams }: PageProps) {
   const { products: featuredCarouselProducts } =
     await fetchFeaturedProductsPage(1);
 
+  const lcpImageSrc =
+    featuredCarouselProducts[0]?.imageSrc?.trim() || "/img/coming-soon.png";
+
   return (
     <>
+      <HomeLcpPreload href={lcpImageSrc} />
+
       <div className="container-fluid hero-header">
         <div className="container hero-header-inner py-3 py-lg-5">
           <div className="row g-lg-5 align-items-center">

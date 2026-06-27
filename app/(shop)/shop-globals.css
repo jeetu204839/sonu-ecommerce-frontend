@@ -1,0 +1,3 @@
+/* Critical shop CSS — Bootstrap + brand tokens (blocking, single Next.js chunk). */
+@import "../../public/css/bootstrap.min.css";
+@import "../../public/css/brand-overrides.css";

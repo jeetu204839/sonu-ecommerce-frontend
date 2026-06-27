@@ -1,15 +1,25 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Open_Sans } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 
 import Footer from "./component/Footer";
 import Navigation from "./component/Navigation";
 import ShopAuthShell from "./component/ShopAuthShell";
 import ShopLayoutHeadHints from "./component/ShopLayoutHeadHints";
 
-const openSans = Open_Sans({
+import "./tailwind.css";
+import "./shop-theme.css";
+
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "600"],
+  weight: ["500", "600", "700"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -31,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={openSans.className}>
+    <html lang="en" className={`${inter.className} ${poppins.variable} ${inter.variable}`}>
       <head>
         <ShopLayoutHeadHints />
         <link rel="preconnect" href="https://use.fontawesome.com" crossOrigin="anonymous" />

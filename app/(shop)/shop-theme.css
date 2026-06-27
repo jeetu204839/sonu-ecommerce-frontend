@@ -1,0 +1,196 @@
+/**
+ * IROZEN shop theme — typography, layout sections, hero, cards, forms.
+ * Loaded in app/(shop)/layout.tsx after Bootstrap + brand-overrides.
+ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: var(--font-inter), Inter, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+.h1,
+.h2,
+.h3,
+.h4 {
+  font-family: var(--font-poppins), Poppins, sans-serif;
+  font-weight: 700;
+  color: var(--brand-text);
+}
+
+#main-content p {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--brand-text-secondary);
+}
+
+#main-content a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):not(
+    .footer-policy-link
+  ):not(.footer-brand):not(.shop-mega-cta):not(.shop-nav-util) {
+  transition: color 0.3s ease;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand-primary);
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--brand-primary-soft);
+}
+
+/* Page hero banners */
+.page-header,
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--brand-gradient-primary) !important;
+  background-image: var(--brand-gradient-primary) !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  color: var(--brand-text-inverse);
+}
+
+.page-header::before,
+.hero::before {
+  content: "";
+  position: absolute;
+  right: -150px;
+  top: -150px;
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.page-header h1,
+.page-header .display-5,
+.page-header .display-6,
+.hero h1 {
+  color: var(--brand-text-inverse) !important;
+}
+
+.page-header p,
+.page-header .lead,
+.page-header .text-white-50,
+.hero p {
+  color: #dbeafe !important;
+}
+
+.section {
+  padding: 90px 0;
+}
+
+.shadow-soft {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.gradient-text {
+  background: var(--brand-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.badge-brand {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 8px 18px;
+  border-radius: var(--brand-radius-pill);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Cards */
+#main-content .card,
+.card.shop-card {
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--brand-radius);
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+}
+
+#main-content .card:hover,
+.card.shop-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--brand-primary);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+}
+
+.product-card img {
+  transition: transform 0.35s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Form controls */
+.form-control,
+.form-select,
+textarea.form-control {
+  padding: 0.875rem 1.125rem;
+  border-radius: 14px;
+  border: 1px solid var(--brand-border);
+  font-size: 1rem;
+  background: var(--brand-surface);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea.form-control:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px var(--brand-focus-ring);
+}
+
+/* Footer links */
+.footer-section a.footer-policy-link,
+.footer-section a.footer-brand {
+  color: #cbd5e1;
+  transition: color 0.3s ease;
+}
+
+.footer-section a.footer-policy-link:hover,
+.footer-section a.footer-brand:hover {
+  color: var(--brand-secondary);
+}
+
+@media (max-width: 768px) {
+  h1,
+  .h1,
+  .display-5 {
+    font-size: 2.5rem;
+    line-height: 1.1;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.875rem;
+  }
+
+  .section {
+    padding: 70px 0;
+  }
+
+  .page-header,
+  .hero {
+    padding-top: 5.625rem !important;
+    padding-bottom: 5.625rem !important;
+  }
+}

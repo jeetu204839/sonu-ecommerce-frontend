@@ -13,52 +13,56 @@
  */
 
 html {
-  /* ── Brand core (logo electric blue) ── */
-  --brand-primary: #008FD4;
-  --brand-primary-dark: #006EA3;
-  --brand-primary-mid: #0096DC;
-  --brand-primary-light: #33B5E5;
-  --brand-primary-deep: #004A70;
-  --brand-primary-soft: #E6F4FC;
-  --brand-primary-soft-hover: #CCE9F9;
-  --brand-nav-deep: #004A70;
+  /* ── Brand core (electric blue) ── */
+  --brand-primary: #0F5EFF;
+  --brand-primary-dark: #0A49C4;
+  --brand-primary-mid: #2196F3;
+  --brand-primary-light: #5B9EFF;
+  --brand-primary-deep: #0A49C4;
+  --brand-primary-soft: #EEF2FF;
+  --brand-primary-soft-hover: #DBEAFE;
+  --brand-nav-deep: #0A49C4;
 
-  /* ── Warm accent (logo orange — Bootstrap secondary bridge) ── */
-  --brand-secondary: #F58220;
-  --brand-secondary-dark: #D96A10;
-  --brand-secondary-soft: #FFF0E3;
+  /* ── Warm accent (orange CTAs) ── */
+  --brand-secondary: #F97316;
+  --brand-secondary-dark: #EA580C;
+  --brand-secondary-soft: #FFF7ED;
 
-  /* ── Logo orange alias (badges, sale tags, highlight CTAs) ── */
-  --brand-accent: #F58220;
-  --brand-accent-dark: #D96A10;
-  --brand-accent-soft: #FFF0E3;
+  /* ── Orange alias (badges, sale tags, highlight CTAs) ── */
+  --brand-accent: #F97316;
+  --brand-accent-dark: #EA580C;
+  --brand-accent-soft: #FFF7ED;
 
-  /* ── Logo silver chrome ── */
-  --brand-chrome: #A8B0B8;
-  --brand-chrome-dark: #8B939C;
-  --brand-chrome-soft: #ECEEF1;
+  /* ── Neutral chrome ── */
+  --brand-chrome: #9CA3AF;
+  --brand-chrome-dark: #6B7280;
+  --brand-chrome-soft: #F3F4F6;
 
-  /* ── Typography (charcoal — logo shadow / letter depth) ── */
-  --brand-ink: #2D3439;
-  --brand-text: #333333;
-  --brand-text-secondary: #4A5568;
-  --brand-text-muted: #5C6773;
-  --brand-text-subtle: #6B7280;
+  /* ── Typography ── */
+  --brand-ink: #111827;
+  --brand-text: #111827;
+  --brand-text-secondary: #4B5563;
+  --brand-text-muted: #6B7280;
+  --brand-text-subtle: #9CA3AF;
   --brand-text-disabled: #9CA3AF;
   --brand-text-inverse: #ffffff;
 
-  /* ── Surfaces (logo white background) ── */
+  /* ── Surfaces ── */
   --brand-surface: #ffffff;
   --brand-surface-page: #F8FAFC;
-  --brand-surface-subtle: #F1F3F5;
-  --brand-surface-muted: #ECEEF1;
+  --brand-surface-subtle: #F1F5F9;
+  --brand-surface-muted: #E5E7EB;
   --brand-surface-hover: #E2E8F0;
-  --brand-surface-elevated: #FFFFFF;
+  --brand-surface-elevated: #ffffff;
 
-  /* ── Borders (silver-tinted) ── */
-  --brand-border: #D1D5DB;
+  /* ── Borders ── */
+  --brand-border: #E5E7EB;
   --brand-border-soft: #E5E7EB;
-  --brand-border-strong: #A8B0B8;
+  --brand-border-strong: #D1D5DB;
+
+  /* ── Layout ── */
+  --brand-radius: 18px;
+  --brand-radius-pill: 999px;
 
   /* ── Semantic states ── */
   --brand-success: #16A34A;
@@ -71,18 +75,18 @@ html {
   --brand-danger: #DC2626;
   --brand-danger-soft: #FEE2E2;
 
-  --brand-info: #008FD4;
+  --brand-info: #0F5EFF;
 
   /* ── Overlays & elevation ── */
-  --brand-overlay-dark: rgba(45, 52, 57, 0.78);
-  --brand-overlay-scrim: rgba(51, 51, 51, 0.72);
+  --brand-overlay-dark: rgba(15, 23, 42, 0.78);
+  --brand-overlay-scrim: rgba(17, 24, 39, 0.72);
 
-  --brand-shadow-sm: rgba(45, 52, 57, 0.06);
-  --brand-shadow-md: rgba(45, 52, 57, 0.12);
-  --brand-shadow-lg: rgba(45, 52, 57, 0.18);
+  --brand-shadow-sm: rgba(15, 23, 42, 0.06);
+  --brand-shadow-md: rgba(15, 23, 42, 0.12);
+  --brand-shadow-lg: rgba(15, 23, 42, 0.18);
 
-  --brand-shadow-primary: rgba(0, 143, 212, 0.28);
-  --brand-focus-ring: rgba(0, 143, 212, 0.35);
+  --brand-shadow-primary: rgba(15, 94, 255, 0.28);
+  --brand-focus-ring: rgba(15, 94, 255, 0.15);
 
   --brand-white-alpha-85: rgba(255, 255, 255, 0.85);
   --brand-white-alpha-45: rgba(255, 255, 255, 0.45);
@@ -93,25 +97,20 @@ html {
   --brand-black-alpha-25: rgba(0, 0, 0, 0.25);
   --brand-black-alpha-20: rgba(0, 0, 0, 0.2);
   --brand-black-alpha-18: rgba(0, 0, 0, 0.18);
-  --brand-black-alpha-12: rgba(45, 52, 57, 0.12);
-  --brand-black-alpha-08: rgba(45, 52, 57, 0.08);
+  --brand-black-alpha-12: rgba(15, 23, 42, 0.12);
+  --brand-black-alpha-08: rgba(15, 23, 42, 0.08);
 
-  --brand-primary-alpha-08: rgba(0, 143, 212, 0.08);
-  --brand-primary-alpha-10: rgba(0, 143, 212, 0.1);
-  --brand-primary-alpha-12: rgba(0, 143, 212, 0.12);
-  --brand-primary-alpha-18: rgba(0, 143, 212, 0.18);
-  --brand-primary-alpha-22: rgba(0, 143, 212, 0.22);
-  --brand-primary-alpha-35: rgba(0, 143, 212, 0.35);
+  --brand-primary-alpha-08: rgba(15, 94, 255, 0.08);
+  --brand-primary-alpha-10: rgba(15, 94, 255, 0.1);
+  --brand-primary-alpha-12: rgba(15, 94, 255, 0.12);
+  --brand-primary-alpha-18: rgba(15, 94, 255, 0.18);
+  --brand-primary-alpha-22: rgba(15, 94, 255, 0.22);
+  --brand-primary-alpha-35: rgba(15, 94, 255, 0.35);
 
-  --brand-secondary-alpha-45: rgba(245, 130, 32, 0.45);
+  --brand-secondary-alpha-45: rgba(249, 115, 22, 0.45);
 
-  /* ── Gradients (logo blue depth + orange highlight) ── */
-  --brand-gradient-primary: linear-gradient(
-    100deg,
-    var(--brand-primary-dark) 0%,
-    var(--brand-primary) 45%,
-    var(--brand-primary-light) 100%
-  );
+  /* ── Gradients ── */
+  --brand-gradient-primary: linear-gradient(135deg, #0F5EFF 0%, #2196F3 100%);
 
   --brand-gradient-primary-vertical: linear-gradient(
     180deg,
@@ -120,24 +119,19 @@ html {
   );
 
   --brand-gradient-nav: linear-gradient(
-    180deg,
+    135deg,
     var(--brand-nav-deep) 0%,
-    var(--brand-primary-dark) 55%,
-    var(--brand-primary) 100%
+    var(--brand-primary) 55%,
+    var(--brand-primary-mid) 100%
   );
 
   --brand-gradient-accent: linear-gradient(
-    110deg,
+    135deg,
     var(--brand-accent) 0%,
-    var(--brand-primary-light) 100%
+    var(--brand-accent-dark) 100%
   );
 
-  --brand-gradient-text: linear-gradient(
-    120deg,
-    var(--brand-primary-dark),
-    var(--brand-primary),
-    var(--brand-accent)
-  );
+  --brand-gradient-text: linear-gradient(90deg, #0F5EFF 0%, #F97316 100%);
 
   --brand-gradient-surface: linear-gradient(
     180deg,
@@ -149,11 +143,11 @@ html {
   --bs-primary: var(--brand-primary) !important;
   --bs-secondary: var(--brand-secondary) !important;
 
-  --bs-primary-rgb: 0, 143, 212 !important;
-  --bs-secondary-rgb: 245, 130, 32 !important;
+  --bs-primary-rgb: 15, 94, 255 !important;
+  --bs-secondary-rgb: 249, 115, 22 !important;
 
   --bs-dark: var(--brand-ink) !important;
-  --bs-dark-rgb: 45, 52, 57 !important;
+  --bs-dark-rgb: 17, 24, 39 !important;
 
   --bs-body-color: var(--brand-text) !important;
   --bs-body-bg: var(--brand-surface-page) !important;
@@ -184,8 +178,8 @@ body {
 }
 
 ::selection {
-  background: var(--brand-secondary-soft);
-  color: var(--brand-text);
+  background: var(--brand-secondary);
+  color: var(--brand-text-inverse);
 }
 
 /* Accessible muted text — overrides Bootstrap .text-muted where contrast was too low */
@@ -295,14 +289,39 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):not(
   border-bottom: 1px solid var(--brand-primary-alpha-10);
 }
 
-/* Primary buttons: slightly richer hover */
+/* Primary buttons — orange CTA */
 .btn-primary {
-  border-color: transparent !important;
-  box-shadow: 0 2px 8px var(--brand-shadow-primary);
+  background-color: var(--brand-secondary) !important;
+  border-color: var(--brand-secondary) !important;
+  border-radius: var(--brand-radius-pill) !important;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(249, 115, 22, 0.25);
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.btn-primary:hover {
-  filter: brightness(1.05);
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--brand-secondary-dark) !important;
+  border-color: var(--brand-secondary-dark) !important;
+  transform: translateY(-3px);
+  filter: none;
+}
+
+.btn-secondary {
+  background-color: var(--brand-primary) !important;
+  border-color: var(--brand-primary) !important;
+  border-radius: var(--brand-radius-pill) !important;
+  font-weight: 600;
+  color: var(--brand-text-inverse) !important;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: var(--brand-primary-dark) !important;
+  border-color: var(--brand-primary-dark) !important;
+  transform: translateY(-3px);
+  color: var(--brand-text-inverse) !important;
 }
 
 .btn-outline-primary {
@@ -2473,7 +2492,7 @@ main {
 }
 
 .footer-section {
-  background: var(--brand-gradient-nav);
+  background: #0f172a;
 }
 
 .shop-mega-brand .shop-mega-logo {
@@ -2595,18 +2614,20 @@ main {
 .shop-mega-cta {
   background: var(--brand-accent) !important;
   color: var(--brand-text-inverse) !important;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.8125rem;
-  padding: 0.55rem 1rem;
-  border-radius: 4px;
+  padding: 0.55rem 1.25rem;
+  border-radius: var(--brand-radius-pill);
   white-space: nowrap;
-  box-shadow: 0 2px 8px var(--brand-secondary-alpha-45);
+  box-shadow: 0 10px 25px var(--brand-secondary-alpha-45);
   text-decoration: none !important;
   line-height: 1.2;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .shop-mega-cta:hover {
   background: var(--brand-accent-dark) !important;
+  transform: translateY(-3px);
   color: var(--brand-text-inverse) !important;
 }
 

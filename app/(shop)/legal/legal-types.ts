@@ -18,4 +18,5 @@ export const LEGAL_PAGE_LINKS = [
   { href: "/terms-and-conditions", label: "Terms & Conditions" },
   { href: "/refund-return-policy", label: "Refund & Return Policy" },
   { href: "/shipping-policy", label: "Shipping Policy" },
+  { href: "/review-comments-policy", label: "Review & Comments Policy" },
 ] as const;

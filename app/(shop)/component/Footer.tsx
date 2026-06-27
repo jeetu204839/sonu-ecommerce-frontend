@@ -43,6 +43,11 @@ const Footer = () => {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link href="/review-feedback" className="footer-policy-link">
+                  Reviews &amp; Feedback
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

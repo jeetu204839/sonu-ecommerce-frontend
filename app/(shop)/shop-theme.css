@@ -64,6 +64,14 @@ h4,
   background: var(--brand-primary-soft);
 }
 
+/* Navbar — beats deferred style.css `.fixed-top { background: white }` */
+header.shop-mega-nav.fixed-top,
+.shop-mega-nav.site-navbar-bar.fixed-top {
+  background: var(--brand-gradient-nav) !important;
+  box-shadow: 0 4px 20px var(--brand-shadow-lg);
+  border-bottom: 1px solid var(--brand-white-alpha-08);
+}
+
 .page-header,
 .hero {
   position: relative;
@@ -74,6 +82,18 @@ h4,
   background-repeat: no-repeat !important;
   background-size: cover !important;
   color: var(--brand-text-inverse);
+}
+
+/* Home carousel strip — keep original light hero image (not blue gradient) */
+.hero-header {
+  background: linear-gradient(
+      rgba(var(--bs-secondary-rgb), 0.12),
+      rgba(var(--bs-secondary-rgb), 0.12)
+    ),
+    url(/img/hero-img.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .page-header::before,

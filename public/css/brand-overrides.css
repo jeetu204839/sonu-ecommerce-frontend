@@ -2485,6 +2485,7 @@ main {
     } */
 }
 
+.shop-mega-nav.fixed-top,
 .shop-mega-nav {
   background: var(--brand-gradient-nav);
   box-shadow: 0 4px 20px var(--brand-shadow-lg);

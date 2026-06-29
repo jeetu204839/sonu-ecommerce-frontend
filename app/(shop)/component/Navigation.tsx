@@ -31,7 +31,7 @@ const Navigation = () => {
     <>
     <header className="fixed-top site-navbar-bar shop-mega-nav w-100">
       <div className="container-fluid px-2 px-sm-3 px-lg-4">
-        <div className="d-flex align-items-center justify-content-between gap-2 py-2">
+        <div className="d-flex align-items-center gap-1 gap-sm-2 py-2 shop-mega-nav-row">
           <Link
             href="/"
             className="shop-mega-brand d-flex align-items-center gap-sm-3 text-decoration-none flex-shrink-0"
@@ -57,11 +57,11 @@ const Navigation = () => {
             </span>
           </Link>
 
-          <div className="d-lg-none">
+          <div className="d-lg-none flex-grow-1 min-w-0 shop-mega-nav-search-slot">
             <NavSearchForm compact />
           </div>
 
-          <div className="d-flex d-lg-none align-items-center flex-shrink-0">
+          <div className="d-flex d-lg-none align-items-center flex-shrink-0 shop-mega-nav-toggler-slot">
             <ShopNavToggler />
           </div>
 

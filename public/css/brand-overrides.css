@@ -263,6 +263,43 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.breadcrumb-item a):not(
   -webkit-tap-highlight-color: transparent;
 }
 
+@media (max-width: 991.98px) {
+  .shop-mega-nav-row {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .shop-mega-nav-search-slot {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: calc(100% - 5.75rem);
+  }
+
+  .shop-mega-nav-toggler-slot {
+    flex: 0 0 auto;
+    margin-left: 0.125rem;
+  }
+
+  .shop-mega-nav .container-fluid {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+  }
+
+  .shop-nav-search-form--compact {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .shop-nav-search-form--compact .shop-nav-search-input {
+    font-size: 0.8125rem;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .shop-nav-search-form--compact .shop-nav-search-submit {
+    padding: 0 0.7rem;
+  }
+}
+
 .shop-nav-toggler:focus,
 .shop-nav-toggler:focus-visible,
 .shop-nav-toggler:active {

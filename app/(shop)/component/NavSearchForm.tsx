@@ -37,7 +37,9 @@ export default function NavSearchForm({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="shop-nav-search-input"
-          placeholder="Enter product / service to search"
+          placeholder={
+            compact ? "Search products…" : "Enter product / service to search"
+          }
           aria-label="Search products or services"
           autoComplete="off"
         />

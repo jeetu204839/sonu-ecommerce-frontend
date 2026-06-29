@@ -2,6 +2,8 @@
 
 import { SHOP_PHONE_OTP_OPEN_EVENT } from "@/lib/auth/constants";
 
+import { hideShopNavDrawer } from "@/app/(shop)/lib/shop-nav-drawer";
+
 type ShopSignInTriggerProps = Readonly<{
   /** Nav icon (header), mobile drawer row, or dropdown menu item. */
   variant?: "nav" | "drawer" | "dropdown";
@@ -13,6 +15,7 @@ export default function ShopSignInTrigger({
   className,
 }: ShopSignInTriggerProps) {
   function handleClick() {
+    hideShopNavDrawer();
     window.dispatchEvent(new Event(SHOP_PHONE_OTP_OPEN_EVENT));
   }
 
@@ -44,7 +47,6 @@ export default function ShopSignInTrigger({
           className ??
           "nav-link shop-drawer-link py-3 px-3 rounded w-100 text-start border-0 bg-transparent"
         }
-        data-bs-dismiss="offcanvas"
         aria-label="Sign in with your mobile number"
         onClick={handleClick}
       >

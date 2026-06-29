@@ -3,7 +3,7 @@ export const SHOP_BOOTSTRAP_READY_EVENT = "shop:bootstrap-ready";
 
 type BootstrapOffcanvas = {
   getOrCreateInstance: (element: Element) => { show: () => void; hide: () => void };
-  getInstance: (element: Element) => { dispose: () => void } | null;
+  getInstance: (element: Element) => { show: () => void; hide: () => void; dispose: () => void } | null;
 };
 
 type BootstrapCarousel = {

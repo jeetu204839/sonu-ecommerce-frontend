@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 
-import BootstrapClient from "./component/BootstrapClient";
-import BootstrapInteractionWarmup from "./component/BootstrapInteractionWarmup";
+import BootstrapScript from "./component/BootstrapScript";
 import DeferredShopStyles from "./component/DeferredShopStyles";
 import Footer from "./component/Footer";
 import Navigation from "./component/Navigation";
@@ -60,9 +59,8 @@ export default function RootLayout({
           <main id="main-content">{children}</main>
         </ShopAuthShell>
         <Footer />
-        <BootstrapClient />
-        <BootstrapInteractionWarmup />
         <DeferredShopStyles />
+        <BootstrapScript />
       </body>
     </html>
   );

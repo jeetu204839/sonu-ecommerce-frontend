@@ -4,6 +4,7 @@ import Image from "next/image";
 import MobileNavigation from "@/app/(shop)/component/MobileNavigation";
 import NavSearchForm from "@/app/(shop)/component/NavSearchForm";
 import ShopNavAccountMenu from "@/app/(shop)/component/ShopNavAccountMenu";
+import ShopNavToggler from "@/app/(shop)/component/ShopNavToggler";
 
 function NavUtilLink({
   href,
@@ -27,6 +28,7 @@ function NavUtilLink({
 
 const Navigation = () => {
   return (
+    <>
     <header className="fixed-top site-navbar-bar shop-mega-nav w-100">
       <div className="container-fluid px-2 px-sm-3 px-lg-4">
         <div className="d-flex align-items-center justify-content-between gap-2 py-2">
@@ -60,16 +62,7 @@ const Navigation = () => {
           </div>
 
           <div className="d-flex d-lg-none align-items-center flex-shrink-0">
-            <button
-              type="button"
-              className="shop-nav-toggler shop-nav-toggler--on-dark py-2 px-3"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#shopNavDrawer"
-              aria-controls="shopNavDrawer"
-              aria-label="Open menu"
-            >
-              <span className="fa fa-bars text-white" aria-hidden="true" />
-            </button>
+            <ShopNavToggler />
           </div>
 
           <div className="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center gap-2 gap-xl-3 min-w-0 ms-2">
@@ -94,9 +87,9 @@ const Navigation = () => {
         </div> */}
 
       </div>
-
-      <MobileNavigation />
     </header>
+    <MobileNavigation />
+    </>
   );
 };
 

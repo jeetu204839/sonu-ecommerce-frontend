@@ -1,41 +1,114 @@
-"use client";
-
-import type { Carousel, Collapse, Dropdown, Offcanvas, Tab } from "bootstrap";
-
-/** Dispatches when Bootstrap JS is ready for carousel, offcanvas, etc. */
+/** Dispatches when Bootstrap JS bundle has loaded (offcanvas, carousel, etc.). */
 export const SHOP_BOOTSTRAP_READY_EVENT = "shop:bootstrap-ready";
 
-type ShopBootstrapApi = {
-  Carousel: typeof Carousel;
-  Offcanvas: typeof Offcanvas;
-  Collapse: typeof Collapse;
-  Tab: typeof Tab;
-  Dropdown: typeof Dropdown;
+type BootstrapOffcanvas = {
+  getOrCreateInstance: (element: Element) => { show: () => void; hide: () => void };
+  getInstance: (element: Element) => { dispose: () => void } | null;
 };
 
-let bootstrapApi: ShopBootstrapApi | null = null;
-let bootstrapPromise: Promise<ShopBootstrapApi> | null = null;
+type BootstrapCarousel = {
+  getOrCreateInstance: (
+    element: Element,
+    options?: { interval?: number; ride?: string | boolean; wrap?: boolean },
+  ) => { cycle: () => void; dispose: () => void };
+  getInstance: (element: Element) => { cycle: () => void; dispose: () => void } | null;
+};
 
-export function getShopBootstrap(): ShopBootstrapApi | null {
-  return bootstrapApi;
+type BootstrapCollapse = {
+  getOrCreateInstance: (element: Element) => { show: () => void; hide: () => void };
+};
+
+type BootstrapTab = {
+  getOrCreateInstance: (element: Element) => { show: () => void };
+};
+
+type BootstrapDropdown = {
+  getOrCreateInstance: (element: Element) => { show: () => void; hide: () => void };
+};
+
+export type ShopBootstrapApi = {
+  Offcanvas: BootstrapOffcanvas;
+  Carousel: BootstrapCarousel;
+  Collapse: BootstrapCollapse;
+  Tab: BootstrapTab;
+  Dropdown: BootstrapDropdown;
+};
+
+function readWindowBootstrap(): ShopBootstrapApi | null {
+  const bootstrap = (
+    window as Window & {
+      bootstrap?: {
+        Offcanvas?: BootstrapOffcanvas;
+        Carousel?: BootstrapCarousel;
+        Collapse?: BootstrapCollapse;
+        Tab?: BootstrapTab;
+        Dropdown?: BootstrapDropdown;
+      };
+    }
+  ).bootstrap;
+
+  if (!bootstrap?.Offcanvas || !bootstrap?.Carousel) {
+    return null;
+  }
+
+  return {
+    Offcanvas: bootstrap.Offcanvas,
+    Carousel: bootstrap.Carousel,
+    Collapse: bootstrap.Collapse!,
+    Tab: bootstrap.Tab!,
+    Dropdown: bootstrap.Dropdown!,
+  };
 }
 
+export function getShopBootstrap(): ShopBootstrapApi | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  return readWindowBootstrap();
+}
+
+let bootstrapPromise: Promise<ShopBootstrapApi> | null = null;
+
 export function loadShopBootstrap(): Promise<ShopBootstrapApi> {
-  if (bootstrapApi) {
-    return Promise.resolve(bootstrapApi);
+  const existing = getShopBootstrap();
+  if (existing) {
+    return Promise.resolve(existing);
   }
 
   if (!bootstrapPromise) {
-    bootstrapPromise = import("bootstrap").then((bootstrap) => {
-      bootstrapApi = {
-        Carousel: bootstrap.Carousel,
-        Offcanvas: bootstrap.Offcanvas,
-        Collapse: bootstrap.Collapse,
-        Tab: bootstrap.Tab,
-        Dropdown: bootstrap.Dropdown,
+    bootstrapPromise = new Promise((resolve, reject) => {
+      if (typeof window === "undefined") {
+        reject(new Error("Bootstrap is only available in the browser."));
+        return;
+      }
+
+      const finish = () => {
+        const api = getShopBootstrap();
+        if (api) {
+          resolve(api);
+          return true;
+        }
+        return false;
       };
-      window.dispatchEvent(new Event(SHOP_BOOTSTRAP_READY_EVENT));
-      return bootstrapApi;
+
+      if (finish()) {
+        return;
+      }
+
+      const onReady = () => {
+        if (!finish()) {
+          reject(new Error("Bootstrap bundle loaded but components are missing."));
+        }
+      };
+
+      window.addEventListener(SHOP_BOOTSTRAP_READY_EVENT, onReady, { once: true });
+
+      window.setTimeout(() => {
+        if (!getShopBootstrap()) {
+          window.removeEventListener(SHOP_BOOTSTRAP_READY_EVENT, onReady);
+          reject(new Error("Bootstrap bundle did not load in time."));
+        }
+      }, 15000);
     });
   }
 

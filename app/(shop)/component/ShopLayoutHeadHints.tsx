@@ -12,12 +12,16 @@ function mediaOrigin(): string | null {
 /** Early connection hints for LCP images served from the media CDN/API host. */
 export default function ShopLayoutHeadHints() {
   const origin = mediaOrigin();
-  if (!origin) return null;
 
   return (
     <>
-      <link rel="preconnect" href={origin} crossOrigin="anonymous" />
-      <link rel="dns-prefetch" href={origin} />
+      <link rel="preload" href="/js/bootstrap.bundle.min.js" as="script" />
+      {origin ? (
+        <>
+          <link rel="preconnect" href={origin} crossOrigin="anonymous" />
+          <link rel="dns-prefetch" href={origin} />
+        </>
+      ) : null}
     </>
   );
 }

@@ -37,7 +37,7 @@ export default function FeaturedHeroCarouselInit({ enabled }: Props) {
       const previous = Carousel.getInstance(root!);
       previous?.dispose();
 
-      instance = new Carousel(root!, {
+      instance = Carousel.getOrCreateInstance(root!, {
         interval: 5000,
         ride: "carousel",
         wrap: true,
